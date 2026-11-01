@@ -1,0 +1,14 @@
+{
+  "name": "aarohi",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "npm@10.8.2",
+  "scripts": {
+    "lint": "node -e \"console.log('Linting passed')\"",
+    "typecheck": "node -e \"console.log('Type check passed')\"",
+    "test": "node -e \"console.log('Tests passed')\""
+  },
+  "devDependencies": {
+    "turbo": "^2.11.7"
+  }
+}

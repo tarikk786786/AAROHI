@@ -215,3 +215,6 @@ server/*.db*
 server/cache/
 server/*.json
 !ANNOUNCEMENTS.json
+
+node_modules/
+.turbo/
