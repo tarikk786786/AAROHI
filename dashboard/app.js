@@ -4592,7 +4592,14 @@ async function initAuthGate() {
       const pass = document.getElementById("wzPass");
       if (pass) { pass.required = true; swap(pass, "data-i18n-ph", "wz.pass_ph_req"); }
     }
+    const wsInp = document.getElementById("wzWsName");
+    if (wsInp && !wsInp.value.trim()) wsInp.value = "AAROHI";
     wz.classList.add("open");
+    // Ensure the sticky Start button is in view on short phones / preview URLs.
+    try {
+      const fin = document.getElementById("wzFinish");
+      if (fin) setTimeout(function () { fin.scrollIntoView({ block: "nearest", behavior: "smooth" }); }, 80);
+    } catch (e) {}
   } else {
     authOverlay.classList.add("open");
   }
@@ -4893,7 +4900,7 @@ async function initSetup() {
     const s = await (await fetch("/settings")).json();
     // Đã setup, đã có tài khoản, hoặc bị chặn auth (đang ở màn đăng nhập) → không hiện wizard
     if (s.setup_done || (s.auth && s.auth.has_password) || s.auth_required) return false;
-    document.getElementById("wzWsName").value = s.workspace_name || "";
+    document.getElementById("wzWsName").value = s.workspace_name || "AAROHI";
     document.getElementById("setupWizard").classList.add("open");
     return true;
   } catch (e) { return false; }

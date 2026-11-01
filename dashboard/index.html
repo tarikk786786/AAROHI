@@ -768,8 +768,8 @@
 
   <!-- Bộ cài đặt lần đầu (hiện khi chưa setup_done) -->
   <div class="modal-overlay" id="setupWizard">
-    <div class="settings-modal" style="max-width:460px">
-      <div class="fm-head"><img src="/brand-logo" alt="" style="width:24px;height:24px;border-radius:6px;vertical-align:middle;margin-right:6px;object-fit:cover"><span data-i18n="wz.welcome">Chào mừng tới Javis</span></div>
+    <div class="settings-modal wz-modal" style="max-width:460px">
+      <div class="fm-head"><img src="/brand-logo" alt="" style="width:24px;height:24px;border-radius:6px;vertical-align:middle;margin-right:6px;object-fit:cover"><span data-i18n="wz.welcome">Welcome to AAROHI</span></div>
       <div class="settings-body">
         <style>
         .wz-prov{display:flex;flex-direction:column;gap:8px;margin-top:6px}
@@ -788,7 +788,7 @@
         <div class="set-note"><span data-i18n="wz.intro">Vài bước nhanh để bắt đầu. Mọi thứ đổi lại được sau trong</span> <i data-ic="settings"></i> <span data-i18n="page.settings.label">Cài đặt</span>.</div>
         <div class="set-sec">
           <h4 data-i18n="wz.s1">1. Workspace</h4>
-          <label data-i18n="wz.ws_name">Tên hiển thị</label><input id="wzWsName" placeholder="Javis OS">
+          <label data-i18n="wz.ws_name">Tên hiển thị</label><input id="wzWsName" placeholder="AAROHI" value="AAROHI">
         </div>
         <div class="set-sec">
           <h4><span data-i18n="wz.s2">2. Tài khoản admin</span> <span class="dim" data-i18n="wz.s2_rec">(khuyến nghị)</span></h4>
@@ -822,8 +822,11 @@
           </div>
           <div id="wzProvHint"></div>
         </div>
-        <div class="set-actions"><button class="s-btn" id="wzFinish" data-i18n="wz.start">Bắt đầu dùng Javis →</button></div>
+      </div>
+      <!-- Sticky footer: Start was easy to miss below a tall provider list (live report 2026-11-01). -->
+      <div class="wz-footer">
         <div class="auth-err" id="wzErr"></div>
+        <div class="set-actions"><button class="s-btn" id="wzFinish" data-i18n="wz.start">Start using AAROHI →</button></div>
       </div>
     </div>
   </div>
