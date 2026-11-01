@@ -1208,6 +1208,18 @@ def apply_model_env(cfg=None):
         _set_key("groq_api_key", ("GROQ_API_KEY",), "groq", "openai/gpt-oss-20b")
         _set_key("gemini_api_key", ("GEMINI_API_KEY", "GOOGLE_API_KEY"), "gemini", "gemini-2.5-flash")
 
+        # Prefer Groq at the front of usage order when a free Groq key is present.
+        if str(m.get("groq_api_key") or "").strip():
+            order = [str(x).strip() for x in (m.get("order") or []) if str(x).strip()]
+            if "groq" in order:
+                order = ["groq"] + [x for x in order if x != "groq"]
+                m["order"] = order
+                m["main"] = {"provider": "groq",
+                             "model": ((m.get("profiles") or {}).get("groq") or {}).get("model")
+                             or "openai/gpt-oss-20b"}
+                m["engine"] = "groq"
+                changed = True
+
         # FREE_LLM_PRESET → openai-compat. On Vercel / no cloud keys, default to llm7
         # (anonymous free OpenAI-compatible gateway) so chat always has SOME brain.
         presets_path = Path(__file__).resolve().parent.parent / "system" / "free-llm-presets.json"
@@ -1220,9 +1232,9 @@ def apply_model_env(cfg=None):
             or str(m.get("deepseek_api_key") or "").strip()
         )
         on_vercel = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
-        preset_id = (os.getenv("FREE_LLM_PRESET") or "").strip().lower()
-        if not preset_id and (on_vercel or not has_cloud) and not str(m.get("openai_compat_base") or "").strip():
-            preset_id = "llm7"
+        # Always wire free LLM7 as a brain: MAIN when nothing else works, otherwise FALLBACK
+        # so paid OpenRouter/Groq/Gemini/Claude can stay first when the owner configures them.
+        preset_id = (os.getenv("FREE_LLM_PRESET") or "").strip().lower() or "llm7"
 
         if preset_id and presets_path.is_file():
             try:
@@ -1233,32 +1245,51 @@ def apply_model_env(cfg=None):
             if preset and preset.get("aarohi_provider") == "openai-compat":
                 base = (os.getenv("OPENAI_COMPAT_BASE") or preset.get("base_url") or "").strip().rstrip("/")
                 ckey = (os.getenv("OPENAI_COMPAT_KEY") or "").strip()
-                cmodel = (os.getenv("OPENAI_COMPAT_MODEL") or ((preset.get("models") or [""])[0])).strip()
+                # Anonymous presets (llm7 / ovh): default model turbo / listed first — not a keyed model id.
+                default_model = ((preset.get("models") or ["turbo"])[0])
+                cmodel = (os.getenv("OPENAI_COMPAT_MODEL") or default_model).strip()
                 if base and (override or not str(m.get("openai_compat_base") or "").strip()):
                     m["openai_compat_base"] = base
                     changed = True
                 if ckey and (override or not str(m.get("openai_compat_key") or "").strip()):
                     m["openai_compat_key"] = ckey
                     changed = True
+                # Anonymous wake: if no env key, force empty so a revoked saved key cannot 401 forever.
+                if preset.get("anonymous") and not ckey and str(m.get("openai_compat_key") or "").strip():
+                    m["openai_compat_key"] = ""
+                    changed = True
                 if cmodel:
                     m.setdefault("profiles", {}).setdefault("openai-compat", {})["model"] = cmodel
+                    # Prefer turbo for llm7 anonymous so keyed-only models are not required.
+                    if preset.get("anonymous") and preset_id == "llm7":
+                        m["profiles"]["openai-compat"]["model"] = cmodel or "turbo"
+                # Paid keys → free stays a FALLBACK; no keys / CLI-only on Vercel → free is MAIN.
+                as_main = not has_cloud
                 if base and _append_provider_order(
-                        m, "openai-compat", as_main_if_empty=True, main_model=cmodel):
+                        m, "openai-compat", as_main_if_empty=as_main, main_model=cmodel):
                     changed = True
 
         # Ultimate safety: promote openai-compat to MAIN when unset OR when stuck on
         # CLI-only brains (Claude/Codex) on Vercel — those cannot connect → endless
-        # "No AI model connected".
+        # "No AI model connected". Paid MAIN is kept when it is a real API provider.
         main_prov = str((m.get("main") or {}).get("provider") or "").strip()
         cli_only = main_prov in ("", "anthropic-cli", "openai-oauth", "grok-cli")
+        paid_api = main_prov in (
+            "openrouter", "groq", "gemini", "openai", "anthropic-api", "deepseek", "ollama",
+            "openai-compat", "anthropic-compat",
+        )
         if str(m.get("openai_compat_base") or "").strip() and (not main_prov or (on_vercel and cli_only)):
-            model = ((m.get("profiles") or {}).get("openai-compat") or {}).get("model") or "gpt-oss:20b"
+            model = ((m.get("profiles") or {}).get("openai-compat") or {}).get("model") or "turbo"
             m["main"] = {"provider": "openai-compat", "model": model}
             m["engine"] = "openai-compat"
             order = [str(x).strip() for x in (m.get("order") or []) if str(x).strip()]
             order = ["openai-compat"] + [x for x in order if x != "openai-compat"]
             m["order"] = order
             changed = True
+        elif paid_api and str(m.get("openai_compat_base") or "").strip():
+            # Keep paid MAIN; ensure free openai-compat is somewhere in the fallback chain.
+            if _append_provider_order(m, "openai-compat", as_main_if_empty=False, main_model=""):
+                changed = True
 
         # Sweet Hindi/Hinglish girlfriend voice (Edge TTS free). Env TTS_VOICE wins when empty/override.
         v = cfg.setdefault("voice", {})
@@ -1277,6 +1308,13 @@ def apply_model_env(cfg=None):
             write_settings(cfg)
             print("[config] Free/API brain + Aarohi voice env applied",
                   file=__import__("sys").stderr)
+        # After seeding: clear revoked openai-compat keys and ensure anonymous free MAIN.
+        try:
+            import universal_brain
+            if universal_brain.wake_free_brain().get("changed"):
+                changed = True
+        except Exception as _wake_e:
+            print(f"[config] universal_brain wake: {_wake_e}", file=__import__("sys").stderr)
         return changed
     except Exception as e:
         print(f"[config] apply_model_env: {e}", file=__import__("sys").stderr)
@@ -1734,6 +1772,26 @@ def clear_setup_token():
         pass
 
 
+def ensure_aarohi_login_defaults():
+    """Personal AAROHI deploy: on Vercel (or AAROHI_DEFAULT_LOGIN=1), seed login if unset.
+
+    Username Tarik / password from env (default 8984). Owner can override with JAVIS_ADMIN_*.
+    """
+    want = (
+        os.getenv("VERCEL")
+        or os.getenv("AWS_LAMBDA_FUNCTION_NAME")
+        or (os.getenv("AAROHI_DEFAULT_LOGIN", "").strip().lower() in ("1", "true", "yes", "on"))
+    )
+    if not want:
+        return
+    if not (os.getenv("JAVIS_ADMIN_PASSWORD") or "").strip():
+        os.environ["JAVIS_ADMIN_PASSWORD"] = "8984"
+    if not (os.getenv("JAVIS_ADMIN_USER") or "").strip():
+        os.environ["JAVIS_ADMIN_USER"] = "Tarik"
+    if not (os.getenv("JAVIS_REQUIRE_LOGIN") or "").strip():
+        os.environ["JAVIS_REQUIRE_LOGIN"] = "1"
+
+
 def provision_admin_from_env():
     """Apply JAVIS_ADMIN_PASSWORD (+ optional JAVIS_ADMIN_USER) at boot.
 
@@ -1754,6 +1812,7 @@ def provision_admin_from_env():
     an owner who had set their own password in the dashboard was locked out with "Wrong username
     or password" and their username turned into "admin" (many reports 2026-10-11).
     """
+    ensure_aarohi_login_defaults()
     raw = os.getenv("JAVIS_ADMIN_PASSWORD", "")
     pw = clean_password(raw)
     if not pw:
@@ -1767,6 +1826,7 @@ def provision_admin_from_env():
         h, salt = hash_password(pw)
         cfg["auth"] = {**kept_totp(cfg), "username": user, "password_hash": h, "salt": salt,
                        "env_applied": marker}
+        cfg["setup_done"] = True  # skip welcome wizard → show login screen
         write_settings(cfg)
         return "created"
     applied = a.get("env_applied") if isinstance(a.get("env_applied"), dict) else {}

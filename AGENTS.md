@@ -73,6 +73,13 @@ Dates are local owner context (**2026-11-01**, Asia/Kolkata) unless noted.
 - **Why:** Owner wants a reliable API brain when Claude/Codex/etc are unavailable, without only using the Models UI.
 - **Never commit real keys** — set locally or in Vercel env only.
 
+### 2026-11-01 — Free LLM wake (401/429 fix)
+
+- **What:** Bad LLM7 keys caused `401 authentication_error`; daily quota caused `429`. Chat stuck.
+- **How:** `universal_brain.wake_free_brain()` clears bad keys, uses anonymous LLM7 `turbo` (no Authorization header), fails over to OVH anonymous; `aux_engine.is_route_failure` hops usage order on 401/429. Docs: `docs/aarohi/FREE_LLM_WAKE.md`.
+- **Why:** Free-first always-on brain without inventing API keys.
+- **Vercel:** leave `OPENAI_COMPAT_KEY` empty; set `OPENAI_COMPAT_MODEL=turbo`. Optional free keys: Groq / Gemini / OpenRouter.
+
 ## Runtime cheat sheet
 
 | Mode | URL / command |

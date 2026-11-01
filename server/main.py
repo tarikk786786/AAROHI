@@ -1181,7 +1181,6 @@ def _is_serverless() -> bool:
     return bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
 
 
-# Duplicate kept near scheduler for readability of the fast-boot branch; same function.
 # Default PORTABLE: vault/ trong repo (tạo lần đầu chạy). Trên VPS/máy khác đặt
 # OBSIDIAN_VAULT_PATH trong .env trỏ tới vault thật; để trống = dùng vault/.
 OBSIDIAN_VAULT_PATH = os.getenv("OBSIDIAN_VAULT_PATH", "/tmp/vault" if os.getenv("VERCEL") else str(PROJECT_ROOT / "vault"))
@@ -2673,7 +2672,12 @@ def _route_ready(mcfg, prov) -> bool:
     if d.get("kind") == "api":
         if d.get("key_field") and d["id"] not in _ROUTING_SINGLE_KEY:
             return bool(model_routing.usable_accounts(mcfg, prov, d["key_field"]))
-        return bool(_provider_key(mcfg, d))
+        if not _provider_key(mcfg, d):
+            return False
+        # Single-slot cards (openai-compat LLM7, etc.): honor mark_rest so daily quota hops to the next brain.
+        if d["id"] in _ROUTING_SINGLE_KEY and model_routing.resting_until(d["id"], "-"):
+            return False
+        return True
     if _pin_limited_until(prov):
         return False
     if plan_accounts.in_use(prov) and plan_accounts.has_extra(mcfg, prov):
@@ -2802,11 +2806,24 @@ def _note_api_limit(mcfg, prov: str, key: str, raw: str = "", seconds: float = 0
     """An API key ran out of quota in a chat turn: that key rests (0.354.0), so the turn and the next ones run on the
     provider's next key, or on the next card when it has none."""
     try:
+        secs = float(seconds or 0) or aux_engine.cooldown_for(raw) or aux_engine.COOLDOWN_QUOTA_S
+        persist = secs >= 3600  # daily / long windows survive restart
         d = _provider_def(prov) or {}
+        # openai-compat / anthropic-compat / ollama-local: one synthetic slot, not a multi-key card.
+        if prov in _ROUTING_SINGLE_KEY:
+            model_routing.mark_rest(prov, "-", seconds=secs, persist=persist)
+            try:
+                import universal_brain
+                universal_brain.on_provider_rest(mcfg, prov, raw or "", secs)
+            except Exception as e2:  # noqa: BLE001
+                print(f"[universal-brain] rest hook: {type(e2).__name__}: {e2}", file=sys.stderr)
+            return
         acc = model_routing.account_for_key(mcfg or {}, prov, key, d.get("key_field") or "")
         if acc:
-            secs = seconds or aux_engine.cooldown_for(raw) or aux_engine.COOLDOWN_QUOTA_S
-            model_routing.mark_rest(prov, acc["id"], seconds=secs)
+            model_routing.mark_rest(prov, acc["id"], seconds=secs, persist=persist)
+        elif key:
+            # Key not in the accounts list yet: still rest a stable id so _route_ready skips it.
+            model_routing.mark_rest(prov, key[:24] or "-", seconds=secs, persist=persist)
     except Exception as e:  # noqa: BLE001
         print(f"[routing] rest {prov}: {type(e).__name__}: {e}", file=sys.stderr)
 
@@ -6505,6 +6522,20 @@ async def free_llm_presets():
         }
     except Exception as e:
         return {"presets": [], "error": f"{type(e).__name__}: {e}"}
+
+
+@app.get("/universal-brain/status")
+async def universal_brain_status():
+    """Free-first brain status: active openai-compat endpoint, order, where to get free keys."""
+    import universal_brain
+    return universal_brain.status()
+
+
+@app.post("/universal-brain/wake")
+async def universal_brain_wake():
+    """Clear a bad OpenAI Compatible key and re-enable anonymous free LLM (LLM7 / OVH)."""
+    import universal_brain
+    return universal_brain.wake_free_brain()
 
 
 @app.get("/api-hub/registry")
@@ -14264,11 +14295,6 @@ async def plugins_remove(slug: str = Form(...), removed: str = Form("1"),
 _MEDIA_GC_LAST = [0.0]
 
 
-def _is_serverless() -> bool:
-    """Vercel / Lambda: no durable background loops; keep cold start short."""
-    return bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
-
-
 @app.on_event("startup")
 async def _start_scheduler():
     # Bootstrap bảo mật cho deploy public: (1) tạo admin từ env nếu có; (2) nếu vẫn chưa có admin
@@ -14317,6 +14343,11 @@ async def _start_scheduler():
     cfgmod.apply_tool_env()   # secret Cài đặt (key ElevenLabs...) → env cho tool ngoài (video-use)
     try:
         cfgmod.apply_model_env()  # OPENROUTER_API_KEY → fallback brain in usage order
+        try:
+            import universal_brain as _ub
+            _ub.wake_free_brain()  # clear bad LLM7 keys; ensure anonymous free MAIN
+        except Exception as _e:
+            print(f"[startup] universal_brain wake: {_e}", file=_sys.stderr)
     except Exception as e:
         print(f"[startup] apply_model_env: {e}", file=_sys.stderr)
     if _serverless:
@@ -18297,9 +18328,8 @@ async def websocket_endpoint(ws: WebSocket):
                                         await ws.send_text(json.dumps({
                                             "type": "error", "content": ev["content"],
                                         }))
-                                        # 0.354.0: a key out of quota rests; the turn may run on the next one.
-                                        if (not final_text and aux_engine.cooldown_for(ev["content"])
-                                                == aux_engine.COOLDOWN_QUOTA_S):
+                                        # 0.354.0: quota OR bad key → rest this route and hop (or clear key / rotate free).
+                                        if not final_text and aux_engine.is_route_failure(ev["content"]):
                                             _limit_state["quota"] = True
                                             _note_api_limit(mcfg, prov, api_key, ev["content"])
                             if not _limit_hit or _attempt == 2:
@@ -29684,6 +29714,16 @@ plugin_zip_routes.register(app, plugin_zip_routes.PluginZipDeps(
     co_phien=lambda r: cfgmod.valid_session(r.cookies.get("javis_session", "")),
     brain_root=lambda b: _brain_root(b),
     after_install=_after_plugin_install,
+))
+
+
+# AAROHI Capability Studio: unified registry, repo inspect, live plugin authoring (browser).
+import routes.capability_studio as capability_studio_routes  # noqa: E402
+
+capability_studio_routes.register(app, capability_studio_routes.CapabilityStudioDeps(
+    co_phien=lambda r: cfgmod.valid_session(r.cookies.get("javis_session", "")),
+    brain_root=lambda b: _brain_root(b),
+    after_plugin_change=_after_plugin_install,
 ))
 
 

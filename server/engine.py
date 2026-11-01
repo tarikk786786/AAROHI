@@ -884,7 +884,12 @@ async def _openai_compat_stream(url, label, api_key, model, messages, reasoning,
     """Chat Completions dạng OpenAI (dùng chung cho OpenAI + Gemini qua endpoint tương thích).
     Stream token-by-token + usage token ở chunk cuối. label chỉ dùng cho thông báo lỗi.
     extra_payload: provider-specific fields merged last (DeepSeek's thinking switch)."""
-    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    # Anonymous free gateways (LLM7 turbo, OVH AI Endpoints) reject a fake Bearer token.
+    # Empty / "none" / "anonymous" → send no Authorization header.
+    headers = {"Content-Type": "application/json"}
+    _tok = (api_key or "").strip()
+    if _tok and _tok.lower() not in ("none", "anonymous", "local"):
+        headers["Authorization"] = f"Bearer {_tok}"
     payload = {"model": model, "messages": messages, "stream": True,
                "stream_options": {"include_usage": True}}   # → chunk cuối kèm usage token
     if reasoning not in (None, "", "off") and send_reasoning:
@@ -1025,13 +1030,22 @@ async def openai_compat_stream(api_key, model, messages, reasoning="off"):
         yield ev
 
 
+def _openai_compat_headers(api_key: str) -> dict:
+    """Build headers for openai-compat; omit Authorization for anonymous free gateways."""
+    headers = {"Content-Type": "application/json"}
+    tok = (api_key or "").strip()
+    if tok and tok.lower() not in ("none", "anonymous", "local"):
+        headers["Authorization"] = f"Bearer {tok}"
+    return headers
+
+
 async def openai_compat_chat_with_mcp(api_key, model, messages, reasoning, mcp_tools, mcp_route):
     """Endpoint OpenAI-compatible tự khai + vòng tool-calling MCP (model phải biết gọi tool)."""
     url = openai_compat_url()
     if not url:
         yield {"type": "error", "content": _c("Chưa đặt Base URL cho OpenAI Compatible trong trang Models.", "No Base URL set for OpenAI Compatible on the Models page.")}
         return
-    headers = {"Authorization": f"Bearer {api_key or 'none'}", "Content-Type": "application/json"}
+    headers = _openai_compat_headers(api_key)
     yield {"type": "meta", "model": model}
     async for ev in _cc_tool_loop(url, headers, model, messages,
                                   mcp_tools, mcp_route, {}, "OpenAI Compatible"):

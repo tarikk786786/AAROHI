@@ -4913,7 +4913,9 @@ if (document.getElementById("wzFinish")) {
     const pass = document.getElementById("wzPass").value;
     const selected = Array.from(document.querySelectorAll('input[name="wzprov"]:checked')).map(function (el) { return el.value; });
     // Cloud-first default: free LLM7 always works on Vercel; CLI brains need a local PC.
-    const order = selected.length ? selected : ["openai-compat", "openrouter"];
+    // Free cloud always in the chain; paid (OpenRouter/Groq/Gemini/Claude) stay ahead when checked.
+    let order = selected.length ? selected.slice() : ["openai-compat", "openrouter"];
+    if (order.indexOf("openai-compat") < 0) order.push("openai-compat");
     const prov = order[0];
     const btn = document.getElementById("wzFinish"); btn.disabled = true; btn.textContent = window.t("settings.saving");
     // Ô mã thiết lập nằm ở mục 2, còn nút bấm và dòng báo lỗi nằm tít dưới đáy. Bỏ trống rồi

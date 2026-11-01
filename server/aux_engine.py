@@ -499,8 +499,17 @@ COOLDOWN_QUOTA_S = 5 * 60          # 429 / quota: quotas refill
 COOLDOWN_DOWN_S = 30 * 60          # 502/503/504/529/timeout: an outage outlasts a retry
 COOLDOWN_ACCESS_S = 6 * 3600       # 401/403/404 / no access to the model: will not change in a minute
 COOLDOWN_MAX_S = 6 * 3600
+COOLDOWN_DAILY_MAX_S = 36 * 3600   # daily token windows (e.g. LLM7 Retry after 88367s)
 _COOLDOWN: dict = {}               # key -> monotonic time it may be tried first again
 _COOL_CLASSES = ("ClaudeSDK", "CodexCLI", "GrokCLI", "AntigravityCLI")
+_QUOTA_WORDS = (
+    "quota", "rate limit", "rate_limit", "usage limit", "too many requests", "hết lượt", "hết hạn mức",
+    "resource_exhausted", "insufficient_quota", "daily token", "token quota",
+)
+_AUTH_WORDS = (
+    "authentication_error", "invalid api key", "invalid_api_key", "api key is invalid",
+    "expired", "revoked", "unauthorized", "forbidden", "invalid_key", "incorrect api key",
+)
 
 _RE_RETRY_AFTER = re.compile(r"retry[- ]?after\D{0,5}(\d+(?:\.\d+)?)\s*(ms|s|sec|seconds?|m|min|minutes?)?", re.I)
 _RE_TRY_AGAIN = re.compile(r"try again in\s*(\d+(?:\.\d+)?)\s*(ms|s|sec|seconds?|m|min|minutes?|h|hours?)", re.I)
@@ -523,22 +532,53 @@ def cooldown_for(error) -> float:
     (a bad prompt, a tool failing). Retry-After / "try again in" wins when the provider states it."""
     text = str(error or "")
     low = text.lower()
+    daily = "daily" in low or "insufficient_quota" in low or "token quota" in low
+    cap = COOLDOWN_DAILY_MAX_S if daily else COOLDOWN_MAX_S
     for rx in (_RE_RETRY_AFTER, _RE_TRY_AGAIN):
         m = rx.search(text)
         if m:
-            return min(COOLDOWN_MAX_S, max(1.0, _seconds(m.group(1), m.group(2) or "s")))
+            return min(cap, max(1.0, _seconds(m.group(1), m.group(2) or "s")))
     if re.search(r"\b(401|403|404)\b", low) or any(k in low for k in (
             "not found", "does not exist", "no access", "permission", "unauthorized", "forbidden",
             "invalid api key", "invalid_api_key", "model_not_found", "mất đăng nhập", "not logged in")):
         return COOLDOWN_ACCESS_S
-    if re.search(r"\b429\b", low) or any(k in low for k in (
-            "quota", "rate limit", "rate_limit", "usage limit", "too many requests", "hết lượt", "hết hạn mức",
-            "resource_exhausted")):
+    if re.search(r"\b429\b", low) or any(k in low for k in _QUOTA_WORDS):
         return COOLDOWN_QUOTA_S
     if re.search(r"\b(502|503|504|529)\b", low) or any(k in low for k in (
             "timeout", "timed out", "deadline", "overloaded", "unavailable", "bad gateway", "không phản hồi")):
         return COOLDOWN_DOWN_S
     return 0.0
+
+
+def is_quota_exhaustion(error) -> bool:
+    """True when chat should rest this route and hop to the next brain (429 / quota / long Retry-After).
+
+    Do NOT compare cooldown_for(...) == COOLDOWN_QUOTA_S: providers that print
+    "Retry after 88367 seconds" return a long cooldown, not the 5-minute default, and that
+    equality check used to skip failover entirely (LLM7 daily quota on AAROHI).
+    """
+    text = str(error or "")
+    if not text.strip():
+        return False
+    low = text.lower()
+    if any(k in low for k in _QUOTA_WORDS) or re.search(r"\b429\b", low):
+        return True
+    secs = cooldown_for(error)
+    return secs >= COOLDOWN_QUOTA_S
+
+
+def is_auth_failure(error) -> bool:
+    """True for 401/403 / invalid-key style failures (hop or clear bad key)."""
+    text = str(error or "")
+    if not text.strip():
+        return False
+    low = text.lower()
+    return bool(re.search(r"\b(401|403)\b", low) or any(k in low for k in _AUTH_WORDS))
+
+
+def is_route_failure(error) -> bool:
+    """Quota OR auth: chat should rest this route and try the next free/paid brain."""
+    return is_quota_exhaustion(error) or is_auth_failure(error)
 
 
 def _cool_key(e) -> str:

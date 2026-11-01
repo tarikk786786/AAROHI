@@ -628,6 +628,53 @@ def delete_plugin(slug: str, vault_root: Optional[str], scope: str = "") -> dict
                                         "The plugin was removed. A backup is kept at {p}.", p=str(bak))}
 
 
+def restore_backup(slug: str, vault_root: Optional[str], scope: str = "global") -> dict:
+    """Roll back a user plugin to the last staged backup under `.javis-authoring/bak/<slug>`.
+
+    The current folder (if any) is moved aside to `bak/<slug>.pre-restore` so restore itself is
+    reversible once. Plugin is left disabled for review.
+    """
+    slug = str(slug or "").strip()
+    scope = str(scope or "global").strip().lower()
+    if not plugins_host.valid_slug(slug):
+        raise _err("slug không hợp lệ: {s}", "Invalid slug: {s}", s=repr(slug))
+    if slug in plugins_host._slug_bundled() or slug in _pack_slugs():
+        raise _err("Không khôi phục được plugin hệ thống/gói {s}.",
+                   "Cannot restore system/pack plugin {s}.", s=repr(slug))
+    base = _base_dir(scope, vault_root)
+    pdir = base / slug
+    bak = base / STAGING / "bak" / slug
+    if not bak.is_dir():
+        raise _err("Không có bản sao lưu cho {s}.", "No backup exists for {s}.", s=repr(slug))
+    pre = base / STAGING / "bak" / f"{slug}.pre-restore"
+    try:
+        plugins_host.unload(slug)
+        if pre.exists():
+            shutil.rmtree(pre, ignore_errors=True)
+        pre.parent.mkdir(parents=True, exist_ok=True)
+        if pdir.is_dir():
+            os.replace(pdir, pre)
+        os.replace(bak, pdir)
+        # Leave OFF so the owner re-reads before enabling.
+        manifest, merr = plugins_host._read_manifest(pdir)
+        if not merr:
+            manifest["enabled"] = False
+            (pdir / "plugin.yaml").write_text(
+                yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    except OSError as e:
+        raise _err("Khôi phục lỗi: {e}", "Restore failed: {e}", e=f"{type(e).__name__}: {e}")
+    plugins_host.invalidate()
+    return {
+        "ok": True, "op": "restore", "slug": slug, "scope": scope, "path": str(pdir),
+        "enabled": False,
+        "previous_kept_at": str(pre) if pre.exists() else "",
+        "tell_owner": localefmt.chu(
+            "Đã khôi phục bản trước và TẮT plugin. Đọc lại rồi bật ở trang Plugins.",
+            "Restored the previous version and left the plugin OFF. Review, then enable on Plugins.",
+        ),
+    }
+
+
 def refresh_hub() -> None:
     """Drop the hub's tool cache so the change shows on the next turn of every engine. Call it on
     the event loop thread, like the /plugins routes do (it also recycles MCP client sessions)."""
