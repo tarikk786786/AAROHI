@@ -37,8 +37,9 @@ def ho_so(ten: str = "") -> dict:
     d = _doc()
     ten = ten or os.getenv("JAVIS_PROFILE") or d.get("default") or ""
     p = dict((d.get("profiles") or {}).get(ten) or {})
-    if os.getenv("JAVIS_URL"):
-        p["url"] = os.environ["JAVIS_URL"]
+    target_url = os.getenv("JAVIS_URL") or os.getenv("APP_URL")
+    if target_url:
+        p["url"] = target_url
     if os.getenv("JAVIS_TOKEN"):
         p["token"] = os.environ["JAVIS_TOKEN"]
     if os.getenv("JAVIS_BRAIN"):
