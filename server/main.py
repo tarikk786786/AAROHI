@@ -1296,6 +1296,7 @@ async def root():
     # Con số `?v=` trong index.html trước đây gõ tay, và đúng như mọi con số gõ tay khác,
     # nó đứng yên ở 5 qua hàng chục bản.
     html = html.replace("/brand-logo?v=5", "/brand-logo?v=" + ver).replace(
+        "/brand-logo?v=aarohi6", "/brand-logo?v=" + ver).replace(
         'src="/brand-logo"', 'src="/brand-logo?v=' + ver + '"')
     # Nhúng phiên bản + vân tay vào chính trang. index.html luôn tải mới (no-store) nên khối
     # này LUÔN đúng, kể cả khi mọi file JS quanh nó đã cũ - đó chính là điểm tựa để
@@ -14119,6 +14120,10 @@ async def _start_scheduler():
     except Exception:
         pass
     cfgmod.apply_tool_env()   # secret Cài đặt (key ElevenLabs...) → env cho tool ngoài (video-use)
+    try:
+        cfgmod.apply_model_env()  # OPENROUTER_API_KEY → fallback brain in usage order
+    except Exception as e:
+        print(f"[startup] apply_model_env: {e}", file=_sys.stderr)
     try:
         loop_feature.ensure_migrated()   # loop_config.json cũ → Javis/loops/vong-lap-goc.md (1 lần)
     except Exception as e:

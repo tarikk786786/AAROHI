@@ -4911,7 +4911,9 @@ if (document.getElementById("wzFinish")) {
     const ws = document.getElementById("wzWsName").value.trim();
     const user = document.getElementById("wzUser").value.trim();
     const pass = document.getElementById("wzPass").value;
-    const prov = (document.querySelector('input[name="wzprov"]:checked') || {}).value || "anthropic-cli";
+    const selected = Array.from(document.querySelectorAll('input[name="wzprov"]:checked')).map(function (el) { return el.value; });
+    const order = selected.length ? selected : ["anthropic-cli", "openai-oauth", "openrouter"];
+    const prov = order[0];
     const btn = document.getElementById("wzFinish"); btn.disabled = true; btn.textContent = window.t("settings.saving");
     // Ô mã thiết lập nằm ở mục 2, còn nút bấm và dòng báo lỗi nằm tít dưới đáy. Bỏ trống rồi
     // bấm thì người dùng chỉ thấy một dòng đỏ ở đáy, không thấy ô nào đang trống - có người
@@ -4932,18 +4934,22 @@ if (document.getElementById("wzFinish")) {
         // khẩu (quá ngắn...) nên kéo về đúng ô mật khẩu.
         if (!d.ok) { return _soiOTrong(document.getElementById("wzPass"), d.error || window.t("app.wz_pw_err")); }
       }
-      await fetch("/settings", { method: "POST", body: _fd({ section: "general", data: JSON.stringify({ workspace_name: ws, setup_done: true }) }) });
+      await fetch("/settings", { method: "POST", body: _fd({ section: "general", data: JSON.stringify({ workspace_name: ws || "AAROHI", setup_done: true }) }) });
       const _PM = { "anthropic-cli": "sonnet", "openai-oauth": "gpt-5.5", "openrouter": "openai/gpt-4o-mini" };
-      const _mp = { main: { provider: prov, model: _PM[prov] || "sonnet" } };
+      const _mp = {
+        main: { provider: prov, model: _PM[prov] || "sonnet" },
+        order: order,
+        profiles: Object.fromEntries(order.map(function (p) { return [p, { model: _PM[p] || "", reasoning: "off" }]; }))
+      };
       const _ork = (document.getElementById("wzOrKeyInput") || {}).value;
-      if (prov === "openrouter" && _ork && _ork.trim()) _mp.openrouter_key = _ork.trim();
+      if (_ork && _ork.trim()) _mp.openrouter_key = _ork.trim();
       await fetch("/settings", { method: "POST", body: _fd({ section: "model", data: JSON.stringify(_mp) }) });
       location.reload();
     } catch (e) { err.textContent = window.t("app.err_net"); btn.disabled = false; btn.textContent = window.t("app.wz_start"); }
   });
 }
 
-// Wizard - chọn nhà cung cấp (card radio) + hiện ô key OpenRouter + gợi ý cách kết nối
+// Wizard - multi-select brains (MAIN = first checked) + OpenRouter key + hints
 (function () {
   const cards = document.querySelectorAll("#wzProv .wz-card");
   if (!cards.length) return;
@@ -4954,18 +4960,30 @@ if (document.getElementById("wzFinish")) {
     "openai-oauth": () => window.t("app.wz_hint_gpt_1") + "<b>Models</b>" + window.t("app.wz_hint_gpt_2") + "<code>codex login</code>" + window.t("app.wz_hint_gpt_3"),
     "openrouter": () => window.t("app.wz_hint_or_1") + "<a href='https://openrouter.ai/keys' target='_blank' style='color:var(--link-ink)'>openrouter.ai/keys</a>" + window.t("app.wz_hint_or_2"),
   };
-  function pick(prov) {
-    cards.forEach(c => c.classList.toggle("sel", c.dataset.prov === prov));
-    const r = document.querySelector('input[name="wzprov"][value="' + prov + '"]'); if (r) r.checked = true;
-    if (orKey) orKey.style.display = prov === "openrouter" ? "" : "none";
-    if (hint) hint.innerHTML = HINTS[prov] ? HINTS[prov]() : "";
+  function sync() {
+    const checked = [];
+    cards.forEach(function (c) {
+      const inp = c.querySelector('input[name="wzprov"]');
+      const on = !!(inp && inp.checked);
+      c.classList.toggle("sel", on);
+      if (on) checked.push(c.dataset.prov);
+    });
+    if (orKey) orKey.style.display = checked.indexOf("openrouter") >= 0 ? "" : "none";
+    if (hint) {
+      const main = checked[0] || "anthropic-cli";
+      hint.innerHTML = (HINTS[main] ? HINTS[main]() : "") +
+        (checked.length > 1 ? "<div style='margin-top:6px'>MAIN: <b>" + main + "</b> · fallbacks: " + checked.slice(1).join(", ") + "</div>" : "");
+    }
   }
-  cards.forEach(c => c.addEventListener("click", () => pick(c.dataset.prov)));
-  pick("anthropic-cli");
-  window.addEventListener("javis:i18n", () => {
-    const da = document.querySelector('input[name="wzprov"]:checked');
-    pick((da && da.value) || "anthropic-cli");
+  cards.forEach(function (c) {
+    c.addEventListener("click", function (ev) {
+      if (ev.target && ev.target.tagName === "INPUT") { setTimeout(sync, 0); return; }
+      const inp = c.querySelector('input[name="wzprov"]');
+      if (inp) { inp.checked = !inp.checked; sync(); }
+    });
   });
+  sync();
+  window.addEventListener("javis:i18n", sync);
 })();
 
 // ============================================
