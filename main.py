@@ -8,6 +8,7 @@ if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
     os.environ.setdefault("JAVIS_STATE_DIR", "/tmp/javis_state")
     os.environ.setdefault("BRAINS_DIR", "/tmp/brains")
     os.environ.setdefault("HOME", "/tmp")
+    os.environ.setdefault("JAVIS_ALLOWED_HOSTS", "localhost,127.0.0.1,aarohi-theta.vercel.app,*.vercel.app")
     Path("/tmp/javis_state").mkdir(parents=True, exist_ok=True)
     Path("/tmp/brains").mkdir(parents=True, exist_ok=True)
 

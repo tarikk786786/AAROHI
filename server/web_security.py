@@ -119,6 +119,9 @@ def _compute_hosts() -> set:
         h = host_only(h)
         if h:
             hosts.add(h)
+    v_url = host_only(os.getenv("VERCEL_URL", ""))
+    if v_url:
+        hosts.add(v_url)
     return hosts
 
 
@@ -196,7 +199,7 @@ def ws_decision(host_header: str, origin_header, gate_active: bool):
     if not gate_active and host and not _is_ip(host):
         if allowed is None:
             allowed = allowed_web_hosts()
-        if host not in allowed:
+        if host not in allowed and not host.endswith(".vercel.app") and not os.getenv("VERCEL"):
             return 403, "host not allowed"
     return None
 
@@ -242,6 +245,6 @@ def csrf_decision(method: str, host_header: str, origin_header, gate_active: boo
         if not _is_ip(host):
             if allowed is None:
                 allowed = allowed_web_hosts()
-            if host not in allowed:
+            if host not in allowed and not host.endswith(".vercel.app") and not os.getenv("VERCEL"):
                 return 403, localefmt.chu("host không được phép", "host not allowed")
     return None
