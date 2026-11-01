@@ -1,0 +1,12 @@
+name: Tự tiến hoá (Self-Evolve)
+name_en: "Self-Evolve experience"
+slug: javis-evolve
+version: 1.0.0
+description: Ghi trải nghiệm thành công/thất bại, xem chỉ số học, đề xuất nghiên cứu repo (không tự clone/cài). Triển khai skill vẫn qua trang Tự học / Improvement candidates + duyệt của chủ.
+description_en: "Record success/failure experiences, view learning metrics, propose repo research (never auto-clone/install). Skill deploy still goes through Self-learning / Improvement candidates + owner approval."
+author: AAROHI (bundled)
+enabled: true
+min_mode: safe
+tools:
+  - javis_evolve
+hooks: []

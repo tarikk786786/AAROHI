@@ -6479,6 +6479,178 @@ async def openrouter_models():
     return await openrouter_models_index()
 
 
+@app.get("/free-llm-presets")
+async def free_llm_presets():
+    """List curated free OpenAI-compatible gateways (llm7, aion, mistral, …).
+    Used as brains via openai-compat + Models usage order / FREE_LLM_PRESET env."""
+    path = Path(__file__).resolve().parent.parent / "system" / "free-llm-presets.json"
+    if not path.is_file():
+        return {"presets": [], "error": "system/free-llm-presets.json missing"}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return {
+            "source": data.get("source"),
+            "notes": data.get("notes"),
+            "aarohi_wiring": data.get("aarohi_wiring"),
+            "presets": data.get("presets") or [],
+            "active_preset": (os.getenv("FREE_LLM_PRESET") or "").strip().lower() or None,
+        }
+    except Exception as e:
+        return {"presets": [], "error": f"{type(e).__name__}: {e}"}
+
+
+@app.get("/api-hub/registry")
+async def api_hub_registry():
+    """Curated Universal API Hub index (discovery only — not an install list)."""
+    path = Path(__file__).resolve().parent.parent / "system" / "api-hub-registry.json"
+    if not path.is_file():
+        return {"ok": False, "error": "system/api-hub-registry.json missing"}
+    try:
+        return {"ok": True, **json.loads(path.read_text(encoding="utf-8"))}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
+def _evolve_brain_root(brain: str = "") -> Path:
+    """Resolve working brain for self-evolve / knowledge routes."""
+    try:
+        root = _brain_root(brain) if brain else _brain_root("")
+        return Path(root)
+    except Exception:
+        return Path(BRAINS_DIR) / "Brain Default"
+
+
+@app.get("/self-evolve/status")
+async def self_evolve_status(brain: str = ""):
+    import self_evolve
+    return self_evolve.status(_evolve_brain_root(brain))
+
+
+@app.get("/self-evolve/experiences")
+async def self_evolve_experiences(brain: str = "", limit: int = 50, event_type: str = ""):
+    import self_evolve
+    return self_evolve.list_experiences(_evolve_brain_root(brain), limit=limit, event_type=event_type)
+
+
+@app.post("/self-evolve/experiences")
+async def self_evolve_record(request: Request, brain: str = ""):
+    import self_evolve
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+    return self_evolve.record_experience(
+        _evolve_brain_root(brain or body.get("brain") or ""),
+        event_type=str(body.get("event_type") or ""),
+        summary=str(body.get("summary") or ""),
+        detail=str(body.get("detail") or ""),
+        skill_slug=str(body.get("skill_slug") or ""),
+        tool_name=str(body.get("tool_name") or ""),
+        success=body.get("success") if "success" in body else None,
+        tokens=int(body.get("tokens") or 0),
+        latency_ms=int(body.get("latency_ms") or 0),
+        cost_usd=float(body.get("cost_usd") or 0),
+        tags=list(body.get("tags") or []) if isinstance(body.get("tags"), list) else [],
+    )
+
+
+@app.get("/self-evolve/metrics")
+async def self_evolve_metrics(brain: str = "", days: int = 14):
+    import self_evolve
+    return self_evolve.metrics(_evolve_brain_root(brain), days=days)
+
+
+@app.post("/self-evolve/research")
+async def self_evolve_research(request: Request, brain: str = ""):
+    import self_evolve
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+    return self_evolve.propose_research(
+        _evolve_brain_root(brain or body.get("brain") or ""),
+        title=str(body.get("title") or ""),
+        repo_url=str(body.get("repo_url") or ""),
+        rationale=str(body.get("rationale") or ""),
+        license_note=str(body.get("license_note") or ""),
+    )
+
+
+@app.post("/self-evolve/research/{proposal_id}/decide")
+async def self_evolve_research_decide(proposal_id: str, request: Request, brain: str = ""):
+    import self_evolve
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+    return self_evolve.decide_research(
+        _evolve_brain_root(brain or body.get("brain") or ""),
+        proposal_id,
+        approve=bool(body.get("approve")),
+    )
+
+
+@app.get("/knowledge/stats")
+async def knowledge_stats(brain: str = ""):
+    import knowledge_intel
+    return knowledge_intel.stats(_evolve_brain_root(brain))
+
+
+@app.post("/knowledge/search")
+async def knowledge_search(request: Request, brain: str = ""):
+    import knowledge_intel
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+    return knowledge_intel.search(
+        _evolve_brain_root(brain or body.get("brain") or ""),
+        str(body.get("query") or ""),
+        limit=int(body.get("limit") or 8),
+    )
+
+
+@app.post("/knowledge/ingest")
+async def knowledge_ingest(request: Request, brain: str = ""):
+    import knowledge_intel
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    if not isinstance(body, dict):
+        body = {}
+    return knowledge_intel.ingest(
+        _evolve_brain_root(brain or body.get("brain") or ""),
+        text=str(body.get("text") or ""),
+        title=str(body.get("title") or ""),
+        kind=str(body.get("kind") or "fact"),
+        source_uri=str(body.get("source_uri") or ""),
+        source_type=str(body.get("source_type") or "api"),
+        tags=list(body.get("tags") or []) if isinstance(body.get("tags"), list) else [],
+        confidence=float(body.get("confidence") or 0.6),
+        verified=bool(body.get("verified")),
+    )
+
+
+@app.get("/self-evolve/registry")
+async def self_evolve_registry():
+    path = Path(__file__).resolve().parent.parent / "system" / "self-evolve-registry.json"
+    if not path.is_file():
+        return {"ok": False, "error": "missing registry"}
+    try:
+        return {"ok": True, **json.loads(path.read_text(encoding="utf-8"))}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {e}"}
+
+
 # Model load ĐỘNG theo provider (không hardcode - provider đổi model không cần sửa code).
 _PROV_MODELS_CACHE = {}   # provider -> {"ids":[...], "ts": float}
 
@@ -14562,8 +14734,8 @@ async def config():
     return {
         "workspace_name": s.get("workspace_name") or os.getenv("WORKSPACE_NAME", "Javis OS"),
         "user_name": os.getenv("USER_NAME", localefmt.chu("Bạn", "You")),
-        "tts_voice": os.getenv("TTS_VOICE", "en-US-AvaMultilingualNeural"),
-        "tts_rate": os.getenv("TTS_RATE", "+5%"),
+        "tts_voice": os.getenv("TTS_VOICE", "hi-IN-SwaraNeural"),
+        "tts_rate": os.getenv("TTS_RATE", "-5%"),
     }
 
 
@@ -16061,8 +16233,8 @@ async def _tts_elevenlabs(text: str, cfg: dict) -> bytes:
 @app.get("/tts")
 async def tts(
     text: str = Query(...),
-    voice: str = Query("en-US-AvaMultilingualNeural"),
-    rate: str = Query("+5%"),
+    voice: str = Query("hi-IN-SwaraNeural"),
+    rate: str = Query("-5%"),
 ):
     """Sinh audio đúng nhà cung cấp đã chọn; lỗi không được âm thầm đổi giọng."""
     import sys
@@ -16070,7 +16242,8 @@ async def tts(
     if voice == "auto":
         # "Auto by language" is resolved per chunk in the browser (voice-lang.js); a page cached
         # from before 0.220.0 can still send the raw value, which Edge would refuse.
-        voice = "en-US-AvaMultilingualNeural"
+        # AAROHI default: sweet Hindi girlfriend voice (Swara).
+        voice = "hi-IN-SwaraNeural"
     from fastapi.responses import StreamingResponse
     cfg = cfgmod.read_settings()
     provider = ((cfg.get("voice", {}) or {}).get("tts_provider") or "edge").lower()

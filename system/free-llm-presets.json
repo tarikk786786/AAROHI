@@ -1,0 +1,94 @@
+{
+  "$comment": "Curated from https://github.com/mnfst/awesome-free-llm-apis — OpenAI-compatible free tiers for AAROHI brains. Prefer built-in Gemini/Groq/OpenRouter cards when listed; otherwise use Models → OpenAI Compatible with base_url + key.",
+  "source": "https://github.com/mnfst/awesome-free-llm-apis",
+  "updated": "2026-11-01",
+  "aarohi_wiring": {
+    "usage_order": "MAIN + fallbacks in Models; Claude/Codex deny → next provider",
+    "env": ["OPENROUTER_API_KEY", "GROQ_API_KEY", "GEMINI_API_KEY", "FREE_LLM_PRESET", "OPENAI_COMPAT_BASE", "OPENAI_COMPAT_KEY", "OPENAI_COMPAT_MODEL"],
+    "auto_default": "On Vercel (or when no cloud keys), apply_model_env seeds FREE_LLM_PRESET=llm7 → openai-compat so chat always has a brain",
+    "local_only": "ollama-local requires PC Ollama; not reachable from Vercel"
+  },
+  "notes": "Stack as many keys as you have; AAROHI walks usage order. Without keys, llm7 anonymous openai-compat is the always-on free brain.",
+  "presets": [
+    {
+      "id": "groq",
+      "label": "Groq (free tier)",
+      "aarohi_provider": "groq",
+      "key_env": "GROQ_API_KEY",
+      "key_url": "https://console.groq.com/keys",
+      "base_url": "https://api.groq.com/openai/v1",
+      "models": ["openai/gpt-oss-20b", "openai/gpt-oss-120b", "qwen/qwen3.8-27b"],
+      "notes": "Ultra-fast. Use the built-in Groq card on Models."
+    },
+    {
+      "id": "gemini",
+      "label": "Google Gemini (free tier)",
+      "aarohi_provider": "gemini",
+      "key_env": "GEMINI_API_KEY",
+      "key_url": "https://aistudio.google.com/app/apikey",
+      "base_url": "https://generativelanguage.googleapis.com/v1beta",
+      "models": ["gemini-2.5-flash", "gemini-2.5-flash-lite"],
+      "notes": "Use the built-in Google Gemini (API) card on Models."
+    },
+    {
+      "id": "openrouter-free",
+      "label": "OpenRouter free pool",
+      "aarohi_provider": "openrouter",
+      "key_env": "OPENROUTER_API_KEY",
+      "key_url": "https://openrouter.ai/keys",
+      "base_url": "https://openrouter.ai/api/v1",
+      "models": ["openrouter/free", "nvidia/nemotron-3-nano-8b-instruct:free"],
+      "notes": "Best general fallback when Claude/Codex deny. Set OPENROUTER_API_KEY."
+    },
+    {
+      "id": "llm7",
+      "label": "LLM7.io (free / anonymous)",
+      "aarohi_provider": "openai-compat",
+      "key_env": "OPENAI_COMPAT_KEY",
+      "key_url": "https://token.llm7.io",
+      "base_url": "https://api.llm7.io/v1",
+      "models": ["gpt-oss:20b", "turbo"],
+      "notes": "Anonymous works with empty key for turbo models; free token raises limits."
+    },
+    {
+      "id": "aion",
+      "label": "Aion Labs (roleplay / storytelling)",
+      "aarohi_provider": "openai-compat",
+      "key_env": "OPENAI_COMPAT_KEY",
+      "key_url": "https://www.aionlabs.ai/app/api-keys/",
+      "base_url": "https://api.aionlabs.ai/v1",
+      "models": ["aion-labs/aion-rp-llama-3.1-8b", "aion-labs/aion-3.0-mini"],
+      "notes": "15 RPM / 20K TPD free. Good sweet-girl persona companion models."
+    },
+    {
+      "id": "mistral",
+      "label": "Mistral AI (free mode)",
+      "aarohi_provider": "openai-compat",
+      "key_env": "OPENAI_COMPAT_KEY",
+      "key_url": "https://console.mistral.ai/api-keys",
+      "base_url": "https://api.mistral.ai/v1",
+      "models": ["mistral-small-latest", "ministral-8b-latest"],
+      "notes": "Wire via OpenAI Compatible card with this base URL + API key."
+    },
+    {
+      "id": "zhipu",
+      "label": "Z AI / Zhipu GLM Flash (free)",
+      "aarohi_provider": "openai-compat",
+      "key_env": "OPENAI_COMPAT_KEY",
+      "key_url": "https://open.bigmodel.cn/usercenter/apikeys",
+      "base_url": "https://open.bigmodel.cn/api/paas/v4",
+      "models": ["glm-4.5-flash", "glm-4.7-flash"],
+      "notes": "1 concurrent free request. Use OpenAI Compatible."
+    },
+    {
+      "id": "ollama-local",
+      "label": "Ollama (local, free)",
+      "aarohi_provider": "ollama-local",
+      "key_env": "",
+      "key_url": "https://ollama.com/download",
+      "base_url": "http://127.0.0.1:11434",
+      "models": ["llama3.2", "qwen2.5", "gemma2"],
+      "notes": "Must be running on your PC. Vercel cloud cannot reach your localhost Ollama — use local AAROHI or a tunnel."
+    }
+  ]
+}

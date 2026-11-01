@@ -1,0 +1,226 @@
+{
+  "$schema_note": "AAROHI Universal API Hub — curated index, NOT an install list. Prefer existing MCP Hub + Models openai-compat over cloning repos.",
+  "version": "1.0.0",
+  "updated": "2026-11-01",
+  "project": "AAROHI",
+  "principles": [
+    "Reuse MCP Hub / Connections before adding SDKs",
+    "openai-compat covers LiteLLM / vLLM / any OpenAI-compatible gateway",
+    "Never mark an API free without verifying terms",
+    "Do not clone every repo — index + selective adapters only",
+    "Secrets stay in env / Models UI — never frontend"
+  ],
+  "existing_aarohi_owners": {
+    "orchestration": "server/main.py + engines",
+    "tools_mcp": "server/mcp_hub.py + mcp_store",
+    "llm_brains": "Models page + apply_model_env + system/free-llm-presets.json",
+    "channels": "Telegram / Discord / Slack / Zalo / WhatsApp modules",
+    "voice": "Edge TTS (Swara Hindi default) + voice_brain / voice_live",
+    "auth": "server auth + settings.json",
+    "vault_memory": "brains/ vault"
+  },
+  "implementation_priority": [
+    {"rank": 1, "component": "API discovery index", "repo": "public-apis/public-apis", "aarohi_action": "catalog only — this registry"},
+    {"rank": 2, "component": "OpenAPI specs", "repo": "APIs-guru/openapi-directory", "aarohi_action": "future OpenAPI→MCP generator; not installed yet"},
+    {"rank": 3, "component": "Unified AI gateway", "repo": "BerriAI/litellm", "aarohi_action": "optional self-host; point Models → openai-compat at LiteLLM /v1"},
+    {"rank": 4, "component": "Agent connectors", "repo": "composiohq/composio | oomol-lab/openconnector", "aarohi_action": "prefer MCP Servers pack; Composio only if MCP gap"},
+    {"rank": 5, "component": "Tool protocol", "repo": "modelcontextprotocol/python-sdk", "aarohi_action": "ALREADY via mcp_hub"},
+    {"rank": 6, "component": "Workflow automation", "repo": "n8n-io/n8n", "aarohi_action": "external optional; AAROHI loops/workflows cover many cases"},
+    {"rank": 7, "component": "Database/memory", "repo": "supabase/supabase", "aarohi_action": "optional; vault + settings.json is SoT today"},
+    {"rank": 8, "component": "API security/secrets", "repo": "Infisical/infisical", "aarohi_action": "use Vercel/env secrets; Infisical optional later"},
+    {"rank": 9, "component": "Monitoring", "repo": "prometheus/grafana", "aarohi_action": "optional ops; not required for girlfriend OS"},
+    {"rank": 10, "component": "API testing", "repo": "Orange-OpenSource/hurl", "aarohi_action": "dev tooling only"}
+  ],
+  "categories": [
+    {
+      "id": "master-collections",
+      "label": "Master API collections",
+      "entries": [
+        {"name": "public-apis", "github": "https://github.com/public-apis/public-apis", "free": true, "aarohi": "discovery", "status": "indexed"},
+        {"name": "Public-APIs (n0shake)", "github": "https://github.com/n0shake/Public-APIs", "free": true, "aarohi": "discovery", "status": "indexed"},
+        {"name": "Awesome_APIs", "github": "https://github.com/TonnyL/Awesome_APIs", "free": true, "aarohi": "discovery", "status": "indexed"},
+        {"name": "Public-API-lists", "github": "https://github.com/abhishekbanthia/Public-API-lists", "free": true, "aarohi": "discovery", "status": "indexed"},
+        {"name": "awesome-osint", "github": "https://github.com/0x4D31/awesome-osint", "free": "mixed", "aarohi": "research skills", "status": "indexed", "caution": "OSINT ethics + ToS"},
+        {"name": "openapi-directory", "github": "https://github.com/APIs-guru/openapi-directory", "free": true, "aarohi": "spec source for future tools", "status": "indexed"},
+        {"name": "awesome-selfhosted", "github": "https://github.com/awesome-selfhosted/awesome-selfhosted", "free": true, "aarohi": "self-host candidates", "status": "indexed"},
+        {"name": "API-mega-list", "github": "https://github.com/cporter202/API-mega-list", "free": true, "aarohi": "discovery", "status": "indexed"},
+        {"name": "agentic-ai-apis", "github": "https://github.com/cporter202/agentic-ai-apis", "free": "mixed", "aarohi": "discovery", "status": "indexed"},
+        {"name": "public-api-lists", "github": "https://github.com/public-api-lists/public-api-lists", "free": true, "aarohi": "discovery", "status": "indexed"},
+        {"name": "graphql-apis", "github": "https://github.com/APIs-guru/graphql-apis", "free": true, "aarohi": "discovery", "status": "indexed"},
+        {"name": "jentic-public-apis", "github": "https://github.com/jentic/jentic-public-apis", "free": true, "aarohi": "agent-readable specs", "status": "indexed"}
+      ]
+    },
+    {
+      "id": "ai-llm",
+      "label": "AI / LLM gateways",
+      "entries": [
+        {"name": "LiteLLM", "github": "https://github.com/BerriAI/litellm", "free": "oss+cloud", "aarohi": "openai-compat base URL", "status": "wire-via-openai-compat"},
+        {"name": "Portkey Gateway", "github": "https://github.com/Portkey-AI/gateway", "free": "oss+cloud", "aarohi": "optional gateway", "status": "rejected-for-now", "why": "overlap with OpenRouter + openai-compat"},
+        {"name": "Bifrost", "github": "https://github.com/maximhq/bifrost", "free": "oss", "aarohi": "optional gateway", "status": "indexed"},
+        {"name": "Ollama", "github": "https://github.com/ollama/ollama", "free": true, "aarohi": "ollama-local provider", "status": "adopted", "note": "local only; not on Vercel"},
+        {"name": "vLLM", "github": "https://github.com/vllm-project/vllm", "free": "oss", "aarohi": "openai-compat", "status": "wire-via-openai-compat"},
+        {"name": "Hugging Face Hub", "github": "https://github.com/huggingface/huggingface_hub", "free": "tiered", "aarohi": "future skill/MCP", "status": "indexed"},
+        {"name": "Instructor", "github": "https://github.com/instructor-ai/instructor", "free": "oss", "aarohi": "optional structured output", "status": "indexed"},
+        {"name": "Agno", "github": "https://github.com/agno-agi/agno", "free": "oss", "aarohi": "do not replace mcp_hub", "status": "rejected-for-now", "why": "duplicate orchestration authority"},
+        {"name": "LangChain", "github": "https://github.com/langchain-ai/langchain", "free": "oss", "aarohi": "avoid as core", "status": "rejected-for-now", "why": "AAROHI already has engines + MCP"},
+        {"name": "LlamaIndex", "github": "https://github.com/run-llama/llama_index", "free": "oss", "aarohi": "optional RAG later", "status": "indexed"},
+        {"name": "Haystack", "github": "https://github.com/deepset-ai/haystack", "free": "oss", "aarohi": "optional RAG later", "status": "indexed"},
+        {"name": "free-llm-presets", "github": "https://github.com/mnfst/awesome-free-llm-apis", "free": "tiered", "aarohi": "system/free-llm-presets.json", "status": "adopted"}
+      ]
+    },
+    {
+      "id": "mcp-connectors",
+      "label": "MCP / universal connectors",
+      "entries": [
+        {"name": "MCP Servers", "github": "https://github.com/modelcontextprotocol/servers", "free": true, "aarohi": "Connections / MCP Hub", "status": "adopted"},
+        {"name": "MCP Python SDK", "github": "https://github.com/modelcontextprotocol/python-sdk", "free": true, "aarohi": "mcp_hub", "status": "adopted"},
+        {"name": "MCP TypeScript SDK", "github": "https://github.com/modelcontextprotocol/typescript-sdk", "free": true, "aarohi": "optional custom MCP", "status": "indexed"},
+        {"name": "Pipedream", "github": "https://github.com/PipedreamHQ/pipedream", "free": "tiered", "aarohi": "external workflows", "status": "indexed"},
+        {"name": "n8n", "github": "https://github.com/n8n-io/n8n", "free": "oss+cloud", "aarohi": "self-host optional beside AAROHI", "status": "indexed"},
+        {"name": "Composio", "github": "https://github.com/composiohq/composio", "free": "tiered", "aarohi": "only if MCP missing app", "status": "indexed"},
+        {"name": "Activepieces", "github": "https://github.com/activepieces/activepieces", "free": "oss", "aarohi": "optional automation", "status": "indexed"},
+        {"name": "OpenConnector", "github": "https://github.com/oomol-lab/openconnector", "free": "oss", "aarohi": "future adapter", "status": "indexed"},
+        {"name": "AnythingMCP", "github": "https://github.com/HelpCode-ai/anythingmcp", "free": "oss", "aarohi": "OpenAPI→MCP helper", "status": "indexed"}
+      ]
+    },
+    {
+      "id": "search-scrape",
+      "label": "Search / research / scrape",
+      "entries": [
+        {"name": "Tavily", "github": "https://github.com/tavily-ai/tavily-python", "free": "tiered", "aarohi": "javis_web_search or MCP", "status": "indexed"},
+        {"name": "Exa", "github": "https://github.com/exa-labs/exa-py", "free": "tiered", "aarohi": "MCP/skill", "status": "indexed"},
+        {"name": "Crawl4AI", "github": "https://github.com/unclecode/crawl4ai", "free": "oss", "aarohi": "local tool/plugin", "status": "indexed"},
+        {"name": "Firecrawl", "github": "https://github.com/mendableai/firecrawl", "free": "tiered", "aarohi": "MCP", "status": "indexed"},
+        {"name": "yt-dlp", "github": "https://github.com/yt-dlp/yt-dlp", "free": true, "aarohi": "terminal/plugin", "status": "indexed"},
+        {"name": "SerpApi", "github": "https://github.com/serpapi", "free": "paid+", "aarohi": "optional", "status": "indexed"}
+      ]
+    },
+    {
+      "id": "backend-storage",
+      "label": "Database / storage / BaaS",
+      "entries": [
+        {"name": "Supabase", "github": "https://github.com/supabase/supabase", "free": "tiered", "aarohi": "optional InsForge/Supabase if needed", "status": "indexed"},
+        {"name": "Appwrite", "github": "https://github.com/appwrite/appwrite", "free": "oss", "aarohi": "optional", "status": "indexed"},
+        {"name": "PocketBase", "github": "https://github.com/pocketbase/pocketbase", "free": "oss", "aarohi": "lightweight optional", "status": "indexed"},
+        {"name": "MinIO", "github": "https://github.com/minio/minio", "free": "oss", "aarohi": "S3-compat storage", "status": "indexed"},
+        {"name": "Meilisearch", "github": "https://github.com/meilisearch/meilisearch", "free": "oss", "aarohi": "vault search upgrade later", "status": "indexed"},
+        {"name": "Redis", "github": "https://github.com/redis/redis", "free": "oss", "aarohi": "cache optional; Vercel ephemeral", "status": "indexed"}
+      ]
+    },
+    {
+      "id": "auth-security",
+      "label": "Auth / identity / secrets",
+      "entries": [
+        {"name": "Keycloak", "github": "https://github.com/keycloak/keycloak", "free": "oss", "aarohi": "overkill vs built-in auth", "status": "rejected-for-now"},
+        {"name": "Infisical", "github": "https://github.com/Infisical/infisical", "free": "oss+cloud", "aarohi": "secrets ops later", "status": "indexed"},
+        {"name": "SOPS", "github": "https://github.com/getsops/sops", "free": true, "aarohi": "encrypt local secrets", "status": "indexed"},
+        {"name": "Supabase Auth", "github": "https://github.com/supabase/auth", "free": "tiered", "aarohi": "optional", "status": "indexed"}
+      ]
+    },
+    {
+      "id": "comms",
+      "label": "Communication",
+      "entries": [
+        {"name": "python-telegram-bot", "github": "https://github.com/python-telegram-bot/python-telegram-bot", "free": true, "aarohi": "Telegram channel adopted", "status": "adopted"},
+        {"name": "Slack SDK", "github": "https://github.com/slackapi/python-slack-sdk", "free": true, "aarohi": "Slack channel", "status": "adopted"},
+        {"name": "Discord API docs", "github": "https://github.com/discord/discord-api-docs", "free": true, "aarohi": "Discord channel", "status": "adopted"},
+        {"name": "WhatsApp Node SDK", "github": "https://github.com/WhatsApp/WhatsApp-Nodejs-SDK", "free": "meta-approval", "aarohi": "WhatsApp channel", "status": "adopted"},
+        {"name": "Twilio", "github": "https://github.com/twilio/twilio-python", "free": "paid+", "aarohi": "SMS optional", "status": "indexed"},
+        {"name": "Novu", "github": "https://github.com/novuhq/novu", "free": "oss+cloud", "aarohi": "notifications optional", "status": "indexed"}
+      ]
+    },
+    {
+      "id": "maps",
+      "label": "Maps / geo",
+      "entries": [
+        {"name": "OSRM", "github": "https://github.com/Project-OSRM/osrm-backend", "free": "oss", "aarohi": "self-host routing", "status": "indexed"},
+        {"name": "OpenRouteService", "github": "https://github.com/openrouteservice/openrouteservice", "free": "tiered", "aarohi": "MCP/skill", "status": "indexed"},
+        {"name": "GeoPy", "github": "https://github.com/geopy/geopy", "free": "oss", "aarohi": "plugin", "status": "indexed"},
+        {"name": "MapLibre", "github": "https://github.com/maplibre/maplibre-gl-js", "free": true, "aarohi": "UI maps later", "status": "indexed"}
+      ]
+    },
+    {
+      "id": "finance",
+      "label": "Finance / crypto",
+      "entries": [
+        {"name": "yfinance", "github": "https://github.com/ranaroussi/yfinance", "free": "unofficial", "aarohi": "skill/plugin", "status": "indexed", "caution": "unofficial Yahoo scrape — fragile"},
+        {"name": "CCXT", "github": "https://github.com/ccxt/ccxt", "free": "oss", "aarohi": "crypto MCP/skill", "status": "indexed"},
+        {"name": "Alpaca", "github": "https://github.com/alpacahq/alpaca-py", "free": "tiered", "aarohi": "trading — approval required", "status": "indexed"}
+      ]
+    },
+    {
+      "id": "ecommerce",
+      "label": "E-commerce",
+      "entries": [
+        {"name": "Shopify API JS", "github": "https://github.com/Shopify/shopify-api-js", "free": "partner", "aarohi": "MCP when store connected", "status": "indexed"},
+        {"name": "Medusa", "github": "https://github.com/medusajs/medusa", "free": "oss", "aarohi": "self-host commerce", "status": "indexed"},
+        {"name": "Saleor", "github": "https://github.com/saleor/saleor", "free": "oss", "aarohi": "self-host commerce", "status": "indexed"},
+        {"name": "WooCommerce", "github": "https://github.com/woocommerce/woocommerce", "free": "oss", "aarohi": "REST MCP", "status": "indexed"}
+      ]
+    },
+    {
+      "id": "india",
+      "label": "India-specific",
+      "entries": [
+        {"name": "data.gov.in", "url": "https://www.data.gov.in/", "free": true, "aarohi": "research skill", "status": "indexed"},
+        {"name": "API Setu", "url": "https://apisetu.gov.in/", "free": "gov-approval", "aarohi": "gov APIs", "status": "indexed"},
+        {"name": "Razorpay Python", "github": "https://github.com/razorpay/razorpay-python", "free": "merchant", "aarohi": "payments — credentials", "status": "indexed"},
+        {"name": "PhonePe PG SDK", "github": "https://github.com/PhonePe/phonepe-pg-sdk-node", "free": "merchant", "aarohi": "payments", "status": "indexed"},
+        {"name": "IndiaStack", "github": "https://github.com/IndiaStack", "free": "docs", "aarohi": "DPI reference", "status": "indexed"},
+        {"name": "indian-states-and-districts", "github": "https://github.com/GeetanshGarg/indian-states-and-districts", "free": true, "aarohi": "dataset in vault", "status": "indexed"}
+      ]
+    },
+    {
+      "id": "voice-media",
+      "label": "Voice / audio / documents",
+      "entries": [
+        {"name": "Edge TTS (Microsoft)", "note": "via edge-tts Python", "free": true, "aarohi": "default TTS — hi-IN-SwaraNeural", "status": "adopted"},
+        {"name": "Whisper / Faster Whisper", "github": "https://github.com/SYSTRAN/faster-whisper", "free": "oss", "aarohi": "STT optional; Groq Whisper used", "status": "partial"},
+        {"name": "Piper", "github": "https://github.com/rhasspy/piper", "free": "oss", "aarohi": "local TTS alternative", "status": "indexed"},
+        {"name": "Coqui TTS", "github": "https://github.com/coqui-ai/TTS", "free": "oss", "aarohi": "local voice clone later", "status": "indexed"},
+        {"name": "PyMuPDF", "github": "https://github.com/pymupdf/PyMuPDF", "free": "oss", "aarohi": "PDF plugin", "status": "indexed"},
+        {"name": "Unstructured", "github": "https://github.com/Unstructured-IO/unstructured", "free": "oss+cloud", "aarohi": "doc extract", "status": "indexed"},
+        {"name": "Tesseract", "github": "https://github.com/tesseract-ocr/tesseract", "free": true, "aarohi": "OCR", "status": "indexed"}
+      ]
+    },
+    {
+      "id": "http-tooling",
+      "label": "HTTP clients / gateways / docs",
+      "entries": [
+        {"name": "httpx", "github": "https://github.com/encode/httpx", "free": true, "aarohi": "Python HTTP (prefer if adding clients)", "status": "indexed"},
+        {"name": "requests", "github": "https://github.com/psf/requests", "free": true, "aarohi": "widely used", "status": "indexed"},
+        {"name": "Kong", "github": "https://github.com/Kong/kong", "free": "oss", "aarohi": "ops gateway — not in app", "status": "rejected-for-now"},
+        {"name": "Traefik", "github": "https://github.com/traefik/traefik", "free": "oss", "aarohi": "deploy proxy", "status": "indexed"},
+        {"name": "Swagger UI", "github": "https://github.com/swagger-api/swagger-ui", "free": true, "aarohi": "docs", "status": "indexed"},
+        {"name": "Hurl", "github": "https://github.com/Orange-OpenSource/hurl", "free": true, "aarohi": "API tests", "status": "indexed"}
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "id": "phase-0",
+      "title": "Registry + docs + endpoint (THIS SHIP)",
+      "done_when": ["system/api-hub-registry.json", "docs/en/universal-api-hub.md", "GET /api-hub/registry"]
+    },
+    {
+      "id": "phase-1",
+      "title": "Wire free LLM brains + Hindi girlfriend voice",
+      "done_when": ["FREE_LLM_PRESET=llm7 on Vercel", "hi-IN-SwaraNeural default", "wizard Free cloud MAIN"]
+    },
+    {
+      "id": "phase-2",
+      "title": "MCP pack recommendations from registry",
+      "done_when": ["Connections UI links top MCP servers", "no duplicate orchestration frameworks"]
+    },
+    {
+      "id": "phase-3",
+      "title": "Optional OpenAPI→tool adapter",
+      "done_when": ["AnythingMCP or custom generator behind feature flag"]
+    },
+    {
+      "id": "phase-4",
+      "title": "External automation (n8n/Pipedream) as sidecar",
+      "done_when": ["webhook bridge to AAROHI tasks", "not embedded in serverless"]
+    }
+  ]
+}

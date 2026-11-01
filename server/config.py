@@ -55,6 +55,8 @@ _DEFAULT = {
     # openai = OpenAI TTS (dùng model.openai_api_key). elevenlabs = ElevenLabs (key riêng).
     "voice": {
         "tts_provider": "edge",                       # edge | openai | elevenlabs
+        # AAROHI girlfriend default: Swara = sweet Hindi girl (Hinglish-friendly Edge TTS)
+        "edge_voice": "hi-IN-SwaraNeural",
         "openai_tts_voice": "shimmer",                # alloy|echo|fable|onyx|nova|shimmer|ash|sage|coral
         "openai_tts_model": "gpt-4o-mini-tts",        # hoặc tts-1 / tts-1-hd
         "elevenlabs_key": "",
@@ -81,6 +83,7 @@ _DEFAULT = {
     "model": {
         # --- Mô hình MAIN MODEL theo provider (mới) ---
         # Rỗng = suy ra từ legacy engine (config cũ không vỡ); UI set vào đây khi user đổi model.
+        # Empty until apply_model_env / wizard; on Vercel free LLM7 seeds openai-compat as MAIN.
         "main": {"provider": "", "model": ""},
         # Model phụ cho việc NỀN (loop/metrics/ingest) - alias Claude qua CLI. "" = dùng mặc định
         # (không đổi). Đặt model rẻ (vd haiku) để tiết kiệm khi chạy nền nhiều.
@@ -1144,59 +1147,135 @@ def apply_tool_env(cfg=None):
     child_utf8_env()
 
 
+def _append_provider_order(m: dict, provider: str, *, as_main_if_empty: bool, main_model: str = "") -> bool:
+    """Put provider in usage order (end). If order empty and as_main_if_empty, make it MAIN."""
+    order = [str(x).strip() for x in (m.get("order") or []) if str(x).strip()]
+    if provider in order:
+        return False
+    if not order and as_main_if_empty:
+        m["order"] = [provider]
+        m["main"] = {"provider": provider, "model": main_model}
+        m["engine"] = provider
+        return True
+    m["order"] = (order or []) + [provider]
+    return True
+
+
 def apply_model_env(cfg=None):
-    """Seed OpenRouter (and optional model id) from environment into settings.
+    """Seed API brains from environment (OpenRouter / Groq / Gemini / free openai-compat presets).
 
-    Used so Vercel/Docker/PowerShell can inject a fallback brain without opening Models:
+    Free-tier catalog: system/free-llm-presets.json
+    (source https://github.com/mnfst/awesome-free-llm-apis)
+
       export OPENROUTER_API_KEY=sk-or-v1-...
-      export OPENROUTER_MODEL=openai/gpt-4o-mini   # optional
+      export GROQ_API_KEY=gsk_...
+      export GEMINI_API_KEY=...
+      export FREE_LLM_PRESET=llm7   # or aion | mistral | zhipu
 
-    When the key is present, OpenRouter is appended to the usage order as a FALLBACK brain
-    (MAIN stays whatever is already first). If there is no usage order yet, OpenRouter becomes MAIN.
-    Env fills an empty settings key by default; set JAVIS_ENV_KEYS_OVERRIDE=1 to always win.
-    Returns True when settings were written.
+    Keys fill empty settings by default; JAVIS_ENV_KEYS_OVERRIDE=1 always wins.
+    Providers are appended as FALLBACKS unless usage order is empty.
     """
     try:
         if cfg is None:
             cfg = read_settings()
         m = cfg.setdefault("model", {})
-        key = (os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENROUTER_KEY") or "").strip()
-        model = (os.getenv("OPENROUTER_MODEL") or "").strip()
         override = os.getenv("JAVIS_ENV_KEYS_OVERRIDE", "").strip().lower() in ("1", "true", "yes", "on")
         changed = False
-        if key and (override or not str(m.get("openrouter_key") or "").strip()):
-            m["openrouter_key"] = key
-            changed = True
-        if model:
-            if m.get("openrouter_model") != model:
-                m["openrouter_model"] = model
+
+        def _set_key(field: str, env_names, provider: str, default_model: str = ""):
+            nonlocal changed
+            val = ""
+            for n in env_names:
+                val = (os.getenv(n) or "").strip()
+                if val:
+                    break
+            if not val:
+                return
+            if override or not str(m.get(field) or "").strip():
+                m[field] = val
                 changed = True
-            prof = m.setdefault("profiles", {}).setdefault("openrouter", {})
-            if prof.get("model") != model:
-                prof["model"] = model
+            model = default_model
+            if provider == "openrouter":
+                model = (os.getenv("OPENROUTER_MODEL") or "").strip() or default_model
+                if model:
+                    m["openrouter_model"] = model
+                    m.setdefault("profiles", {}).setdefault("openrouter", {})["model"] = model
+            if _append_provider_order(m, provider, as_main_if_empty=True, main_model=model or default_model):
                 changed = True
-        if key:
+
+        _set_key("openrouter_key", ("OPENROUTER_API_KEY", "OPENROUTER_KEY"), "openrouter",
+                 "openai/gpt-4o-mini")
+        _set_key("groq_api_key", ("GROQ_API_KEY",), "groq", "openai/gpt-oss-20b")
+        _set_key("gemini_api_key", ("GEMINI_API_KEY", "GOOGLE_API_KEY"), "gemini", "gemini-2.5-flash")
+
+        # FREE_LLM_PRESET → openai-compat. On Vercel / no cloud keys, default to llm7
+        # (anonymous free OpenAI-compatible gateway) so chat always has SOME brain.
+        presets_path = Path(__file__).resolve().parent.parent / "system" / "free-llm-presets.json"
+        has_cloud = bool(
+            str(m.get("openrouter_key") or "").strip()
+            or str(m.get("groq_api_key") or "").strip()
+            or str(m.get("gemini_api_key") or "").strip()
+            or str(m.get("openai_api_key") or "").strip()
+            or str(m.get("anthropic_api_key") or "").strip()
+            or str(m.get("deepseek_api_key") or "").strip()
+        )
+        on_vercel = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
+        preset_id = (os.getenv("FREE_LLM_PRESET") or "").strip().lower()
+        if not preset_id and (on_vercel or not has_cloud) and not str(m.get("openai_compat_base") or "").strip():
+            preset_id = "llm7"
+
+        if preset_id and presets_path.is_file():
+            try:
+                data = json.loads(presets_path.read_text(encoding="utf-8"))
+                preset = next((p for p in (data.get("presets") or []) if p.get("id") == preset_id), None)
+            except Exception:
+                preset = None
+            if preset and preset.get("aarohi_provider") == "openai-compat":
+                base = (os.getenv("OPENAI_COMPAT_BASE") or preset.get("base_url") or "").strip().rstrip("/")
+                ckey = (os.getenv("OPENAI_COMPAT_KEY") or "").strip()
+                cmodel = (os.getenv("OPENAI_COMPAT_MODEL") or ((preset.get("models") or [""])[0])).strip()
+                if base and (override or not str(m.get("openai_compat_base") or "").strip()):
+                    m["openai_compat_base"] = base
+                    changed = True
+                if ckey and (override or not str(m.get("openai_compat_key") or "").strip()):
+                    m["openai_compat_key"] = ckey
+                    changed = True
+                if cmodel:
+                    m.setdefault("profiles", {}).setdefault("openai-compat", {})["model"] = cmodel
+                if base and _append_provider_order(
+                        m, "openai-compat", as_main_if_empty=True, main_model=cmodel):
+                    changed = True
+
+        # Ultimate safety: promote openai-compat to MAIN when unset OR when stuck on
+        # CLI-only brains (Claude/Codex) on Vercel — those cannot connect → endless
+        # "No AI model connected".
+        main_prov = str((m.get("main") or {}).get("provider") or "").strip()
+        cli_only = main_prov in ("", "anthropic-cli", "openai-oauth", "grok-cli")
+        if str(m.get("openai_compat_base") or "").strip() and (not main_prov or (on_vercel and cli_only)):
+            model = ((m.get("profiles") or {}).get("openai-compat") or {}).get("model") or "gpt-oss:20b"
+            m["main"] = {"provider": "openai-compat", "model": model}
+            m["engine"] = "openai-compat"
             order = [str(x).strip() for x in (m.get("order") or []) if str(x).strip()]
-            if "openrouter" not in order:
-                if not order:
-                    order = ["openrouter"]
-                    m["main"] = {
-                        "provider": "openrouter",
-                        "model": model or m.get("openrouter_model") or "openai/gpt-4o-mini",
-                    }
-                    m["engine"] = "openrouter"
-                    if not m.get("openrouter_model"):
-                        m["openrouter_model"] = m["main"]["model"]
-                else:
-                    order.append("openrouter")
-                m["order"] = order
-                changed = True
-            elif not order:
-                m["order"] = ["openrouter"]
-                changed = True
+            order = ["openai-compat"] + [x for x in order if x != "openai-compat"]
+            m["order"] = order
+            changed = True
+
+        # Sweet Hindi/Hinglish girlfriend voice (Edge TTS free). Env TTS_VOICE wins when empty/override.
+        v = cfg.setdefault("voice", {})
+        tts_voice = (os.getenv("TTS_VOICE") or "").strip() or "hi-IN-SwaraNeural"
+        tts_rate = (os.getenv("TTS_RATE") or "").strip() or "-5%"
+        if override or not str(v.get("edge_voice") or "").strip():
+            v["edge_voice"] = tts_voice
+            changed = True
+        if override or not str(v.get("tts_provider") or "").strip():
+            v["tts_provider"] = "edge"
+            changed = True
+        # Keep a soft romantic pace for Aarohi
+        cfg.setdefault("_tts_rate_hint", tts_rate)
+
         if changed:
             write_settings(cfg)
-            print("[config] OpenRouter env keyed into model settings (fallback brain ready)",
+            print("[config] Free/API brain + Aarohi voice env applied",
                   file=__import__("sys").stderr)
         return changed
     except Exception as e:

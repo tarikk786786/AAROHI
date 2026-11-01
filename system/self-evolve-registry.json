@@ -1,0 +1,125 @@
+{
+  "$comment": "AAROHI Autonomous Self-Learning map. Existing improvement_* + learn.py OWN the loop. Do not install AutoSkill/DSPy/Mem0 as a second framework.",
+  "version": "1.0.0",
+  "updated": "2026-11-01",
+  "existing_authorities": {
+    "chat_self_learning": "server/learn.py + auto_learning.py + Self-learning dashboard",
+    "skill_evolution_harness": "server/improvement_loop.py (Harness² sequential recursion)",
+    "candidates_approval": "improvement_candidate_* + improvement-candidates.js",
+    "experiments_canary": "improvement_experiment_* + improvement_canary.py",
+    "sandbox_security": "improvement_sandbox.py + secret/injection scans in learn path",
+    "git_undo": "server/git_brain.py",
+    "memory_tools": "javis_memory plugin + memory_chat.py",
+    "knowledge_layer": "server/knowledge_intel.py (phase 1)"
+  },
+  "research_repos": [
+    {
+      "name": "AutoSkill",
+      "github": "https://github.com/ECNU-ICALK/AutoSkill",
+      "verdict": "study-only",
+      "why": "Skill auto-gen ideas; AAROHI already writes skills via learn + improvement candidates with owner approve"
+    },
+    {
+      "name": "Memento-Skills",
+      "github": "https://github.com/Memento-Teams/Memento-Skills",
+      "verdict": "study-only",
+      "why": "Skill memory patterns overlap javis_memory + wiki/knowledge"
+    },
+    {
+      "name": "GEPA",
+      "github": "https://github.com/gepa-ai/gepa",
+      "verdict": "study-only",
+      "why": "Prompt evolution; improvement_loop already does measurable baseline-vs-candidate"
+    },
+    {
+      "name": "ACE",
+      "github": "https://github.com/ace-agent/ace",
+      "verdict": "rejected-core",
+      "why": "Would duplicate orchestration authority"
+    },
+    {
+      "name": "MemSkill",
+      "github": "https://github.com/ViktorAxelsen/MemSkill",
+      "verdict": "study-only",
+      "why": "Memory-skill link; use vault skills/ + memory/"
+    },
+    {
+      "name": "SkillHone",
+      "github": "https://github.com/Tencent/SkillHone",
+      "verdict": "study-only",
+      "license_check": "required before any reuse"
+    },
+    {
+      "name": "mem0",
+      "github": "https://github.com/mem0ai/mem0",
+      "verdict": "optional-sidecar",
+      "why": "Hosted memory SaaS not needed; vault is SoT"
+    },
+    {
+      "name": "graphiti",
+      "github": "https://github.com/getzep/graphiti",
+      "verdict": "optional-later",
+      "why": "Temporal KG; AAROHI already has wikilink graph + knowledge_intel"
+    },
+    {
+      "name": "DSPy",
+      "github": "https://github.com/stanfordnlp/dspy",
+      "verdict": "optional-research",
+      "why": "Could inspire optimizers; do not replace improvement_loop"
+    },
+    {
+      "name": "Langfuse",
+      "github": "https://github.com/langfuse/langfuse",
+      "verdict": "optional-ops",
+      "why": "Observability sidecar; usage page already tracks tokens/cost"
+    },
+    {
+      "name": "DeepEval",
+      "github": "https://github.com/confident-ai/deepeval",
+      "verdict": "optional-ci",
+      "why": "Eval harness for offline tests; map to improvement qualification cases"
+    },
+    {
+      "name": "promptfoo",
+      "github": "https://github.com/promptfoo/promptfoo",
+      "verdict": "optional-ci",
+      "why": "Prompt regression; use beside qualification, never auto-promote"
+    }
+  ],
+  "module_map_user_request_to_aarohi": {
+    "Experience Collector": "auto_learning + self_evolve.record_experience",
+    "Execution Trace Analyzer": "improvement_observation_history + operation_*",
+    "Failure Analysis Agent": "improvement_loop evidence (INV/DOM) + learn failure logs",
+    "Success Pattern Extractor": "learn skill/wiki extract + improvement_compose",
+    "Knowledge Curator": "knowledge_intel + Self-learning Curator",
+    "Skill Generator": "learn Skills switch + improvement_candidate stage",
+    "Skill Evolution Agent": "improvement_loop.py",
+    "Prompt Optimizer": "improvement_loop improve() — gated by metrics",
+    "Workflow Optimizer": "learn Workflows edit-in-place + improvement role_workflow",
+    "Tool Discovery Agent": "mcp catalog + api-hub-registry + self_evolve research proposals",
+    "Tool Evaluation Agent": "improvement_evaluation + qualification",
+    "Benchmark Agent": "improvement qualification / sealed cases",
+    "Regression Testing Agent": "qualification must beat baseline; git rollback",
+    "Security Review Agent": "secret+injection scans; improvement_sandbox; no auto code exec",
+    "Improvement Deployment Manager": "authorize + manual_apply + canary (activation gated)"
+  },
+  "continuous_loop": [
+    "OBSERVE (chat/tools/errors)",
+    "ANALYZE (learn pass / improvement evidence)",
+    "EXTRACT (JSON proposals only — model cannot write)",
+    "LEARN (Python writer into memory/wiki/skills)",
+    "GENERATE (skill candidates)",
+    "TEST (tuning + sealed qualification)",
+    "COMPARE (must beat baseline)",
+    "APPROVE (owner authorize)",
+    "DEPLOY (manual_apply / canary)",
+    "MONITOR (metrics + rollback via git)"
+  ],
+  "hard_rules": [
+    "Never promote because an LLM said it is better — metrics vs baseline only",
+    "Never auto-execute downloaded code",
+    "Never arbitrary production code mods without approval",
+    "Vercel cannot run long workers — use local/Docker for continuous loops",
+    "No model-weight training required for phase 1–3"
+  ]
+}

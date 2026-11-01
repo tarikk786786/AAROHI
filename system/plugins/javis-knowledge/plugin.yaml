@@ -1,0 +1,12 @@
+name: Tri thức (Knowledge Intel)
+name_en: "Knowledge intelligence"
+slug: javis-knowledge
+version: 1.0.0
+description: Tìm/ghi/sửa/quên tri thức có nguồn gốc trong brain (wiki/knowledge + sqlite provenance). Bổ sung Second Brain, không thay memory vault.
+description_en: "Search/ingest/correct/forget provenance-backed knowledge in the brain (wiki/knowledge + sqlite). Extends Second Brain; does not replace the memory vault."
+author: AAROHI (bundled)
+enabled: true
+min_mode: safe
+tools:
+  - javis_knowledge
+hooks: []

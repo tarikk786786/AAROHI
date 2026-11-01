@@ -4912,7 +4912,8 @@ if (document.getElementById("wzFinish")) {
     const user = document.getElementById("wzUser").value.trim();
     const pass = document.getElementById("wzPass").value;
     const selected = Array.from(document.querySelectorAll('input[name="wzprov"]:checked')).map(function (el) { return el.value; });
-    const order = selected.length ? selected : ["anthropic-cli", "openai-oauth", "openrouter"];
+    // Cloud-first default: free LLM7 always works on Vercel; CLI brains need a local PC.
+    const order = selected.length ? selected : ["openai-compat", "openrouter"];
     const prov = order[0];
     const btn = document.getElementById("wzFinish"); btn.disabled = true; btn.textContent = window.t("settings.saving");
     // Ô mã thiết lập nằm ở mục 2, còn nút bấm và dòng báo lỗi nằm tít dưới đáy. Bỏ trống rồi
@@ -4935,30 +4936,51 @@ if (document.getElementById("wzFinish")) {
         if (!d.ok) { return _soiOTrong(document.getElementById("wzPass"), d.error || window.t("app.wz_pw_err")); }
       }
       await fetch("/settings", { method: "POST", body: _fd({ section: "general", data: JSON.stringify({ workspace_name: ws || "AAROHI", setup_done: true }) }) });
-      const _PM = { "anthropic-cli": "sonnet", "openai-oauth": "gpt-5.5", "openrouter": "openai/gpt-4o-mini" };
+      const _PM = {
+        "openai-compat": "gpt-oss:20b",
+        "openrouter": "openrouter/free",
+        "groq": "openai/gpt-oss-20b",
+        "gemini": "gemini-2.5-flash",
+        "anthropic-cli": "sonnet",
+        "openai-oauth": "gpt-5.5",
+      };
       const _mp = {
-        main: { provider: prov, model: _PM[prov] || "sonnet" },
+        main: { provider: prov, model: _PM[prov] || "gpt-oss:20b" },
         order: order,
+        engine: prov,
         profiles: Object.fromEntries(order.map(function (p) { return [p, { model: _PM[p] || "", reasoning: "off" }]; }))
       };
-      const _ork = (document.getElementById("wzOrKeyInput") || {}).value;
-      if (_ork && _ork.trim()) _mp.openrouter_key = _ork.trim();
+      if (order.indexOf("openai-compat") >= 0) {
+        _mp.openai_compat_base = "https://api.llm7.io/v1";
+        _mp.openai_compat_key = "";
+      }
+      const _ork = ((document.getElementById("wzOrKeyInput") || {}).value || "").trim();
+      const _grk = ((document.getElementById("wzGroqKeyInput") || {}).value || "").trim();
+      const _gmk = ((document.getElementById("wzGeminiKeyInput") || {}).value || "").trim();
+      if (_ork) _mp.openrouter_key = _ork;
+      if (_grk) _mp.groq_api_key = _grk;
+      if (_gmk) _mp.gemini_api_key = _gmk;
       await fetch("/settings", { method: "POST", body: _fd({ section: "model", data: JSON.stringify(_mp) }) });
       location.reload();
     } catch (e) { err.textContent = window.t("app.err_net"); btn.disabled = false; btn.textContent = window.t("app.wz_start"); }
   });
 }
 
-// Wizard - multi-select brains (MAIN = first checked) + OpenRouter key + hints
+// Wizard - multi-select brains (MAIN = first checked) + free API keys + hints
 (function () {
   const cards = document.querySelectorAll("#wzProv .wz-card");
   if (!cards.length) return;
   const orKey = document.getElementById("wzOrKey");
+  const groqKey = document.getElementById("wzGroqKey");
+  const gemKey = document.getElementById("wzGeminiKey");
   const hint = document.getElementById("wzProvHint");
   const HINTS = {
+    "openai-compat": () => "Free cloud brain via <a href='https://llm7.io' target='_blank' style='color:var(--link-ink)'>LLM7</a> — no key needed. Add other keys for more models.",
     "anthropic-cli": () => window.t("app.wz_hint_cli_1") + "<code>claude auth login --claudeai</code>" + window.t("app.wz_hint_cli_2"),
     "openai-oauth": () => window.t("app.wz_hint_gpt_1") + "<b>Models</b>" + window.t("app.wz_hint_gpt_2") + "<code>codex login</code>" + window.t("app.wz_hint_gpt_3"),
     "openrouter": () => window.t("app.wz_hint_or_1") + "<a href='https://openrouter.ai/keys' target='_blank' style='color:var(--link-ink)'>openrouter.ai/keys</a>" + window.t("app.wz_hint_or_2"),
+    "groq": () => "Get a free key at <a href='https://console.groq.com/keys' target='_blank' style='color:var(--link-ink)'>console.groq.com/keys</a>.",
+    "gemini": () => "Get a free key at <a href='https://aistudio.google.com/app/apikey' target='_blank' style='color:var(--link-ink)'>Google AI Studio</a>.",
   };
   function sync() {
     const checked = [];
@@ -4969,8 +4991,10 @@ if (document.getElementById("wzFinish")) {
       if (on) checked.push(c.dataset.prov);
     });
     if (orKey) orKey.style.display = checked.indexOf("openrouter") >= 0 ? "" : "none";
+    if (groqKey) groqKey.style.display = checked.indexOf("groq") >= 0 ? "" : "none";
+    if (gemKey) gemKey.style.display = checked.indexOf("gemini") >= 0 ? "" : "none";
     if (hint) {
-      const main = checked[0] || "anthropic-cli";
+      const main = checked[0] || "openai-compat";
       hint.innerHTML = (HINTS[main] ? HINTS[main]() : "") +
         (checked.length > 1 ? "<div style='margin-top:6px'>MAIN: <b>" + main + "</b> · fallbacks: " + checked.slice(1).join(", ") + "</div>" : "");
     }

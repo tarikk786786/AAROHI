@@ -23,8 +23,11 @@ from pathlib import Path
 
 MAX_CHARS = 1000
 VI_VOICE = "vi-VN-HoaiMyNeural"
-DEFAULT_VOICE = "en-US-AvaMultilingualNeural"
+HI_VOICE = "hi-IN-SwaraNeural"          # sweet Hindi girlfriend (AAROHI default)
+HINGLISH_VOICE = "en-IN-NeerjaNeural"   # soft Indian English / Hinglish
+DEFAULT_VOICE = "hi-IN-SwaraNeural"
 _VI_CHARS = re.compile(r"[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]", re.I)
+_HI_CHARS = re.compile(r"[\u0900-\u097F]")  # Devanagari
 _VOICE_RE = re.compile(r"^[a-z]{2,3}-[A-Z]{2}-[A-Za-z]+Neural$")
 
 
@@ -36,18 +39,25 @@ def valid_edge_voice(voice) -> bool:
 
 def pick_voice(text: str, voice: str = "", chosen: str = "") -> str:
     """The voice the tool named, else the owner's Edge voice from Settings when it can read this text
-    (0.298.0), else the language default. A Vietnamese-only voice does not read English text and an
-    English-only one does not read Vietnamese; multilingual voices read both."""
+    (0.298.0), else the language default. AAROHI defaults to sweet Hindi Swara; Hinglish/English
+    keep the chosen girlfriend voice when it is multilingual / Indian."""
     v = str(voice or "").strip()
     if v and _VOICE_RE.match(v):
         return v
     vi = bool(_VI_CHARS.search(text or ""))
+    hi = bool(_HI_CHARS.search(text or ""))
     c = str(chosen or "").strip()
     if c != "auto" and _VOICE_RE.match(c):
-        if "Multilingual" in c or vi == c.startswith("vi-"):
+        if "Multilingual" in c or c.startswith(("hi-", "en-IN-", "en-US-", "en-GB-")):
+            return c
+        if vi and c.startswith("vi-"):
+            return c
+        if hi and c.startswith("hi-"):
             return c
     if vi:
         return VI_VOICE
+    if hi:
+        return HI_VOICE
     return os.getenv("TTS_VOICE", "") or DEFAULT_VOICE
 
 

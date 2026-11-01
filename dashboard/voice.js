@@ -85,8 +85,8 @@ class JavisVoice {
 
     // Edge TTS backend (server)
     this.ttsBackend = opts.ttsBackend || "/tts"; // "/tts" hoặc null để dùng browser
-    this.ttsVoice = opts.ttsVoice || "en-US-EmmaMultilingualNeural"; // nhãn UI: Hoài My (nữ) | Nam Minh (nam) | 5 giọng đa ngôn ngữ (Ava, Emma, Andrew, Brian, William)
-    this.ttsRate = opts.ttsRate || "+5%";
+    this.ttsVoice = opts.ttsVoice || "hi-IN-SwaraNeural"; // AAROHI: Swara sweet Hindi girlfriend; Neerja = Hinglish
+    this.ttsRate = opts.ttsRate || "-5%";
     this.currentAudio = null;
     this.ttsQueue = [];
     this.speechQueue = [];   // hàng đợi đọc nối tiếp (các bước trung gian + kết quả)

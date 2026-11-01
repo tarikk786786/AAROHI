@@ -494,9 +494,9 @@
               <!-- Kho giọng Edge: app.js đọc/ghi giọng Edge qua ô này (localStorage javis.voice), còn
                    người dùng chọn ở #vcVoice. Ẩn, nhưng vẫn là danh sách gốc của bảy giọng Edge. -->
               <select id="voiceSel" name="voice" hidden aria-hidden="true" tabindex="-1">
-                <option value="en-US-AvaMultilingualNeural" selected>Ava / Aarohi · Sweet & Expressive Female Voice</option>
-                <option value="en-IN-NeerjaNeural">Neerja · Sweet Indian English Female Voice</option>
-                <option value="hi-IN-SwaraNeural">Swara · Sweet Hindi Female Voice</option>
+                <option value="hi-IN-SwaraNeural" selected>Swara · Aarohi · Sweet romantic Hindi girlfriend</option>
+                <option value="en-IN-NeerjaNeural">Neerja · Soft Indian English / Hinglish girlfriend</option>
+                <option value="en-US-AvaMultilingualNeural">Ava · Sweet multilingual expressive female</option>
                 <option value="en-US-EmmaMultilingualNeural" data-i18n="qs.voice_opt_emma">Emma · Cheerful & Clear Female Voice</option>
                 <option value="vi-VN-HoaiMyNeural" data-i18n="qs.voice_opt_hoaimy">Hoài My · Warm Natural Female Voice</option>
                 <option value="vi-VN-NamMinhNeural" data-i18n="qs.voice_opt_namminh">Nam Minh · Nam, trầm</option>
@@ -798,27 +798,52 @@
         </div>
         <div class="set-sec">
           <h4 data-i18n="wz.s3">3. AI providers (brains)</h4>
-          <div class="set-note"><span data-i18n="wz.prov_note">Enable every brain you want. First checked = MAIN; others are fallbacks when a model denies or runs out. Change later in</span> <i data-ic="cpu"></i> <b>Models</b>.</div>
+          <div class="set-note"><span data-i18n="wz.prov_note">Enable every brain you want. First checked = MAIN; others are fallbacks when a model denies or runs out. On Vercel, start with Free cloud — Claude/ChatGPT CLIs need your PC. Change later in</span> <i data-ic="cpu"></i> <b>Models</b>.</div>
           <div class="wz-prov" id="wzProv">
-            <label class="wz-card sel" data-prov="anthropic-cli">
-              <input type="checkbox" name="wzprov" value="anthropic-cli" checked>
-              <div><b><i data-ic="brain"></i> Claude Code <span class="wz-rec" data-i18n="wz.rec">recommended</span></b>
-                <div class="wz-pdesc" data-i18n="wz.prov_claude">Sign in with a Claude subscription → full MCP, skills, file read/write, self-improvement loops.</div></div>
-            </label>
-            <label class="wz-card sel" data-prov="openai-oauth">
-              <input type="checkbox" name="wzprov" value="openai-oauth" checked>
-              <div><b><i data-ic="message-circle"></i> <span data-i18n="wz.prov_gpt_name">ChatGPT (subscription)</span></b>
-                <div class="wz-pdesc" data-i18n="wz.prov_gpt">Sign in with ChatGPT Plus/Pro (via Codex) → still gets AAROHI MCP.</div></div>
+            <label class="wz-card sel" data-prov="openai-compat">
+              <input type="checkbox" name="wzprov" value="openai-compat" checked>
+              <div><b><i data-ic="zap"></i> Free cloud (LLM7) <span class="wz-rec" data-i18n="wz.rec">recommended</span></b>
+                <div class="wz-pdesc">Works on Vercel with no key. Always-on free brain; add Groq/Gemini/OpenRouter keys below for more power.</div></div>
             </label>
             <label class="wz-card sel" data-prov="openrouter">
               <input type="checkbox" name="wzprov" value="openrouter" checked>
               <div><b><i data-ic="globe"></i> OpenRouter</b>
                 <div class="wz-pdesc" data-i18n="wz.prov_or">Many models with one API key — best fallback when others deny. Paste key below (or set OPENROUTER_API_KEY).</div></div>
             </label>
+            <label class="wz-card" data-prov="groq">
+              <input type="checkbox" name="wzprov" value="groq">
+              <div><b><i data-ic="cpu"></i> Groq (free tier)</b>
+                <div class="wz-pdesc">Ultra-fast open models. Free key at console.groq.com — optional below.</div></div>
+            </label>
+            <label class="wz-card" data-prov="gemini">
+              <input type="checkbox" name="wzprov" value="gemini">
+              <div><b><i data-ic="sparkles"></i> Google Gemini (free)</b>
+                <div class="wz-pdesc">Gemini Flash free tier. Key from Google AI Studio — optional below.</div></div>
+            </label>
+            <label class="wz-card" data-prov="anthropic-cli">
+              <input type="checkbox" name="wzprov" value="anthropic-cli">
+              <div><b><i data-ic="brain"></i> Claude Code</b>
+                <div class="wz-pdesc" data-i18n="wz.prov_claude">Sign in with a Claude subscription → full MCP, skills, file read/write, self-improvement loops.</div></div>
+            </label>
+            <label class="wz-card" data-prov="openai-oauth">
+              <input type="checkbox" name="wzprov" value="openai-oauth">
+              <div><b><i data-ic="message-circle"></i> <span data-i18n="wz.prov_gpt_name">ChatGPT (subscription)</span></b>
+                <div class="wz-pdesc" data-i18n="wz.prov_gpt">Sign in with ChatGPT Plus/Pro (via Codex) → still gets AAROHI MCP.</div></div>
+            </label>
           </div>
-          <div id="wzOrKey">
-            <label>OpenRouter API key <span class="dim" data-i18n="wz.or_key_later">(optional — can paste later in Models)</span></label>
-            <input id="wzOrKeyInput" placeholder="sk-or-v1-…" data-i18n-ph="wz.or_key_ph" autocomplete="off">
+          <div id="wzKeys" style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+            <div id="wzOrKey">
+              <label>OpenRouter API key <span class="dim" data-i18n="wz.or_key_later">(optional — can paste later in Models)</span></label>
+              <input id="wzOrKeyInput" placeholder="sk-or-v1-…" data-i18n-ph="wz.or_key_ph" autocomplete="off">
+            </div>
+            <div id="wzGroqKey" style="display:none">
+              <label>Groq API key <span class="dim">(optional)</span></label>
+              <input id="wzGroqKeyInput" placeholder="gsk_…" autocomplete="off">
+            </div>
+            <div id="wzGeminiKey" style="display:none">
+              <label>Gemini API key <span class="dim">(optional)</span></label>
+              <input id="wzGeminiKeyInput" placeholder="AIza…" autocomplete="off">
+            </div>
           </div>
           <div id="wzProvHint"></div>
         </div>

@@ -1,21 +1,22 @@
 /* voice-lang.js - "Auto by language" Edge voice for the basic call path (0.220.0). Pure module.
 
-   The voice follows the language of the TEXT being read, detected from its script: Vietnamese
-   diacritics, kana, Han, Hangul, Thai, Cyrillic, else Latin. Why not Whisper's language: the
-   recognition language is pinned to the UI language (vi-VN or en-US) so Whisper never mistranslates
-   a short Vietnamese sentence, which means Whisper's "language" field always echoes the hint. And
-   it is the reply text, not the question, that the speaker has to pronounce.
+   The voice follows the language of the TEXT being read, detected from its script: Devanagari
+   (Hindi), Vietnamese diacritics, kana, Han, Hangul, Thai, Cyrillic, else Latin. Why not Whisper's
+   language: the recognition language is pinned to the UI language so Whisper never mistranslates
+   a short sentence, which means Whisper's "language" field always echoes the hint. And it is the
+   reply text, not the question, that the speaker has to pronounce.
 
    Anti-flap: a chunk under 3 words never switches the voice ("OK.", "Dạ."), and a new language
    must hold for 2 chunks in a row unless the chunk is long (6 words or more). */
 (function () {
   "use strict";
 
-  // Language -> Edge voice. Latin text that is not Vietnamese goes to Emma, which is multilingual
-  // and reads French, Spanish or German correctly too.
+  // Language -> Edge voice. AAROHI: Hindi → sweet Swara girlfriend; Latin/English → soft Neerja
+  // (Indian English / Hinglish). Other scripts keep native female Neural voices.
   var VOICES = {
+    hi: "hi-IN-SwaraNeural",
     vi: "vi-VN-HoaiMyNeural",
-    en: "en-US-EmmaMultilingualNeural",
+    en: "en-IN-NeerjaNeural",
     ja: "ja-JP-NanamiNeural",
     zh: "zh-CN-XiaoxiaoNeural",
     ko: "ko-KR-SunHiNeural",
@@ -43,7 +44,8 @@
 
   function detect(text) {
     text = String(text || "");
-    if (count(/[぀-ヿ]/g, text)) return "ja";            // kana only exists in Japanese
+    if (count(/[\u0900-\u097F]/g, text)) return "hi";   // Devanagari → Aarohi Hindi girlfriend voice
+    if (count(/[ぁ-ヿ]/g, text)) return "ja";            // kana only exists in Japanese
     if (count(/[가-힯]/g, text)) return "ko";
     if (count(/[฀-๿]/g, text)) return "th";
     if (count(/[㐀-鿿]/g, text)) return "zh";
@@ -59,7 +61,7 @@
 
   // One tracker per JavisVoice. `start` is the language to read in before anything is detected.
   function Tracker(start) {
-    this.lang = VOICES[start] ? start : "vi";
+    this.lang = VOICES[start] ? start : "hi";
     this.candidate = "";
     // The same chunk is asked twice in a row (preload, then play): answer it once, not twice.
     this._lastKey = null;
