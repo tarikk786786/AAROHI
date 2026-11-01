@@ -39,6 +39,9 @@ The dashboard's navigation rail groups **19 pages** into **5 groups**: Brain · 
 - [08 - Recurring jobs and reminders](08-recurring-jobs.md) - several background loops plus reminders on a clock or a cron schedule.
 - [21 - Work (Kanban)](21-kanban-work.md) - handing over a goal in words, with the AI specifying and running the background task.
 - [22 - Self-learning](22-self-learning.md) - Javis extracting memories, distilling Wiki pages and skills after each conversation, undoably.
+- [Autonomous self-evolving engine](autonomous-self-evolving.md) - experience metrics facade + map onto existing improvement stack (no duplicate frameworks).
+- [Universal knowledge intelligence](universal-knowledge-intelligence.md) - provenance knowledge layer over the Second Brain.
+- [Universal API Hub](universal-api-hub.md) - curated API/MCP registry (discovery, not mass install).
 
 ### Connections and channels (the Connections group)
 - [09 - Connections and business data](09-connections-and-business-data.md) - the multi-account store of external services, permissions, reporting real figures.
