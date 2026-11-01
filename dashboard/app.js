@@ -153,7 +153,7 @@ const orbState = document.getElementById("orbState");
 // nên mọi truy cập phải guard để trang không chết trắng nếu thiếu.
 fetch("/config").then(r => r.json()).then(cfg => {
   const wn = document.getElementById("workspaceName");
-  if (wn) wn.textContent = cfg.workspace_name || "Javis OS";
+  if (wn) wn.textContent = cfg.workspace_name || "AAROHI";
 }).catch(() => {});
 
 // ============================================
@@ -4748,7 +4748,7 @@ if (document.getElementById("settingsBtn")) {
 
   document.getElementById("saveGeneral").addEventListener("click", (e) => {
     _saveSetting("general", { workspace_name: document.getElementById("setWsName").value.trim() }, e.target)
-      .then(() => { const wn = document.getElementById("workspaceName"); if (wn) wn.textContent = document.getElementById("setWsName").value.trim() || "Javis OS"; });
+      .then(() => { const wn = document.getElementById("workspaceName"); if (wn) wn.textContent = document.getElementById("setWsName").value.trim() || "AAROHI"; });
   });
   document.getElementById("saveModel").addEventListener("click", (e) => {
     const sel = document.getElementById("setOrModelSel");
