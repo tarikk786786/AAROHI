@@ -406,7 +406,16 @@ def _token_ok(request, path: str) -> bool:
     cfgmod.note_token_failure(ip, raw[:12])
     return False
 
-DASHBOARD_PATH = Path(__file__).parent.parent / "dashboard"
+DASHBOARD_PATH = Path(__file__).resolve().parent.parent / "dashboard"
+if not DASHBOARD_PATH.exists():
+    _alt_dash = Path(__file__).resolve().parent / "dashboard"
+    if _alt_dash.exists():
+        DASHBOARD_PATH = _alt_dash
+    else:
+        try:
+            DASHBOARD_PATH.mkdir(parents=True, exist_ok=True)
+        except Exception:
+            pass
 # Windows/mimetypes không biết .webp -> StaticFiles trả text/plain; khai rõ để logo webp đúng kiểu ảnh.
 import mimetypes
 mimetypes.add_type("image/webp", ".webp")
@@ -1164,12 +1173,12 @@ BRAIN_PATH = os.getenv("BRAIN_PATH", str(PROJECT_ROOT / "brain"))   # LEGACY (br
 # Thư mục CHA chứa MỌI brain - mỗi folder con = 1 second brain. Docker = /brains (mount riêng,
 # git-backup được, KHÔNG nằm trong /data state). Local = <project>/brains. Brain mặc định =
 # <BRAINS_DIR>/Brain Default. KHÔNG hardcode: cấu hình qua env, chọn brain bất kỳ qua path:.
-BRAINS_DIR = os.getenv("BRAINS_DIR", str(PROJECT_ROOT / "brains"))
+BRAINS_DIR = os.getenv("BRAINS_DIR", "/tmp/brains" if os.getenv("VERCEL") else str(PROJECT_ROOT / "brains"))
 # Default PORTABLE: vault/ trong repo (tạo lần đầu chạy). Trên VPS/máy khác đặt
 # OBSIDIAN_VAULT_PATH trong .env trỏ tới vault thật; để trống = dùng vault/.
-OBSIDIAN_VAULT_PATH = os.getenv("OBSIDIAN_VAULT_PATH", str(PROJECT_ROOT / "vault"))
+OBSIDIAN_VAULT_PATH = os.getenv("OBSIDIAN_VAULT_PATH", "/tmp/vault" if os.getenv("VERCEL") else str(PROJECT_ROOT / "vault"))
 # Nơi lưu file đính kèm từ chat (source cho Second Brain)
-SOURCES_PATH = os.getenv("SOURCES_PATH", str(PROJECT_ROOT / "brain" / "01 - Sources"))
+SOURCES_PATH = os.getenv("SOURCES_PATH", "/tmp/sources" if os.getenv("VERCEL") else str(PROJECT_ROOT / "brain" / "01 - Sources"))
 
 # Tạo sẵn thư mục brains/vault để máy mới (VPS sạch) không crash vì thiếu folder.
 for _p in (BRAINS_DIR, OBSIDIAN_VAULT_PATH):
@@ -1241,14 +1250,33 @@ async def app_version():
 
 @app.get("/")
 async def root():
-    html = (DASHBOARD_PATH / "index.html").read_text(encoding="utf-8")
+    index_file = DASHBOARD_PATH / "index.html"
+    if not index_file.exists():
+        for _cand in [
+            Path(__file__).resolve().parent / "dashboard" / "index.html",
+            Path(__file__).resolve().parent.parent / "dashboard" / "index.html",
+            Path("/var/task/dashboard/index.html"),
+            Path("/var/task/server/dashboard/index.html"),
+        ]:
+            if _cand.exists():
+                index_file = _cand
+                break
+    try:
+        html = index_file.read_text(encoding="utf-8") if index_file.exists() else ""
+    except Exception:
+        html = ""
+    if not html:
+        return HTMLResponse("<h1>Aarohi OS is running!</h1><p>Welcome to Aarohi AI Companion.</p>")
     # Ép khoá cache của MỌI file .js/.css theo phiên bản app. Trước đây mỗi file có ?v=NN
     # gõ tay, và suốt hàng chục bản không ai nhớ tăng console.js?v=72 nên trình duyệt cứ
     # dùng console.js CŨ trong cache - máy chủ cập nhật thật mà giao diện đóng băng, mọi
     # sửa đổi frontend trở nên vô hình. Gắn phiên bản vào đây thì mỗi lần bump là tự bể cache.
     ver = _app_version() or "0"
     # Vân tay tính TRƯỚC khi đổi `?v=` - regex tìm theo `?v=` nên thứ tự này bắt buộc.
-    fps = _asset_fps(html)
+    try:
+        fps = _asset_fps(html)
+    except Exception:
+        fps = {}
     # Khoá cache theo VÂN TAY TỪNG FILE, không theo số phiên bản chung.
     #
     # Trước đây mọi file mang `?v=<phiên bản app>`, nên bump VERSION là 42 URL đổi MỘT LƯỢT
@@ -14060,9 +14088,18 @@ async def _start_scheduler():
     # Bootstrap bảo mật cho deploy public: (1) tạo admin từ env nếu có; (2) nếu vẫn chưa có admin
     # mà đang public → in MÃ THIẾT LẬP ra log để chính chủ tạo tài khoản (chống kẻ chỉ-có-URL chiếm admin).
     import sys as _sys
-    _migrate_legacy_brain()   # dữ liệu brain cũ → <BRAINS_DIR>/Brain Default (không mất data)
-    _ensure_default_brain()   # brain mặc định có sẵn cấu trúc chuẩn (ghi được trên mount /brains)
-    _sync_system_all_brains() # năng lực hệ thống → mọi brain (update theo phiên bản app)
+    try:
+        _migrate_legacy_brain()   # dữ liệu brain cũ → <BRAINS_DIR>/Brain Default (không mất data)
+    except Exception as e:
+        print(f"[startup] legacy brain migration: {e}", file=_sys.stderr)
+    try:
+        _ensure_default_brain()   # brain mặc định có sẵn cấu trúc chuẩn (ghi được trên mount /brains)
+    except Exception as e:
+        print(f"[startup] ensure default brain: {e}", file=_sys.stderr)
+    try:
+        _sync_system_all_brains() # năng lực hệ thống → mọi brain (update theo phiên bản app)
+    except Exception as e:
+        print(f"[startup] sync system all brains: {e}", file=_sys.stderr)
     # 0.9.251: gỡ hẳn listener Zalo cũ. Nó từng tự tắt connector MCP để giữ riêng socket,
     # nên khi nâng cấp phải bật trả connector về rồi xoá cấu hình listener; nếu không user
     # nối tài khoản rồi mà model vẫn không thấy các tool zalo_* để gửi trực tiếp.

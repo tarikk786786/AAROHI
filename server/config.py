@@ -14,7 +14,7 @@ from pathlib import Path
 # Mọi state Javis tự ghi (settings, auth sessions, loop config) nằm ở JAVIS_STATE_DIR.
 # Mặc định = server/ (không đổi trên máy cũ). Docker/VPS đặt = /data/state (volume ghi được,
 # vì code tree /app là read-only trong container).
-STATE_DIR = Path(os.getenv("JAVIS_STATE_DIR", str(Path(__file__).parent)))
+STATE_DIR = Path(os.getenv("JAVIS_STATE_DIR", "/tmp/javis_state" if os.getenv("VERCEL") else str(Path(__file__).parent)))
 try:
     STATE_DIR.mkdir(parents=True, exist_ok=True)
 except Exception:
