@@ -1174,6 +1174,14 @@ BRAIN_PATH = os.getenv("BRAIN_PATH", str(PROJECT_ROOT / "brain"))   # LEGACY (br
 # git-backup được, KHÔNG nằm trong /data state). Local = <project>/brains. Brain mặc định =
 # <BRAINS_DIR>/Brain Default. KHÔNG hardcode: cấu hình qua env, chọn brain bất kỳ qua path:.
 BRAINS_DIR = os.getenv("BRAINS_DIR", "/tmp/brains" if os.getenv("VERCEL") else str(PROJECT_ROOT / "brains"))
+
+
+def _is_serverless() -> bool:
+    """Vercel / Lambda: short cold start; no durable background schedulers."""
+    return bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
+
+
+# Duplicate kept near scheduler for readability of the fast-boot branch; same function.
 # Default PORTABLE: vault/ trong repo (tạo lần đầu chạy). Trên VPS/máy khác đặt
 # OBSIDIAN_VAULT_PATH trong .env trỏ tới vault thật; để trống = dùng vault/.
 OBSIDIAN_VAULT_PATH = os.getenv("OBSIDIAN_VAULT_PATH", "/tmp/vault" if os.getenv("VERCEL") else str(PROJECT_ROOT / "vault"))
@@ -4832,7 +4840,7 @@ async def _tu_cap_nhat_claude():
     # The on/off switch (settings model.claude_auto_update, env override) is read on every pass
     # below, not here: turning it off on the Models page must stop the next run without a restart,
     # and turning it back on must not need one either.
-    if deploy_info.deploy_mode() == "docker":
+    if deploy_info.deploy_mode() == "docker" or _is_serverless():
         return
 
     async def _vong():
@@ -4879,7 +4887,7 @@ async def _tu_cap_nhat_agy():
     không có vòng này thì nó đứng ở bản lúc cài mãi mãi, và model mới (Gemini 4 Argon, 14/10/2026)
     không bao giờ hiện trong trình chọn. Chờ 3 phút sau khi khởi động, lệch với vòng của Claude.
     """
-    if not agy_update.bat():
+    if _is_serverless() or not agy_update.bat():
         return
 
     async def _vong():
@@ -14256,11 +14264,17 @@ async def plugins_remove(slug: str = Form(...), removed: str = Form("1"),
 _MEDIA_GC_LAST = [0.0]
 
 
+def _is_serverless() -> bool:
+    """Vercel / Lambda: no durable background loops; keep cold start short."""
+    return bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
+
+
 @app.on_event("startup")
 async def _start_scheduler():
     # Bootstrap bảo mật cho deploy public: (1) tạo admin từ env nếu có; (2) nếu vẫn chưa có admin
     # mà đang public → in MÃ THIẾT LẬP ra log để chính chủ tạo tài khoản (chống kẻ chỉ-có-URL chiếm admin).
     import sys as _sys
+    _serverless = _is_serverless()
     try:
         _migrate_legacy_brain()   # dữ liệu brain cũ → <BRAINS_DIR>/Brain Default (không mất data)
     except Exception as e:
@@ -14269,10 +14283,19 @@ async def _start_scheduler():
         _ensure_default_brain()   # brain mặc định có sẵn cấu trúc chuẩn (ghi được trên mount /brains)
     except Exception as e:
         print(f"[startup] ensure default brain: {e}", file=_sys.stderr)
-    try:
-        _sync_system_all_brains() # năng lực hệ thống → mọi brain (update theo phiên bản app)
-    except Exception as e:
-        print(f"[startup] sync system all brains: {e}", file=_sys.stderr)
+    # System skill sync is disk-heavy; on serverless defer so the first HTML/API can return sooner.
+    if _serverless:
+        async def _sync_later():
+            try:
+                await asyncio.to_thread(_sync_system_all_brains)
+            except Exception as e:
+                print(f"[startup] sync system all brains: {e}", file=_sys.stderr)
+        asyncio.create_task(_sync_later())
+    else:
+        try:
+            _sync_system_all_brains() # năng lực hệ thống → mọi brain (update theo phiên bản app)
+        except Exception as e:
+            print(f"[startup] sync system all brains: {e}", file=_sys.stderr)
     # 0.9.251: gỡ hẳn listener Zalo cũ. Nó từng tự tắt connector MCP để giữ riêng socket,
     # nên khi nâng cấp phải bật trả connector về rồi xoá cấu hình listener; nếu không user
     # nối tài khoản rồi mà model vẫn không thấy các tool zalo_* để gửi trực tiếp.
@@ -14296,6 +14319,18 @@ async def _start_scheduler():
         cfgmod.apply_model_env()  # OPENROUTER_API_KEY → fallback brain in usage order
     except Exception as e:
         print(f"[startup] apply_model_env: {e}", file=_sys.stderr)
+    if _serverless:
+        # Fast path for Vercel/Lambda: no 30s scheduler, Telegram bots, or health loops.
+        # Those need a long-lived process (local / Docker / always-on host).
+        try:
+            _env_admin = cfgmod.provision_admin_from_env()
+            if _env_admin == "created":
+                print("[auth] Đã tạo tài khoản admin từ JAVIS_ADMIN_PASSWORD (env).", file=_sys.stderr)
+            cfgmod.clear_setup_token()
+        except Exception as e:
+            print(f"[auth bootstrap] {e}", file=_sys.stderr)
+        print("[startup] serverless fast-boot (skipped background schedulers)", file=_sys.stderr)
+        return
     try:
         loop_feature.ensure_migrated()   # loop_config.json cũ → Javis/loops/vong-lap-goc.md (1 lần)
     except Exception as e:

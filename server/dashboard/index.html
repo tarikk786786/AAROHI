@@ -1,42 +1,42 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- maximum-scale=1 + user-scalable=no: tắt pinch/double-tap zoom trên mobile theo yêu cầu
-       chủ. Chỉ chặn TUYỆT ĐỐI khi chạy dạng app màn hình chính (xem cụm apple-mobile-web-app-*
-       dưới); ở tab Safari thường iOS 10+ vẫn cho zoom bằng tay vì lý do accessibility, nên còn
-       chặn thêm bằng touch-action trong style.css làm lớp thứ hai. -->
+  <!-- maximum-scale=1 + user-scalable=no: táº¯t pinch/double-tap zoom trÃªn mobile theo yÃªu cáº§u
+       chá»§. Chá»‰ cháº·n TUYá»†T Äá»I khi cháº¡y dáº¡ng app mÃ n hÃ¬nh chÃ­nh (xem cá»¥m apple-mobile-web-app-*
+       dÆ°á»›i); á»Ÿ tab Safari thÆ°á»ng iOS 10+ váº«n cho zoom báº±ng tay vÃ¬ lÃ½ do accessibility, nÃªn cÃ²n
+       cháº·n thÃªm báº±ng touch-action trong style.css lÃ m lá»›p thá»© hai. -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
-  <title>AAROHI · Your AI Girlfriend</title>
-  <!-- Favicon = logo hiện tại (/brand-logo): mặc định theo logo.png, và tự đổi theo ảnh user tải lên. -->
+  <title>AAROHI Â· Your AI Girlfriend</title>
+  <!-- Favicon = logo hiá»‡n táº¡i (/brand-logo): máº·c Ä‘á»‹nh theo logo.png, vÃ  tá»± Ä‘á»•i theo áº£nh user táº£i lÃªn. -->
   <link rel="icon" href="/brand-logo?v=aarohi6" type="image/png">
   <link rel="apple-touch-icon" href="/brand-logo?v=aarohi6">
-  <!-- Thêm vào màn hình chính iPhone = KHÔNG thanh địa chỉ: iOS chỉ mở app "standalone"
-       (ẩn chrome Safari) khi có ĐỦ cụm apple-mobile-web-app-* này VÀ manifest.json bên dưới -
-       thiếu một trong hai là một số bản iOS vẫn hiện thanh địa chỉ dù bản khác thì không.
-       Icon đã thêm TRƯỚC khi có đủ cụm này vẫn giữ hành vi cũ - phải xoá khỏi màn hình chính
-       rồi "Thêm vào MH chính" lại thì iOS mới đọc lại và chạy standalone. -->
+  <!-- ThÃªm vÃ o mÃ n hÃ¬nh chÃ­nh iPhone = KHÃ”NG thanh Ä‘á»‹a chá»‰: iOS chá»‰ má»Ÿ app "standalone"
+       (áº©n chrome Safari) khi cÃ³ Äá»¦ cá»¥m apple-mobile-web-app-* nÃ y VÃ€ manifest.json bÃªn dÆ°á»›i -
+       thiáº¿u má»™t trong hai lÃ  má»™t sá»‘ báº£n iOS váº«n hiá»‡n thanh Ä‘á»‹a chá»‰ dÃ¹ báº£n khÃ¡c thÃ¬ khÃ´ng.
+       Icon Ä‘Ã£ thÃªm TRÆ¯á»šC khi cÃ³ Ä‘á»§ cá»¥m nÃ y váº«n giá»¯ hÃ nh vi cÅ© - pháº£i xoÃ¡ khá»i mÃ n hÃ¬nh chÃ­nh
+       rá»“i "ThÃªm vÃ o MH chÃ­nh" láº¡i thÃ¬ iOS má»›i Ä‘á»c láº¡i vÃ  cháº¡y standalone. -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="AAROHI">
   <meta name="theme-color" content="#0e0e16">
-  <!-- manifest.json khai icon PNG vuông 192/512 có sizes rõ ràng: đó là điều kiện để
-       Chrome/Edge DESKTOP coi trang là cài được (icon "any" trên PNG bị coi là không hợp lệ
-       nên trước đây chỉ mobile chạy dạng app, desktop không bao giờ có nút cài). Nút
-       "Mở như app" trên thanh trạng thái + icon cài trong thanh địa chỉ ăn theo file này. -->
+  <!-- manifest.json khai icon PNG vuÃ´ng 192/512 cÃ³ sizes rÃµ rÃ ng: Ä‘Ã³ lÃ  Ä‘iá»u kiá»‡n Ä‘á»ƒ
+       Chrome/Edge DESKTOP coi trang lÃ  cÃ i Ä‘Æ°á»£c (icon "any" trÃªn PNG bá»‹ coi lÃ  khÃ´ng há»£p lá»‡
+       nÃªn trÆ°á»›c Ä‘Ã¢y chá»‰ mobile cháº¡y dáº¡ng app, desktop khÃ´ng bao giá» cÃ³ nÃºt cÃ i). NÃºt
+       "Má»Ÿ nhÆ° app" trÃªn thanh tráº¡ng thÃ¡i + icon cÃ i trong thanh Ä‘á»‹a chá»‰ Äƒn theo file nÃ y. -->
   <link rel="manifest" href="/static/manifest.json?v=aarohi6">
-  <!-- Font tự chứa (0.416.0, dashboard/fonts/): không còn gọi fonts.googleapis.com / fonts.gstatic.com lúc mở trang. -->
+  <!-- Font tá»± chá»©a (0.416.0, dashboard/fonts/): khÃ´ng cÃ²n gá»i fonts.googleapis.com / fonts.gstatic.com lÃºc má»Ÿ trang. -->
   <link rel="stylesheet" href="/static/fonts/fonts.css?v=1">
-  <!-- Biến --ic-* cho icon dùng trong content: của CSS. Phải đứng TRƯỚC style.css
-       vì style.css tham chiếu các biến này. -->
+  <!-- Biáº¿n --ic-* cho icon dÃ¹ng trong content: cá»§a CSS. Pháº£i Ä‘á»©ng TRÆ¯á»šC style.css
+       vÃ¬ style.css tham chiáº¿u cÃ¡c biáº¿n nÃ y. -->
   <link rel="stylesheet" href="/static/vendor/lucide-icons.css?v=1">
   <link rel="stylesheet" href="/static/style.css?v=156">
   <link rel="stylesheet" href="/static/console.css?v=130">
-  <!-- Áp tông đã lưu TRƯỚC khi vẽ để không nháy tối rồi mới đổi sang sáng.
-       Giá trị cũ "dim" (tông tối-nhạt, gỡ ở 0.9.250) quy về tối; theme.js sẽ ghi đè lại.
-       Chế độ "auto" (0.74.0, mặc định khi chưa chọn gì từ 0.75.1) tính theo khung giờ "HH:MM-HH:MM", cùng quy tắc với lightAt() trong
-       theme.js (vắt qua nửa đêm được, hai mốc trùng là tối): sửa một bên thì sửa cả bên kia. -->
+  <!-- Ãp tÃ´ng Ä‘Ã£ lÆ°u TRÆ¯á»šC khi váº½ Ä‘á»ƒ khÃ´ng nhÃ¡y tá»‘i rá»“i má»›i Ä‘á»•i sang sÃ¡ng.
+       GiÃ¡ trá»‹ cÅ© "dim" (tÃ´ng tá»‘i-nháº¡t, gá»¡ á»Ÿ 0.9.250) quy vá» tá»‘i; theme.js sáº½ ghi Ä‘Ã¨ láº¡i.
+       Cháº¿ Ä‘á»™ "auto" (0.74.0, máº·c Ä‘á»‹nh khi chÆ°a chá»n gÃ¬ tá»« 0.75.1) tÃ­nh theo khung giá» "HH:MM-HH:MM", cÃ¹ng quy táº¯c vá»›i lightAt() trong
+       theme.js (váº¯t qua ná»­a Ä‘Ãªm Ä‘Æ°á»£c, hai má»‘c trÃ¹ng lÃ  tá»‘i): sá»­a má»™t bÃªn thÃ¬ sá»­a cáº£ bÃªn kia. -->
   <script>(function(){try{var m=localStorage.getItem('javis.theme'),L=m==='light';if(m!=='light'&&m!=='dark'&&m!=='dim'){var p=/^(\d{1,2}):(\d{2})-(\d{1,2}):(\d{2})$/.exec(localStorage.getItem('javis.theme.schedule')||'')||[0,6,0,18,0],a=p[1]*60+ +p[2],b=p[3]*60+ +p[4],d=new Date(),n=d.getHours()*60+d.getMinutes();L=a!==b&&(a<b?n>=a&&n<b:n>=a||n<b);}if(L)document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body>
@@ -44,63 +44,63 @@
 
     <!-- ===== TOP BAR ===== -->
     <header class="hud-top">
-      <!-- Mobile-only: mở ngăn kéo điều hướng -->
-      <button class="hud-icon-btn nav-toggle-btn" id="navToggle" title="Menu" aria-label="Mở menu" data-i18n-title="top.menu" data-i18n-aria="top.menu_open">
+      <!-- Mobile-only: má»Ÿ ngÄƒn kÃ©o Ä‘iá»u hÆ°á»›ng -->
+      <button class="hud-icon-btn nav-toggle-btn" id="navToggle" title="Menu" aria-label="Má»Ÿ menu" data-i18n-title="top.menu" data-i18n-aria="top.menu_open">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/>
         </svg>
       </button>
-      <!-- NHÓM TRÁI: thương hiệu + chọn brain + số liệu (bám trái) -->
+      <!-- NHÃ“M TRÃI: thÆ°Æ¡ng hiá»‡u + chá»n brain + sá»‘ liá»‡u (bÃ¡m trÃ¡i) -->
       <div class="hud-top-left">
         <div class="brand"><span class="brand-icon"><img src="/brand-logo" alt="" style="width:22px;height:22px;border-radius:5px;vertical-align:middle;object-fit:cover"></span> <span class="brand-text">AAROHI</span></div>
-        <!-- Select Brain: dời từ góc graph lên navbar -->
+        <!-- Select Brain: dá»i tá»« gÃ³c graph lÃªn navbar -->
         <div class="orb-graph-ctl navbar-brain">
-          <i data-ic="brain" class="brain-select-ico" data-ic-title="Bộ não đang chọn" data-i18n-title="top.brain_current"></i>
+          <i data-ic="brain" class="brain-select-ico" data-ic-title="Bá»™ nÃ£o Ä‘ang chá»n" data-i18n-title="top.brain_current"></i>
           <select id="graphSource" class="graph-select">
             <option value="brain">Brain Default</option>
           </select>
-          <button class="graph-folder-btn" id="newBrainBtn" title="Tạo brain mới trong thư mục brains" data-i18n-title="top.brain_new"><i data-ic="plus"></i></button>
-          <button class="graph-folder-btn" id="renameBrainBtn" title="Đổi tên brain đang chọn (thư mục và liên kết giữ nguyên)" data-i18n-title="top.brain_rename"><i data-ic="pencil"></i></button>
-          <button class="graph-folder-btn" id="delBrainBtn" title="Xoá brain đang chọn (xác nhận gõ đúng tên)" data-i18n-title="top.brain_delete"><i data-ic="trash-2"></i></button>
-          <button class="graph-folder-btn" id="pickFolderBtn" title="Chọn brain từ folder ngoài bất kỳ" data-i18n-title="top.brain_pick"><i data-ic="folder-open"></i></button>
+          <button class="graph-folder-btn" id="newBrainBtn" title="Táº¡o brain má»›i trong thÆ° má»¥c brains" data-i18n-title="top.brain_new"><i data-ic="plus"></i></button>
+          <button class="graph-folder-btn" id="renameBrainBtn" title="Äá»•i tÃªn brain Ä‘ang chá»n (thÆ° má»¥c vÃ  liÃªn káº¿t giá»¯ nguyÃªn)" data-i18n-title="top.brain_rename"><i data-ic="pencil"></i></button>
+          <button class="graph-folder-btn" id="delBrainBtn" title="XoÃ¡ brain Ä‘ang chá»n (xÃ¡c nháº­n gÃµ Ä‘Ãºng tÃªn)" data-i18n-title="top.brain_delete"><i data-ic="trash-2"></i></button>
+          <button class="graph-folder-btn" id="pickFolderBtn" title="Chá»n brain tá»« folder ngoÃ i báº¥t ká»³" data-i18n-title="top.brain_pick"><i data-ic="folder-open"></i></button>
           <span class="graph-stats" id="graphStats">-</span>
         </div>
       </div>
-      <!-- NHÓM GIỮA: thanh trạng thái đang quá tải nên bỏ tên workspace lẫn ngày tháng theo
-           yêu cầu chủ (0.9.195) - tên vẫn hiện trong Cài đặt; chỗ này giờ dành cho đèn báo não
-           khi bộ não mất đăng nhập. Chuông Thông báo đã dời về góc phải cho khớp với panel
-           (panel ghim right:18px, để nút ở giữa thì bấm một nơi hộp bung nơi khác). -->
+      <!-- NHÃ“M GIá»®A: thanh tráº¡ng thÃ¡i Ä‘ang quÃ¡ táº£i nÃªn bá» tÃªn workspace láº«n ngÃ y thÃ¡ng theo
+           yÃªu cáº§u chá»§ (0.9.195) - tÃªn váº«n hiá»‡n trong CÃ i Ä‘áº·t; chá»— nÃ y giá» dÃ nh cho Ä‘Ã¨n bÃ¡o nÃ£o
+           khi bá»™ nÃ£o máº¥t Ä‘Äƒng nháº­p. ChuÃ´ng ThÃ´ng bÃ¡o Ä‘Ã£ dá»i vá» gÃ³c pháº£i cho khá»›p vá»›i panel
+           (panel ghim right:18px, Ä‘á»ƒ nÃºt á»Ÿ giá»¯a thÃ¬ báº¥m má»™t nÆ¡i há»™p bung nÆ¡i khÃ¡c). -->
       <div class="hud-center-title">
         <span class="engine-banner" id="engineBanner" hidden></span>
       </div>
-      <!-- NHÓM PHẢI: chuông Thông báo + nút đổi tông (LUÔN hiện) + cụm nút cockpit (ẩn ở trang quản lý) -->
+      <!-- NHÃ“M PHáº¢I: chuÃ´ng ThÃ´ng bÃ¡o + nÃºt Ä‘á»•i tÃ´ng (LUÃ”N hiá»‡n) + cá»¥m nÃºt cockpit (áº©n á»Ÿ trang quáº£n lÃ½) -->
       <div class="hud-top-right">
         <button class="notification-trigger" id="notificationTrigger" type="button"
-                aria-haspopup="dialog" aria-expanded="false" title="Mở hộp thư Thông báo" data-i18n-title="top.notifications">
+                aria-haspopup="dialog" aria-expanded="false" title="Má»Ÿ há»™p thÆ° ThÃ´ng bÃ¡o" data-i18n-title="top.notifications">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
             <path d="M10 21h4"></path>
           </svg>
-          <span class="notification-trigger-label" data-i18n="noti.label">Thông báo</span>
+          <span class="notification-trigger-label" data-i18n="noti.label">ThÃ´ng bÃ¡o</span>
           <span class="notification-badge" id="notificationBadge" hidden>0</span>
         </button>
-        <!-- Cài Javis như app riêng (PWA). Ẩn mặc định: app.js chỉ hiện khi trình duyệt
-             bắn beforeinstallprompt (Chrome/Edge desktop + Android) và chưa chạy standalone.
-             Safari/iOS không có event này - bên đó vẫn là Share → Thêm vào MH chính. -->
+        <!-- CÃ i Javis nhÆ° app riÃªng (PWA). áº¨n máº·c Ä‘á»‹nh: app.js chá»‰ hiá»‡n khi trÃ¬nh duyá»‡t
+             báº¯n beforeinstallprompt (Chrome/Edge desktop + Android) vÃ  chÆ°a cháº¡y standalone.
+             Safari/iOS khÃ´ng cÃ³ event nÃ y - bÃªn Ä‘Ã³ váº«n lÃ  Share â†’ ThÃªm vÃ o MH chÃ­nh. -->
         <button class="install-app-btn" id="installAppBtn" type="button" hidden
-                title="Cài Javis thành app riêng - mở từ Desktop/Dock, không lẫn giữa các tab" data-i18n-title="top.install_title"
-                aria-label="Cài Javis thành app riêng" data-i18n-aria="top.install">
+                title="CÃ i Javis thÃ nh app riÃªng - má»Ÿ tá»« Desktop/Dock, khÃ´ng láº«n giá»¯a cÃ¡c tab" data-i18n-title="top.install_title"
+                aria-label="CÃ i Javis thÃ nh app riÃªng" data-i18n-aria="top.install">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <rect x="2" y="3" width="20" height="14" rx="2"/>
             <path d="M8 21h8M12 17v4"/>
             <path d="M12 6v6M9.5 9.5 12 12l2.5-2.5"/>
           </svg>
-          <span class="install-app-label" data-i18n="top.install_label">Mở như app</span>
+          <span class="install-app-label" data-i18n="top.install_label">Má»Ÿ nhÆ° app</span>
         </button>
         <button class="hud-icon-btn theme-toggle" id="themeToggle" type="button" aria-pressed="false"
-                title="Đang dùng tông tối - bấm để chuyển sang tông sáng"
-                aria-label="Đang dùng tông tối - bấm để chuyển sang tông sáng">
-          <!-- Trăng hiện ở tông tối, mặt trời hiện ở tông sáng (đổi qua CSS theo data-theme) -->
+                title="Äang dÃ¹ng tÃ´ng tá»‘i - báº¥m Ä‘á»ƒ chuyá»ƒn sang tÃ´ng sÃ¡ng"
+                aria-label="Äang dÃ¹ng tÃ´ng tá»‘i - báº¥m Ä‘á»ƒ chuyá»ƒn sang tÃ´ng sÃ¡ng">
+          <!-- TrÄƒng hiá»‡n á»Ÿ tÃ´ng tá»‘i, máº·t trá»i hiá»‡n á»Ÿ tÃ´ng sÃ¡ng (Ä‘á»•i qua CSS theo data-theme) -->
           <svg class="ic-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z"/>
@@ -112,8 +112,8 @@
           </svg>
         </button>
         <div class="hud-actions">
-          <button class="studio-open-btn" id="studioOpenBtn" title="Studio - Agents, Skills, Workflows" data-i18n-title="top.studio_title">▦ Studio</button>
-          <button class="hud-icon-btn" id="settingsBtn" title="Cài đặt" data-i18n-title="page.settings.label">
+          <button class="studio-open-btn" id="studioOpenBtn" title="Studio - Agents, Skills, Workflows" data-i18n-title="top.studio_title">â–¦ Studio</button>
+          <button class="hud-icon-btn" id="settingsBtn" title="CÃ i Ä‘áº·t" data-i18n-title="page.settings.label">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
               <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
@@ -121,17 +121,17 @@
               <line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>
             </svg>
           </button>
-          <!-- Nút loa ở đây đã BỎ (0.48.3): cùng một công tắc mà có tới ba chỗ bấm (header,
-               thanh nhập chat, công tắc trong Cài đặt nhanh). Giữ lại đúng nút trên THANH NHẬP
-               (#ttsToggleBar) - nó nằm ngay cạnh chỗ người ta gõ, thấy được ở cả màn Javis lẫn
-               trang Trò chuyện, và có ở màn hẹp. Chỗ trống này để dành cho hòm thư. -->
-          <button class="hud-icon-btn" id="resetBtn" title="Reset hội thoại" data-i18n-title="top.reset">
+          <!-- NÃºt loa á»Ÿ Ä‘Ã¢y Ä‘Ã£ Bá»Ž (0.48.3): cÃ¹ng má»™t cÃ´ng táº¯c mÃ  cÃ³ tá»›i ba chá»— báº¥m (header,
+               thanh nháº­p chat, cÃ´ng táº¯c trong CÃ i Ä‘áº·t nhanh). Giá»¯ láº¡i Ä‘Ãºng nÃºt trÃªn THANH NHáº¬P
+               (#ttsToggleBar) - nÃ³ náº±m ngay cáº¡nh chá»— ngÆ°á»i ta gÃµ, tháº¥y Ä‘Æ°á»£c á»Ÿ cáº£ mÃ n Javis láº«n
+               trang TrÃ² chuyá»‡n, vÃ  cÃ³ á»Ÿ mÃ n háº¹p. Chá»— trá»‘ng nÃ y Ä‘á»ƒ dÃ nh cho hÃ²m thÆ°. -->
+          <button class="hud-icon-btn" id="resetBtn" title="Reset há»™i thoáº¡i" data-i18n-title="top.reset">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.7 3M3 4v5h5"/>
             </svg>
           </button>
-          <!-- Mobile-only: hội thoại mới -->
-          <button class="hud-icon-btn new-chat-btn" id="newChatBtn" title="Hội thoại mới" data-i18n-title="top.new_chat" aria-label="Hội thoại mới" data-i18n-aria="top.new_chat">
+          <!-- Mobile-only: há»™i thoáº¡i má»›i -->
+          <button class="hud-icon-btn new-chat-btn" id="newChatBtn" title="Há»™i thoáº¡i má»›i" data-i18n-title="top.new_chat" aria-label="Há»™i thoáº¡i má»›i" data-i18n-aria="top.new_chat">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
@@ -140,85 +140,85 @@
       </div>
     </header>
 
-    <!-- Hộp thư chung: bản cập nhật + thông báo cộng đồng/marketing -->
+    <!-- Há»™p thÆ° chung: báº£n cáº­p nháº­t + thÃ´ng bÃ¡o cá»™ng Ä‘á»“ng/marketing -->
     <div class="notification-shade" id="notificationShade" hidden></div>
     <aside class="notification-panel" id="notificationPanel" role="dialog"
-           aria-modal="false" aria-label="Hộp thư Thông báo" data-i18n-aria="top.notifications" aria-hidden="true" hidden>
+           aria-modal="false" aria-label="Há»™p thÆ° ThÃ´ng bÃ¡o" data-i18n-aria="top.notifications" aria-hidden="true" hidden>
       <div class="noti-head">
         <div>
-          <div class="noti-title" data-i18n="noti.label">Thông báo</div>
-          <div class="noti-sub" id="notificationSummary" data-i18n="noti.summary">Cập nhật mới và tin từ Javis OS</div>
+          <div class="noti-title" data-i18n="noti.label">ThÃ´ng bÃ¡o</div>
+          <div class="noti-sub" id="notificationSummary" data-i18n="noti.summary">Cáº­p nháº­t má»›i vÃ  tin tá»« Javis OS</div>
         </div>
         <div class="noti-head-actions">
-          <button class="noti-text-btn" id="notificationReadAll" type="button" data-i18n="noti.read_all">Đọc tất cả</button>
-          <button class="noti-close" id="notificationClose" type="button" aria-label="Đóng" data-i18n-aria="common.close">×</button>
+          <button class="noti-text-btn" id="notificationReadAll" type="button" data-i18n="noti.read_all">Äá»c táº¥t cáº£</button>
+          <button class="noti-close" id="notificationClose" type="button" aria-label="ÄÃ³ng" data-i18n-aria="common.close">Ã—</button>
         </div>
       </div>
-      <!-- Hai tab: thư RIÊNG của người dùng và tin PHÁT CHUNG. Gộp một danh sách thì kết quả
-           công việc thật bị chôn dưới mấy dòng changelog, mà đó mới là thứ cần đọc ngay. -->
+      <!-- Hai tab: thÆ° RIÃŠNG cá»§a ngÆ°á»i dÃ¹ng vÃ  tin PHÃT CHUNG. Gá»™p má»™t danh sÃ¡ch thÃ¬ káº¿t quáº£
+           cÃ´ng viá»‡c tháº­t bá»‹ chÃ´n dÆ°á»›i máº¥y dÃ²ng changelog, mÃ  Ä‘Ã³ má»›i lÃ  thá»© cáº§n Ä‘á»c ngay. -->
       <div class="noti-tabs" role="tablist">
         <button class="noti-tab active" id="notiTabMine" type="button" role="tab" aria-selected="true">
-          <span data-i18n="noti.tab_mine">Của tôi</span><span class="noti-tab-count" id="notiTabMineCount" hidden>0</span>
+          <span data-i18n="noti.tab_mine">Cá»§a tÃ´i</span><span class="noti-tab-count" id="notiTabMineCount" hidden>0</span>
         </button>
         <button class="noti-tab" id="notiTabNews" type="button" role="tab" aria-selected="false">
-          <span data-i18n="noti.tab_news">Tin tức</span><span class="noti-tab-count" id="notiTabNewsCount" hidden>0</span>
+          <span data-i18n="noti.tab_news">Tin tá»©c</span><span class="noti-tab-count" id="notiTabNewsCount" hidden>0</span>
         </button>
         <!-- 0.403.0: Javis Core's notification filter (each group's mode, per-kind rules, undo). -->
         <button class="noti-tab noti-tab-filter" id="notiTabFilter" type="button" role="tab" aria-selected="false">
-          <span data-i18n="noti.filter_btn">Bộ lọc</span>
+          <span data-i18n="noti.filter_btn">Bá»™ lá»c</span>
         </button>
       </div>
       <div class="noti-list" id="notificationList">
-        <div class="noti-loading" data-i18n="noti.loading">Đang tải thông báo…</div>
+        <div class="noti-loading" data-i18n="noti.loading">Äang táº£i thÃ´ng bÃ¡oâ€¦</div>
       </div>
-      <!-- Công tắc thông báo đẩy. Ẩn khi trình duyệt/ngữ cảnh không cho (http trần, iOS chưa
-           cài PWA) và nói LÝ DO thay vì để một cái nút bấm không lên. -->
+      <!-- CÃ´ng táº¯c thÃ´ng bÃ¡o Ä‘áº©y. áº¨n khi trÃ¬nh duyá»‡t/ngá»¯ cáº£nh khÃ´ng cho (http tráº§n, iOS chÆ°a
+           cÃ i PWA) vÃ  nÃ³i LÃ DO thay vÃ¬ Ä‘á»ƒ má»™t cÃ¡i nÃºt báº¥m khÃ´ng lÃªn. -->
       <div class="noti-push" id="notificationPush" hidden>
         <div class="noti-push-main">
-          <span class="noti-push-title" data-i18n="noti.push">Thông báo đẩy</span>
-          <span class="noti-push-note" id="notificationPushNote" data-i18n="noti.push_note">Báo cả khi bạn không mở Javis</span>
+          <span class="noti-push-title" data-i18n="noti.push">ThÃ´ng bÃ¡o Ä‘áº©y</span>
+          <span class="noti-push-note" id="notificationPushNote" data-i18n="noti.push_note">BÃ¡o cáº£ khi báº¡n khÃ´ng má»Ÿ Javis</span>
         </div>
-        <button class="noti-text-btn" id="notificationPushTest" type="button" hidden data-i18n="noti.push_test">Gửi thử</button>
-        <button class="noti-text-btn primary" id="notificationPushToggle" type="button" data-i18n="noti.push_on">Bật</button>
+        <button class="noti-text-btn" id="notificationPushTest" type="button" hidden data-i18n="noti.push_test">Gá»­i thá»­</button>
+        <button class="noti-text-btn primary" id="notificationPushToggle" type="button" data-i18n="noti.push_on">Báº­t</button>
         <label class="noti-push-hide" id="notificationPushHideRow" hidden><input type="checkbox" id="notificationPushHide">
-          <span data-i18n="noti.push_hide">Ẩn nội dung trên thông báo đẩy</span></label>
+          <span data-i18n="noti.push_hide">áº¨n ná»™i dung trÃªn thÃ´ng bÃ¡o Ä‘áº©y</span></label>
       </div>
       <div class="noti-foot">
-        <button class="noti-text-btn" id="notificationRefresh" type="button" data-i18n="noti.refresh">↻ Làm mới</button>
-        <button class="noti-text-btn primary" id="notificationOpenUpdates" type="button" data-i18n="noti.open_updates">Xem nhật ký cập nhật →</button>
+        <button class="noti-text-btn" id="notificationRefresh" type="button" data-i18n="noti.refresh">â†» LÃ m má»›i</button>
+        <button class="noti-text-btn primary" id="notificationOpenUpdates" type="button" data-i18n="noti.open_updates">Xem nháº­t kÃ½ cáº­p nháº­t â†’</button>
       </div>
     </aside>
 
     <!-- ===== BODY: 3 columns ===== -->
     <div class="hud-body">
 
-      <!-- LEFT: Vault explorer (cây thư mục kiểu Obsidian + tìm note). Thay cho panel số liệu KD cũ. -->
+      <!-- LEFT: Vault explorer (cÃ¢y thÆ° má»¥c kiá»ƒu Obsidian + tÃ¬m note). Thay cho panel sá»‘ liá»‡u KD cÅ©. -->
       <aside class="hud-left">
-        <!-- Nút mở lại khi panel đang thu gọn (body.vault-thu). Ẩn mặc định bằng CSS;
-             chỉ hiện ở màn chính, không theo node sang tab "Thư mục" của trang Trò chuyện. -->
-        <button class="vault-expand" id="vtExpand" title="Mở lại panel Vault" data-i18n-title="vault.expand" aria-label="Mở lại panel Vault" data-i18n-aria="vault.expand"><i data-ic="panel-left"></i></button>
+        <!-- NÃºt má»Ÿ láº¡i khi panel Ä‘ang thu gá»n (body.vault-thu). áº¨n máº·c Ä‘á»‹nh báº±ng CSS;
+             chá»‰ hiá»‡n á»Ÿ mÃ n chÃ­nh, khÃ´ng theo node sang tab "ThÆ° má»¥c" cá»§a trang TrÃ² chuyá»‡n. -->
+        <button class="vault-expand" id="vtExpand" title="Má»Ÿ láº¡i panel Vault" data-i18n-title="vault.expand" aria-label="Má»Ÿ láº¡i panel Vault" data-i18n-aria="vault.expand"><i data-ic="panel-left"></i></button>
         <div class="vault-head">
           <span class="vault-title">VAULT</span>
           <span class="vault-tools">
-            <button class="mini-btn" id="vtNewFile" title="Tạo file mới ở gốc brain" data-i18n-title="vault.new_file">＋</button>
-            <button class="mini-btn" id="vtNewDir" title="Tạo thư mục mới ở gốc brain" data-i18n-title="vault.new_dir"><i data-ic="folder-plus"></i></button>
-            <button class="mini-btn" id="vtDaily" title="Nhật ký hôm nay (Ctrl+D / Cmd+D khi đang ở khung ghi chú)" data-i18n-title="vault.daily"><i data-ic="calendar"></i></button>
-            <button class="mini-btn" id="vtRefresh" title="Làm mới cây" data-i18n-title="vault.refresh">⟳</button>
-            <button class="mini-btn" id="vtCollapse" title="Thu gọn panel Vault (như sidebar)" data-i18n-title="vault.collapse"><i data-ic="panel-left"></i></button>
+            <button class="mini-btn" id="vtNewFile" title="Táº¡o file má»›i á»Ÿ gá»‘c brain" data-i18n-title="vault.new_file">ï¼‹</button>
+            <button class="mini-btn" id="vtNewDir" title="Táº¡o thÆ° má»¥c má»›i á»Ÿ gá»‘c brain" data-i18n-title="vault.new_dir"><i data-ic="folder-plus"></i></button>
+            <button class="mini-btn" id="vtDaily" title="Nháº­t kÃ½ hÃ´m nay (Ctrl+D / Cmd+D khi Ä‘ang á»Ÿ khung ghi chÃº)" data-i18n-title="vault.daily"><i data-ic="calendar"></i></button>
+            <button class="mini-btn" id="vtRefresh" title="LÃ m má»›i cÃ¢y" data-i18n-title="vault.refresh">âŸ³</button>
+            <button class="mini-btn" id="vtCollapse" title="Thu gá»n panel Vault (nhÆ° sidebar)" data-i18n-title="vault.collapse"><i data-ic="panel-left"></i></button>
           </span>
         </div>
         <div class="vault-search">
           <i class="vs-ico" data-ic="search"></i>
-          <!-- data-esc: ô này TỰ xử Esc (xoá chữ, về lại cây). Trình sửa note bắt Esc ở mức
-               document + capture, nên không khai dấu này thì Esc ở đây đóng mất file đang mở. -->
-          <input id="vaultSearch" type="text" data-esc placeholder="Tìm note..." data-i18n-ph="vault.search_ph" spellcheck="false" autocomplete="off">
-          <button class="vs-clear" id="vaultSearchClear" title="Xoá tìm kiếm" data-i18n-title="vault.search_clear" hidden><i data-ic="x"></i></button>
+          <!-- data-esc: Ã´ nÃ y Tá»° xá»­ Esc (xoÃ¡ chá»¯, vá» láº¡i cÃ¢y). TrÃ¬nh sá»­a note báº¯t Esc á»Ÿ má»©c
+               document + capture, nÃªn khÃ´ng khai dáº¥u nÃ y thÃ¬ Esc á»Ÿ Ä‘Ã¢y Ä‘Ã³ng máº¥t file Ä‘ang má»Ÿ. -->
+          <input id="vaultSearch" type="text" data-esc placeholder="TÃ¬m note..." data-i18n-ph="vault.search_ph" spellcheck="false" autocomplete="off">
+          <button class="vs-clear" id="vaultSearchClear" title="XoÃ¡ tÃ¬m kiáº¿m" data-i18n-title="vault.search_clear" hidden><i data-ic="x"></i></button>
         </div>
         <div class="vault-modes">
-          <button class="vs-chip active" id="vsModeName" data-mode="name" title="Lọc nhanh theo tên trong cây" data-i18n-title="vault.mode_name_title" data-i18n="vault.mode_name">Tên</button>
-          <button class="vs-chip" id="vsModeContent" data-mode="content" title="Tìm sâu theo nội dung (quét toàn vault)" data-i18n-title="vault.mode_content_title" data-i18n="vault.mode_content">Nội dung</button>
+          <button class="vs-chip active" id="vsModeName" data-mode="name" title="Lá»c nhanh theo tÃªn trong cÃ¢y" data-i18n-title="vault.mode_name_title" data-i18n="vault.mode_name">TÃªn</button>
+          <button class="vs-chip" id="vsModeContent" data-mode="content" title="TÃ¬m sÃ¢u theo ná»™i dung (quÃ©t toÃ n vault)" data-i18n-title="vault.mode_content_title" data-i18n="vault.mode_content">Ná»™i dung</button>
         </div>
-        <div class="vault-tree" id="vaultTree"><div class="vt-info" data-i18n="common.loading">Đang tải…</div></div>
+        <div class="vault-tree" id="vaultTree"><div class="vt-info" data-i18n="common.loading">Äang táº£iâ€¦</div></div>
         <div class="vault-results" id="vaultResults" hidden></div>
       </aside>
 
@@ -228,12 +228,12 @@
         <div id="graph2d"></div>
         <div class="concept-labels" id="conceptLabels"></div>
         <div class="orb-overlay">
-          <div class="orb-state" id="orbState" data-i18n="orb.ready">SẴN SÀNG</div>
+          <div class="orb-state" id="orbState" data-i18n="orb.ready">Sáº´N SÃ€NG</div>
           <div class="orb-interim" id="voiceInterim"></div>
         </div>
         <button class="brain-overlay-toggle" id="brainOverlayToggle" type="button"
-                aria-pressed="false" aria-label="Ẩn nhãn và số liệu brain" data-i18n-aria="orb.overlay_aria"
-                title="Ẩn nhãn thư mục và số liệu Agents / Skills / Workflows" data-i18n-title="orb.overlay_title">
+                aria-pressed="false" aria-label="áº¨n nhÃ£n vÃ  sá»‘ liá»‡u brain" data-i18n-aria="orb.overlay_aria"
+                title="áº¨n nhÃ£n thÆ° má»¥c vÃ  sá»‘ liá»‡u Agents / Skills / Workflows" data-i18n-title="orb.overlay_title">
           <svg class="brain-eye-on" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
             <circle cx="12" cy="12" r="2.75"></circle>
@@ -243,10 +243,10 @@
           </svg>
         </button>
 
-        <!-- Timelapse "cuộc đời brain": chiếu lại note mọc dần theo thời gian tạo (chỉ đồ thị 2D) -->
+        <!-- Timelapse "cuá»™c Ä‘á»i brain": chiáº¿u láº¡i note má»c dáº§n theo thá»i gian táº¡o (chá»‰ Ä‘á»“ thá»‹ 2D) -->
         <button class="brain-overlay-toggle graph-timelapse-btn" id="graphTimelapseBtn" type="button"
-                aria-pressed="false" aria-label="Chiếu timelapse cuộc đời brain" data-i18n-aria="orb.timelapse_aria"
-                title="Timelapse: xem lại brain lớn lên từ note đầu tiên tới giờ" data-i18n-title="orb.timelapse_title">
+                aria-pressed="false" aria-label="Chiáº¿u timelapse cuá»™c Ä‘á»i brain" data-i18n-aria="orb.timelapse_aria"
+                title="Timelapse: xem láº¡i brain lá»›n lÃªn tá»« note Ä‘áº§u tiÃªn tá»›i giá»" data-i18n-title="orb.timelapse_title">
           <svg class="tl-play" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="9"></circle>
             <path d="M12 7v5l3.5 2"></path>
@@ -257,11 +257,11 @@
           </svg>
         </button>
 
-        <!-- BUNG/THU khoang não - CHỈ hiện trên điện thoại (console.css .brain-max-btn).
-             Trên desktop khoang não đã chiếm cả cột giữa nên không có gì để bung. -->
+        <!-- BUNG/THU khoang nÃ£o - CHá»ˆ hiá»‡n trÃªn Ä‘iá»‡n thoáº¡i (console.css .brain-max-btn).
+             TrÃªn desktop khoang nÃ£o Ä‘Ã£ chiáº¿m cáº£ cá»™t giá»¯a nÃªn khÃ´ng cÃ³ gÃ¬ Ä‘á»ƒ bung. -->
         <button class="brain-overlay-toggle brain-max-btn" id="brainMaxBtn" type="button"
-                aria-pressed="false" aria-label="Bung khoang não toàn màn" data-i18n-aria="orb.max_aria"
-                title="Bung khoang não ra toàn màn để nhìn rõ đồ thị" data-i18n-title="orb.max_title">
+                aria-pressed="false" aria-label="Bung khoang nÃ£o toÃ n mÃ n" data-i18n-aria="orb.max_aria"
+                title="Bung khoang nÃ£o ra toÃ n mÃ n Ä‘á»ƒ nhÃ¬n rÃµ Ä‘á»“ thá»‹" data-i18n-title="orb.max_title">
           <svg class="bmx-in" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4"></path>
           </svg>
@@ -270,32 +270,32 @@
           </svg>
         </button>
 
-        <!-- Lớp Agentic: số agent / skill / workflow - bấm mở Studio -->
+        <!-- Lá»›p Agentic: sá»‘ agent / skill / workflow - báº¥m má»Ÿ Studio -->
         <div class="brain-stats" id="brainStats">
-          <button class="bstat" data-tab="agents" title="Mở Studio · Agents" data-i18n-title="orb.stat_agents">
+          <button class="bstat" data-tab="agents" title="Má»Ÿ Studio Â· Agents" data-i18n-title="orb.stat_agents">
             <span class="bstat-num" id="statAgents">-</span>
             <span class="bstat-lbl">AGENTS</span>
           </button>
           <span class="bstat-sep"></span>
-          <button class="bstat" data-tab="skills" title="Mở Studio · Skills" data-i18n-title="orb.stat_skills">
+          <button class="bstat" data-tab="skills" title="Má»Ÿ Studio Â· Skills" data-i18n-title="orb.stat_skills">
             <span class="bstat-num" id="statSkills">-</span>
             <span class="bstat-lbl">SKILLS</span>
           </button>
           <span class="bstat-sep"></span>
-          <button class="bstat" data-tab="workflows" title="Mở Studio · Workflows" data-i18n-title="orb.stat_workflows">
+          <button class="bstat" data-tab="workflows" title="Má»Ÿ Studio Â· Workflows" data-i18n-title="orb.stat_workflows">
             <span class="bstat-num" id="statWorkflows">-</span>
             <span class="bstat-lbl">WORKFLOWS</span>
           </button>
         </div>
 
-        <!-- MỨC DÙNG token đã chuyển thành trang riêng "Mức dùng" trong rail (nhóm Hệ thống) - có đồ thị 14 ngày. -->
+        <!-- Má»¨C DÃ™NG token Ä‘Ã£ chuyá»ƒn thÃ nh trang riÃªng "Má»©c dÃ¹ng" trong rail (nhÃ³m Há»‡ thá»‘ng) - cÃ³ Ä‘á»“ thá»‹ 14 ngÃ y. -->
 
-        <!-- Popup sửa note: neo absolute BÊN TRONG .hud-center → đè lên visual não, cây trái & chat phải vẫn sống.
-             Nội dung (toolbar + thân) do console.js openNote() dựng theo loại file. -->
+        <!-- Popup sá»­a note: neo absolute BÃŠN TRONG .hud-center â†’ Ä‘Ã¨ lÃªn visual nÃ£o, cÃ¢y trÃ¡i & chat pháº£i váº«n sá»‘ng.
+             Ná»™i dung (toolbar + thÃ¢n) do console.js openNote() dá»±ng theo loáº¡i file. -->
         <div class="note-editor" id="noteEditor" hidden>
           <div class="ne-bar">
-            <!-- Lùi / Tiến giữa các note. Đặt BÊN TRÁI tên file, đúng chỗ trình duyệt nào cũng
-                 để nó, nên không phải học. console.js _neVeNutLui() dựng theo vệt đường đi. -->
+            <!-- LÃ¹i / Tiáº¿n giá»¯a cÃ¡c note. Äáº·t BÃŠN TRÃI tÃªn file, Ä‘Ãºng chá»— trÃ¬nh duyá»‡t nÃ o cÅ©ng
+                 Ä‘á»ƒ nÃ³, nÃªn khÃ´ng pháº£i há»c. console.js _neVeNutLui() dá»±ng theo vá»‡t Ä‘Æ°á»ng Ä‘i. -->
             <span class="ne-nav" id="neNav"></span>
             <span class="ne-title" id="neTitle">note.md</span>
             <span class="ne-actions" id="neActions"></span>
@@ -309,95 +309,95 @@
 
       <!-- RIGHT: transcript + activity -->
       <aside class="hud-right">
-        <!-- Nút mở lại khi khung hội thoại đang thu (body.chatcol-thu, chỉ desktop).
-             Ẩn mặc định bằng CSS - trên điện thoại cột này chính là khung chat, không thu. -->
-        <button class="chatcol-expand" id="chatColMo" title="Mở lại khung hội thoại" data-i18n-title="chat.col_expand" aria-label="Mở lại khung hội thoại" data-i18n-aria="chat.col_expand"><i data-ic="panel-left"></i></button>
+        <!-- NÃºt má»Ÿ láº¡i khi khung há»™i thoáº¡i Ä‘ang thu (body.chatcol-thu, chá»‰ desktop).
+             áº¨n máº·c Ä‘á»‹nh báº±ng CSS - trÃªn Ä‘iá»‡n thoáº¡i cá»™t nÃ y chÃ­nh lÃ  khung chat, khÃ´ng thu. -->
+        <button class="chatcol-expand" id="chatColMo" title="Má»Ÿ láº¡i khung há»™i thoáº¡i" data-i18n-title="chat.col_expand" aria-label="Má»Ÿ láº¡i khung há»™i thoáº¡i" data-i18n-aria="chat.col_expand"><i data-ic="panel-left"></i></button>
         <div class="panel-label">
-          <span data-i18n="chat.panel">HỘI THOẠI</span>
-          <!-- Chip project: sessions-ui.js vẽ vào đây khi lượt chat thuộc một project.
-               Rỗng thì span co về 0 nên hàng vẫn là "nhãn ... nút" như cũ. -->
+          <span data-i18n="chat.panel">Há»˜I THOáº I</span>
+          <!-- Chip project: sessions-ui.js váº½ vÃ o Ä‘Ã¢y khi lÆ°á»£t chat thuá»™c má»™t project.
+               Rá»—ng thÃ¬ span co vá» 0 nÃªn hÃ ng váº«n lÃ  "nhÃ£n ... nÃºt" nhÆ° cÅ©. -->
           <span class="proj-chip-host" id="projChipHost"></span>
           <span class="panel-acts">
-            <button class="mini-btn" id="chatZoomBtn" title="Mở trang Trò chuyện (khung chat toàn màn)" data-i18n-title="chat.zoom"><i data-ic="maximize"></i></button>
-            <button class="mini-btn chatcol-thu-btn" id="chatColThu" title="Thu khung hội thoại sang phải (như thu sidebar)" data-i18n-title="chat.col_collapse"><i data-ic="panel-left"></i></button>
+            <button class="mini-btn" id="chatZoomBtn" title="Má»Ÿ trang TrÃ² chuyá»‡n (khung chat toÃ n mÃ n)" data-i18n-title="chat.zoom"><i data-ic="maximize"></i></button>
+            <button class="mini-btn chatcol-thu-btn" id="chatColThu" title="Thu khung há»™i thoáº¡i sang pháº£i (nhÆ° thu sidebar)" data-i18n-title="chat.col_collapse"><i data-ic="panel-left"></i></button>
           </span>
         </div>
-        <!-- MỨC DÙNG token đã DỜI xuống góc dưới-phải khung giữa (giải phóng chỗ cho khung chat). -->
-        <!-- Thanh gọi (call-bar.js, 0.65.18): hiện khi bấm mic gọi Javis. Nằm trong CHAT_NODE_IDS
-             (console.js) nên sang trang Trò chuyện là đi theo khung chat. -->
+        <!-- Má»¨C DÃ™NG token Ä‘Ã£ Dá»œI xuá»‘ng gÃ³c dÆ°á»›i-pháº£i khung giá»¯a (giáº£i phÃ³ng chá»— cho khung chat). -->
+        <!-- Thanh gá»i (call-bar.js, 0.65.18): hiá»‡n khi báº¥m mic gá»i Javis. Náº±m trong CHAT_NODE_IDS
+             (console.js) nÃªn sang trang TrÃ² chuyá»‡n lÃ  Ä‘i theo khung chat. -->
         <div class="call-bar" id="callBar" hidden></div>
-        <div class="transcript" id="chatArea" data-i18n-empty="chat.empty_hint" data-empty-hint="Talk or type to chat with your sweet girl Aarohi ❤️"></div>
-        <!-- Thanh #toolBar cũ ĐÃ BỎ: trạng thái "đang suy nghĩ / gọi tool" giờ hiện bằng
-             chip hoạt động NGAY TRONG #chatArea (app.js showActivity) → tự đi theo cả khi
-             phóng to chat workspace (chat-zoom chỉ dời #chatArea, trước đây toolBar bị bỏ lại). -->
-        <!-- "BỘ NHỚ DÀI HẠN" + auto-reflect "sau mỗi 6 lượt" ĐÃ BỎ: engine tự học mới (learn.py)
-             rewire sau MỖI lượt (có debounce, read-only, undo được). Cấu hình + xem "đã học gì" +
-             hoàn tác ở trang sidebar "Tự học" (console.js renderLearn). Widget cũ vốn là UI chết,
-             không còn JS nào gắn vào (autoLearnToggle/learnBtn/memCount không có handler). -->
+        <div class="transcript" id="chatArea" data-i18n-empty="chat.empty_hint" data-empty-hint="Talk or type to chat with your sweet girl Aarohi â¤ï¸"></div>
+        <!-- Thanh #toolBar cÅ© ÄÃƒ Bá»Ž: tráº¡ng thÃ¡i "Ä‘ang suy nghÄ© / gá»i tool" giá» hiá»‡n báº±ng
+             chip hoáº¡t Ä‘á»™ng NGAY TRONG #chatArea (app.js showActivity) â†’ tá»± Ä‘i theo cáº£ khi
+             phÃ³ng to chat workspace (chat-zoom chá»‰ dá»i #chatArea, trÆ°á»›c Ä‘Ã¢y toolBar bá»‹ bá» láº¡i). -->
+        <!-- "Bá»˜ NHá»š DÃ€I Háº N" + auto-reflect "sau má»—i 6 lÆ°á»£t" ÄÃƒ Bá»Ž: engine tá»± há»c má»›i (learn.py)
+             rewire sau Má»–I lÆ°á»£t (cÃ³ debounce, read-only, undo Ä‘Æ°á»£c). Cáº¥u hÃ¬nh + xem "Ä‘Ã£ há»c gÃ¬" +
+             hoÃ n tÃ¡c á»Ÿ trang sidebar "Tá»± há»c" (console.js renderLearn). Widget cÅ© vá»‘n lÃ  UI cháº¿t,
+             khÃ´ng cÃ²n JS nÃ o gáº¯n vÃ o (autoLearnToggle/learnBtn/memCount khÃ´ng cÃ³ handler). -->
 
-        <!-- HỆ THỐNG + MCP ĐANG DÙNG đã DỜI xuống thanh model-bar (ngang hàng ô chọn model). -->
+        <!-- Há»† THá»NG + MCP ÄANG DÃ™NG Ä‘Ã£ Dá»œI xuá»‘ng thanh model-bar (ngang hÃ ng Ã´ chá»n model). -->
 
 
-        <!-- ===== CÀI ĐẶT: avatar + tên miền + giọng nói + tốc độ (console.js nhúng vào trang Cài đặt) ===== -->
+        <!-- ===== CÃ€I Äáº¶T: avatar + tÃªn miá»n + giá»ng nÃ³i + tá»‘c Ä‘á»™ (console.js nhÃºng vÃ o trang CÃ i Ä‘áº·t) ===== -->
         <details class="quick-set" id="quickSet" open>
           <summary class="panel-label" style="cursor:pointer;list-style:none;user-select:none">
-            <i data-ic="settings"></i> <span data-i18n="qs.title">CÀI ĐẶT NHANH</span> <i class="qs-caret" data-ic="chevron-right"></i>
+            <i data-ic="settings"></i> <span data-i18n="qs.title">CÃ€I Äáº¶T NHANH</span> <i class="qs-caret" data-ic="chevron-right"></i>
           </summary>
           <div class="quick-set-body">
 
-            <!-- MỘT CỘT, mỗi thẻ một việc (0.58.8). Bản trước xếp lưới HAI cột: các thẻ cao
-                 thấp chênh nhau rất xa (thẻ giọng nói 1200px nằm cạnh thẻ ảnh đại diện 150px)
-                 nên ô ngắn bị ô dài kéo giãn theo, để lại mảng trống gần một màn hình - chủ
-                 repo gọi đúng tên là "rất rỗi". Một cột thì không còn ô nào phải chờ ô nào.
-                 Trong mỗi thẻ, bề ngang được dùng bằng hàng "nhãn trái, ô chọn phải" (.qs-field)
-                 thay vì xếp chồng dọc, nên thẻ ngắn lại mà không phải bỏ bớt nội dung. -->
+            <!-- Má»˜T Cá»˜T, má»—i tháº» má»™t viá»‡c (0.58.8). Báº£n trÆ°á»›c xáº¿p lÆ°á»›i HAI cá»™t: cÃ¡c tháº» cao
+                 tháº¥p chÃªnh nhau ráº¥t xa (tháº» giá»ng nÃ³i 1200px náº±m cáº¡nh tháº» áº£nh Ä‘áº¡i diá»‡n 150px)
+                 nÃªn Ã´ ngáº¯n bá»‹ Ã´ dÃ i kÃ©o giÃ£n theo, Ä‘á»ƒ láº¡i máº£ng trá»‘ng gáº§n má»™t mÃ n hÃ¬nh - chá»§
+                 repo gá»i Ä‘Ãºng tÃªn lÃ  "ráº¥t rá»—i". Má»™t cá»™t thÃ¬ khÃ´ng cÃ²n Ã´ nÃ o pháº£i chá» Ã´ nÃ o.
+                 Trong má»—i tháº», bá» ngang Ä‘Æ°á»£c dÃ¹ng báº±ng hÃ ng "nhÃ£n trÃ¡i, Ã´ chá»n pháº£i" (.qs-field)
+                 thay vÃ¬ xáº¿p chá»“ng dá»c, nÃªn tháº» ngáº¯n láº¡i mÃ  khÃ´ng pháº£i bá» bá»›t ná»™i dung. -->
 
-            <!-- Ngôn ngữ: console.js render vào đây khi mở trang Cài đặt.
-                 Đặt TRÊN nhóm giọng nói vì giọng đọc phụ thuộc ngôn ngữ, không ngược lại. -->
+            <!-- NgÃ´n ngá»¯: console.js render vÃ o Ä‘Ã¢y khi má»Ÿ trang CÃ i Ä‘áº·t.
+                 Äáº·t TRÃŠN nhÃ³m giá»ng nÃ³i vÃ¬ giá»ng Ä‘á»c phá»¥ thuá»™c ngÃ´n ngá»¯, khÃ´ng ngÆ°á»£c láº¡i. -->
             <div id="replyLangHost" data-settings-section="general"></div>
 
-            <!-- GIỌNG NÓI (0.65.19, docs/dev/2026-10-voice-call-spec.md mục 5): MỘT thẻ, ba ô, mọi ô
-                 tự lưu khi đổi, không còn nút Lưu. Bấm mic là gọi Javis, nên những gì máy tự lo được
-                 (bộ não giọng, tai nghe lại, ngôn ngữ nghe, im bao lâu thì gửi, ngắt lời bằng giọng,
-                 nhịp hội thoại, đọc trả lời bằng giọng; từ 0.65.22 cả "Tập trung": im 30 giây thì ngắt
-                 Live, nói là nối lại) không còn ô nhập. Giá trị đã lưu từ bản cũ
-                 vẫn được đọc và dùng tiếp. console.js renderVoiceCard() đổ lựa chọn và nối tay bắt;
-                 khung là node TĨNH để data-i18n dịch được và #rateSel giữ tay bắt của app.js. -->
+            <!-- GIá»ŒNG NÃ“I (0.65.19, docs/dev/2026-10-voice-call-spec.md má»¥c 5): Má»˜T tháº», ba Ã´, má»i Ã´
+                 tá»± lÆ°u khi Ä‘á»•i, khÃ´ng cÃ²n nÃºt LÆ°u. Báº¥m mic lÃ  gá»i Javis, nÃªn nhá»¯ng gÃ¬ mÃ¡y tá»± lo Ä‘Æ°á»£c
+                 (bá»™ nÃ£o giá»ng, tai nghe láº¡i, ngÃ´n ngá»¯ nghe, im bao lÃ¢u thÃ¬ gá»­i, ngáº¯t lá»i báº±ng giá»ng,
+                 nhá»‹p há»™i thoáº¡i, Ä‘á»c tráº£ lá»i báº±ng giá»ng; tá»« 0.65.22 cáº£ "Táº­p trung": im 30 giÃ¢y thÃ¬ ngáº¯t
+                 Live, nÃ³i lÃ  ná»‘i láº¡i) khÃ´ng cÃ²n Ã´ nháº­p. GiÃ¡ trá»‹ Ä‘Ã£ lÆ°u tá»« báº£n cÅ©
+                 váº«n Ä‘Æ°á»£c Ä‘á»c vÃ  dÃ¹ng tiáº¿p. console.js renderVoiceCard() Ä‘á»• lá»±a chá»n vÃ  ná»‘i tay báº¯t;
+                 khung lÃ  node TÄ¨NH Ä‘á»ƒ data-i18n dá»‹ch Ä‘Æ°á»£c vÃ  #rateSel giá»¯ tay báº¯t cá»§a app.js. -->
             <div class="qs-block" id="voiceCard" data-settings-section="voice">
-              <div class="popover-label" data-i18n="settings.vc_title">GIỌNG NÓI</div>
+              <div class="popover-label" data-i18n="settings.vc_title">GIá»ŒNG NÃ“I</div>
               <!-- 0.298.0: what you will HEAR, in words: the call path and its voice, then the voice that reads chat
                    answers, each with male/female (voice-catalog.js). Owner report 23/10: female picked, male heard,
                    because a ChatGPT Live call speaks with its own voice list, not the reading voice. -->
               <div class="vc-now" id="vcNow" role="status"></div>
               <div class="qs-field vc-field">
                 <div class="vc-lblcol">
-                  <label class="qs-lbl" for="vcVoice" id="vcVoiceLbl" data-i18n="settings.vc_voice">Giọng Javis</label>
+                  <label class="qs-lbl" for="vcVoice" id="vcVoiceLbl" data-i18n="settings.vc_voice">Giá»ng Javis</label>
                   <div class="vc-sub" id="vcVoiceSub"></div>
                 </div>
                 <div class="v2-voice-row">
                   <select class="js-input" id="vcVoice"></select>
-                  <button class="gcard-btn ghost" type="button" id="vcTry" data-i18n="qs.test_voice">▶ Nghe thử</button>
+                  <button class="gcard-btn ghost" type="button" id="vcTry" data-i18n="qs.test_voice">â–¶ Nghe thá»­</button>
                   <span class="vc-saved" id="vcVoiceSaved" aria-live="polite"></span>
                 </div>
               </div>
-              <div class="qs-hint" id="vcVoiceNote" data-i18n="qs.voice_ml_note" hidden>Giọng đa ngôn ngữ hỗ trợ tiếng Việt.</div>
+              <div class="qs-hint" id="vcVoiceNote" data-i18n="qs.voice_ml_note" hidden>Giá»ng Ä‘a ngÃ´n ngá»¯ há»— trá»£ tiáº¿ng Viá»‡t.</div>
               <div class="vc-mismatch" id="vcMismatch" role="status" hidden>
                 <span id="vcMismatchTxt"></span>
                 <button class="gcard-btn" type="button" id="vcMismatchFix"></button>
               </div>
-              <!-- 0.255.0 (owner: "đang thiếu ElevenLabs"): ChatGPT Live and Live over an API speak with their own
+              <!-- 0.255.0 (owner: "Ä‘ang thiáº¿u ElevenLabs"): ChatGPT Live and Live over an API speak with their own
                    voice, so on those paths the list above holds their voices and ElevenLabs had nowhere to go. This
                    row picks the voice that reads chat answers and voice notes; on the Basic path the list above
                    already does that, so console.js hides this row there. -->
               <div class="qs-field vc-field" id="vcReadRow" hidden>
                 <div class="vc-lblcol">
-                  <label class="qs-lbl" for="vcReadVoice"><span data-i18n="settings.vc_read_voice">Giọng đọc câu trả lời</span> <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giải thích" title="Xem giải thích" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button></label>
-                  <div class="vc-sub" data-i18n="settings.vc_read_sub">Đọc tin trong khung chat và ghi chú giọng nói.</div>
+                  <label class="qs-lbl" for="vcReadVoice"><span data-i18n="settings.vc_read_voice">Giá»ng Ä‘á»c cÃ¢u tráº£ lá»i</span> <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giáº£i thÃ­ch" title="Xem giáº£i thÃ­ch" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button></label>
+                  <div class="vc-sub" data-i18n="settings.vc_read_sub">Äá»c tin trong khung chat vÃ  ghi chÃº giá»ng nÃ³i.</div>
                 </div>
-                <div class="info-body" hidden data-i18n="settings.vc_read_info">Giọng đọc câu trả lời trong chat và ghi chú giọng nói gửi qua Telegram, Zalo. Cuộc gọi ChatGPT Live hay Live qua API nói bằng giọng riêng của nó nên không đổi theo ô này.</div>
+                <div class="info-body" hidden data-i18n="settings.vc_read_info">Giá»ng Ä‘á»c cÃ¢u tráº£ lá»i trong chat vÃ  ghi chÃº giá»ng nÃ³i gá»­i qua Telegram, Zalo. Cuá»™c gá»i ChatGPT Live hay Live qua API nÃ³i báº±ng giá»ng riÃªng cá»§a nÃ³ nÃªn khÃ´ng Ä‘á»•i theo Ã´ nÃ y.</div>
                 <div class="v2-voice-row">
                   <select class="js-input" id="vcReadVoice"></select>
-                  <button class="gcard-btn ghost" type="button" id="vcReadTry" data-i18n="qs.test_voice">▶ Nghe thử</button>
+                  <button class="gcard-btn ghost" type="button" id="vcReadTry" data-i18n="qs.test_voice">â–¶ Nghe thá»­</button>
                   <span class="vc-saved" id="vcReadSaved" aria-live="polite"></span>
                 </div>
               </div>
@@ -406,14 +406,14 @@
                    list cannot load. -->
               <div id="vcEleven" hidden>
                 <div class="qs-field">
-                  <label class="qs-lbl" for="vcElKey"><span>ElevenLabs API key</span> <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giải thích" title="Xem giải thích" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button> <span class="dim" id="vcElKeySet" data-i18n="settings.key_set" hidden>(đã có - để trống nếu không đổi)</span></label>
-                  <div class="info-body" hidden data-i18n="settings.vc_el_info">Lấy key ở elevenlabs.io, mục Developers, API Keys. Giọng bạn tự nhân bản trên ElevenLabs cũng có trong danh sách. Model Multilingual v2 không đọc được tiếng Việt, nên câu tiếng Việt tự dùng Flash v2.5.</div>
-                  <input class="js-input" id="vcElKey" type="password" autocomplete="off" data-i18n-ph="settings.eleven_ph" placeholder="Dán API key ElevenLabs">
+                  <label class="qs-lbl" for="vcElKey"><span>ElevenLabs API key</span> <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giáº£i thÃ­ch" title="Xem giáº£i thÃ­ch" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button> <span class="dim" id="vcElKeySet" data-i18n="settings.key_set" hidden>(Ä‘Ã£ cÃ³ - Ä‘á»ƒ trá»‘ng náº¿u khÃ´ng Ä‘á»•i)</span></label>
+                  <div class="info-body" hidden data-i18n="settings.vc_el_info">Láº¥y key á»Ÿ elevenlabs.io, má»¥c Developers, API Keys. Giá»ng báº¡n tá»± nhÃ¢n báº£n trÃªn ElevenLabs cÅ©ng cÃ³ trong danh sÃ¡ch. Model Multilingual v2 khÃ´ng Ä‘á»c Ä‘Æ°á»£c tiáº¿ng Viá»‡t, nÃªn cÃ¢u tiáº¿ng Viá»‡t tá»± dÃ¹ng Flash v2.5.</div>
+                  <input class="js-input" id="vcElKey" type="password" autocomplete="off" data-i18n-ph="settings.eleven_ph" placeholder="DÃ¡n API key ElevenLabs">
                 </div>
                 <div class="qs-field">
-                  <label class="qs-lbl" for="vcElVoiceSel" data-i18n="settings.vc_el_voice">Giọng ElevenLabs</label>
+                  <label class="qs-lbl" for="vcElVoiceSel" data-i18n="settings.vc_el_voice">Giá»ng ElevenLabs</label>
                   <select class="js-input" id="vcElVoiceSel" hidden></select>
-                  <input class="js-input" id="vcElVoice" data-i18n-ph="settings.eleven_voice_ph" placeholder="Ví dụ: 21m00Tcm4TlvDq8ikWAM (Rachel)">
+                  <input class="js-input" id="vcElVoice" data-i18n-ph="settings.eleven_voice_ph" placeholder="VÃ­ dá»¥: 21m00Tcm4TlvDq8ikWAM (Rachel)">
                   <div class="qs-hint" id="vcElVoiceMsg" role="status"></div>
                 </div>
                 <div class="qs-field">
@@ -424,144 +424,144 @@
               <!-- Mic and speaker test (0.222.0, dashboard/mic-test.js): a person speaking is the only check
                    a muted mic or a level slider at zero cannot pass. -->
               <div class="qs-field">
-                <span class="qs-lbl" data-i18n="settings.vc_mic_lbl">Thử mic và loa</span>
+                <span class="qs-lbl" data-i18n="settings.vc_mic_lbl">Thá»­ mic vÃ  loa</span>
                 <div class="v2-voice-row">
-                  <button class="gcard-btn ghost" type="button" id="vcMicTest" data-i18n="settings.vc_mic_btn">Thử mic</button>
-                  <button class="gcard-btn ghost" type="button" id="vcSpkTest" data-i18n="settings.vc_spk_btn">Thử loa</button>
+                  <button class="gcard-btn ghost" type="button" id="vcMicTest" data-i18n="settings.vc_mic_btn">Thá»­ mic</button>
+                  <button class="gcard-btn ghost" type="button" id="vcSpkTest" data-i18n="settings.vc_spk_btn">Thá»­ loa</button>
                 </div>
               </div>
               <div class="mic-meter" aria-hidden="true"><div class="mic-meter-bar" id="vcMicBar"></div></div>
               <div class="mic-result" id="vcMicResult" role="status"></div>
               <details class="qs-advanced" id="vcAdvanced">
-                <summary data-i18n="settings.vc_advanced">Nâng cao</summary>
+                <summary data-i18n="settings.vc_advanced">NÃ¢ng cao</summary>
                 <div class="qs-field">
-                  <label class="qs-lbl" for="vcEngine" data-i18n="settings.vc_engine">Đường gọi</label>
+                  <label class="qs-lbl" for="vcEngine" data-i18n="settings.vc_engine">ÄÆ°á»ng gá»i</label>
                   <select class="js-input" id="vcEngine">
-                    <option value="auto" data-i18n="settings.vc_engine_auto">Tự động</option>
+                    <option value="auto" data-i18n="settings.vc_engine_auto">Tá»± Ä‘á»™ng</option>
                     <option value="chatgpt">ChatGPT Live</option>
                     <option value="api" data-i18n="settings.vc_engine_api">Live qua API key</option>
-                    <option value="basic" data-i18n="settings.vc_engine_basic">Cơ bản</option>
+                    <option value="basic" data-i18n="settings.vc_engine_basic">CÆ¡ báº£n</option>
                   </select>
                 </div>
-                <!-- Bộ não trả lời nhanh + Model: CHỈ hiện khi cuộc gọi chạy đường Cơ bản (0.65.31, chủ dự
-                     án góp ý 02/10). ChatGPT Live và Live qua API tự nghe, tự trả lời nên ô này không có
-                     tác dụng; để hiện ở đó thì chọn Antigravity mà vẫn nghe ChatGPT trả lời, rất khó hiểu.
-                     console.js renderVoiceCard() bật/tắt theo đường đang dùng thật (call.engine). -->
+                <!-- Bá»™ nÃ£o tráº£ lá»i nhanh + Model: CHá»ˆ hiá»‡n khi cuá»™c gá»i cháº¡y Ä‘Æ°á»ng CÆ¡ báº£n (0.65.31, chá»§ dá»±
+                     Ã¡n gÃ³p Ã½ 02/10). ChatGPT Live vÃ  Live qua API tá»± nghe, tá»± tráº£ lá»i nÃªn Ã´ nÃ y khÃ´ng cÃ³
+                     tÃ¡c dá»¥ng; Ä‘á»ƒ hiá»‡n á»Ÿ Ä‘Ã³ thÃ¬ chá»n Antigravity mÃ  váº«n nghe ChatGPT tráº£ lá»i, ráº¥t khÃ³ hiá»ƒu.
+                     console.js renderVoiceCard() báº­t/táº¯t theo Ä‘Æ°á»ng Ä‘ang dÃ¹ng tháº­t (call.engine). -->
                 <div id="vcBrainBox" hidden>
                   <div class="qs-field">
-                    <label class="qs-lbl" for="vcBrain" data-i18n="settings.vc_brain">Bộ não trả lời nhanh</label>
+                    <label class="qs-lbl" for="vcBrain" data-i18n="settings.vc_brain">Bá»™ nÃ£o tráº£ lá»i nhanh</label>
                     <select class="js-input" id="vcBrain"></select>
                   </div>
                   <div class="qs-field" id="vcBrainModelRow" hidden>
                     <label class="qs-lbl" for="vcBrainModel" data-i18n="settings.vc_brain_model">Model</label>
                     <select class="js-input" id="vcBrainModel"></select>
                   </div>
-                  <div class="qs-hint" data-i18n="settings.vc_brain_hint">Bộ não trả lời các câu nói ở đường Cơ bản. Việc cần dữ liệu vẫn đi bộ não chính.</div>
+                  <div class="qs-hint" data-i18n="settings.vc_brain_hint">Bá»™ nÃ£o tráº£ lá»i cÃ¡c cÃ¢u nÃ³i á»Ÿ Ä‘Æ°á»ng CÆ¡ báº£n. Viá»‡c cáº§n dá»¯ liá»‡u váº«n Ä‘i bá»™ nÃ£o chÃ­nh.</div>
                 </div>
                 <!-- Live over an API key only (0.220.0): console.js shows this box when call.engine is "api". -->
                 <div id="vcLiveBox" hidden>
                   <div class="qs-field">
-                    <label class="qs-lbl" for="vcLiveProactive" data-i18n="settings.vc_live_proactive">Lọc tiếng xung quanh</label>
+                    <label class="qs-lbl" for="vcLiveProactive" data-i18n="settings.vc_live_proactive">Lá»c tiáº¿ng xung quanh</label>
                     <select class="js-input" id="vcLiveProactive">
-                      <option value="on" data-i18n="settings.vc_live_proactive_on">Bật: bỏ qua TV, người bên cạnh</option>
-                      <option value="off" data-i18n="settings.vc_live_proactive_off">Tắt: trả lời mọi câu nghe được</option>
+                      <option value="on" data-i18n="settings.vc_live_proactive_on">Báº­t: bá» qua TV, ngÆ°á»i bÃªn cáº¡nh</option>
+                      <option value="off" data-i18n="settings.vc_live_proactive_off">Táº¯t: tráº£ lá»i má»i cÃ¢u nghe Ä‘Æ°á»£c</option>
                     </select>
                   </div>
                   <div class="qs-field">
-                    <label class="qs-lbl" for="vcLiveTurn" data-i18n="settings.vc_live_turn">Nhịp trả lời</label>
+                    <label class="qs-lbl" for="vcLiveTurn" data-i18n="settings.vc_live_turn">Nhá»‹p tráº£ lá»i</label>
                     <select class="js-input" id="vcLiveTurn">
-                      <option value="fast" data-i18n="settings.vc_live_turn_fast">Nhanh: đáp ngay khi bạn ngừng</option>
-                      <option value="normal" data-i18n="settings.vc_live_turn_normal">Vừa (mặc định)</option>
-                      <option value="slow" data-i18n="settings.vc_live_turn_slow">Chậm rãi: chờ bạn nghĩ thêm</option>
+                      <option value="fast" data-i18n="settings.vc_live_turn_fast">Nhanh: Ä‘Ã¡p ngay khi báº¡n ngá»«ng</option>
+                      <option value="normal" data-i18n="settings.vc_live_turn_normal">Vá»«a (máº·c Ä‘á»‹nh)</option>
+                      <option value="slow" data-i18n="settings.vc_live_turn_slow">Cháº­m rÃ£i: chá» báº¡n nghÄ© thÃªm</option>
                     </select>
                   </div>
-                  <div class="qs-hint" data-i18n="settings.vc_live_hint">Áp dụng cho Gemini Live và OpenAI Realtime, từ cuộc gọi kế tiếp.</div>
+                  <div class="qs-hint" data-i18n="settings.vc_live_hint">Ãp dá»¥ng cho Gemini Live vÃ  OpenAI Realtime, tá»« cuá»™c gá»i káº¿ tiáº¿p.</div>
                 </div>
                 <div class="qs-field" id="vcRateRow">
-                  <label class="qs-lbl" for="rateSel" data-i18n="qs.rate_lbl">Tốc độ đọc</label>
+                  <label class="qs-lbl" for="rateSel" data-i18n="qs.rate_lbl">Tá»‘c Ä‘á»™ Ä‘á»c</label>
                   <select class="js-input" id="rateSel">
-                    <option value="0.85" data-i18n="qs.rate_opt_slow">Chậm · 0,85×</option>
-                    <option value="1.00" data-i18n="qs.rate_opt_normal">Bình thường · 1,00×</option>
-                    <option value="1.10" data-i18n="qs.rate_opt_default">Hơi nhanh · 1,10× (mặc định)</option>
-                    <option value="1.25" data-i18n="qs.rate_opt_fast">Nhanh · 1,25×</option>
-                    <option value="1.45" data-i18n="qs.rate_opt_veryfast">Rất nhanh · 1,45×</option>
+                    <option value="0.85" data-i18n="qs.rate_opt_slow">Cháº­m Â· 0,85Ã—</option>
+                    <option value="1.00" data-i18n="qs.rate_opt_normal">BÃ¬nh thÆ°á»ng Â· 1,00Ã—</option>
+                    <option value="1.10" data-i18n="qs.rate_opt_default">HÆ¡i nhanh Â· 1,10Ã— (máº·c Ä‘á»‹nh)</option>
+                    <option value="1.25" data-i18n="qs.rate_opt_fast">Nhanh Â· 1,25Ã—</option>
+                    <option value="1.45" data-i18n="qs.rate_opt_veryfast">Ráº¥t nhanh Â· 1,45Ã—</option>
                   </select>
                 </div>
-                <div class="qs-hint" id="vcOpenaiNote" data-i18n="settings.vc_openai_note" hidden>Muốn giọng OpenAI: dán API key OpenAI ở trang Models.</div>
+                <div class="qs-hint" id="vcOpenaiNote" data-i18n="settings.vc_openai_note" hidden>Muá»‘n giá»ng OpenAI: dÃ¡n API key OpenAI á»Ÿ trang Models.</div>
               </details>
               <div class="gcard-meta" id="vcStatus" role="status"></div>
               <div class="gcard-meta" id="v2LastErr" hidden></div>
-              <!-- Kho giọng Edge: app.js đọc/ghi giọng Edge qua ô này (localStorage javis.voice), còn
-                   người dùng chọn ở #vcVoice. Ẩn, nhưng vẫn là danh sách gốc của bảy giọng Edge. -->
+              <!-- Kho giá»ng Edge: app.js Ä‘á»c/ghi giá»ng Edge qua Ã´ nÃ y (localStorage javis.voice), cÃ²n
+                   ngÆ°á»i dÃ¹ng chá»n á»Ÿ #vcVoice. áº¨n, nhÆ°ng váº«n lÃ  danh sÃ¡ch gá»‘c cá»§a báº£y giá»ng Edge. -->
               <select id="voiceSel" name="voice" hidden aria-hidden="true" tabindex="-1">
-                <option value="hi-IN-SwaraNeural" selected>Swara · Aarohi · Sweet romantic Hindi girlfriend</option>
-                <option value="en-IN-NeerjaNeural">Neerja · Soft Indian English / Hinglish girlfriend</option>
-                <option value="en-US-AvaMultilingualNeural">Ava · Sweet multilingual expressive female</option>
-                <option value="en-US-EmmaMultilingualNeural" data-i18n="qs.voice_opt_emma">Emma · Cheerful & Clear Female Voice</option>
-                <option value="vi-VN-HoaiMyNeural" data-i18n="qs.voice_opt_hoaimy">Hoài My · Warm Natural Female Voice</option>
-                <option value="vi-VN-NamMinhNeural" data-i18n="qs.voice_opt_namminh">Nam Minh · Nam, trầm</option>
-                <option value="en-US-AndrewMultilingualNeural" data-i18n="qs.voice_opt_andrew">Andrew · Nam, ấm và tự tin · đa ngôn ngữ</option>
-                <option value="en-US-BrianMultilingualNeural" data-i18n="qs.voice_opt_brian">Brian · Nam, gần gũi đời thường · đa ngôn ngữ</option>
-                <option value="en-AU-WilliamMultilingualNeural" data-i18n="qs.voice_opt_william">William · Nam, thân thiện giọng Úc · đa ngôn ngữ</option>
-                <option value="auto" data-i18n="qs.voice_opt_auto">Auto by language · Sweet Female Voices</option>
+                <option value="hi-IN-SwaraNeural" selected>Swara Â· Aarohi Â· Sweet romantic Hindi girlfriend</option>
+                <option value="en-IN-NeerjaNeural">Neerja Â· Soft Indian English / Hinglish girlfriend</option>
+                <option value="en-US-AvaMultilingualNeural">Ava Â· Sweet multilingual expressive female</option>
+                <option value="en-US-EmmaMultilingualNeural" data-i18n="qs.voice_opt_emma">Emma Â· Cheerful & Clear Female Voice</option>
+                <option value="vi-VN-HoaiMyNeural" data-i18n="qs.voice_opt_hoaimy">HoÃ i My Â· Warm Natural Female Voice</option>
+                <option value="vi-VN-NamMinhNeural" data-i18n="qs.voice_opt_namminh">Nam Minh Â· Nam, tráº§m</option>
+                <option value="en-US-AndrewMultilingualNeural" data-i18n="qs.voice_opt_andrew">Andrew Â· Nam, áº¥m vÃ  tá»± tin Â· Ä‘a ngÃ´n ngá»¯</option>
+                <option value="en-US-BrianMultilingualNeural" data-i18n="qs.voice_opt_brian">Brian Â· Nam, gáº§n gÅ©i Ä‘á»i thÆ°á»ng Â· Ä‘a ngÃ´n ngá»¯</option>
+                <option value="en-AU-WilliamMultilingualNeural" data-i18n="qs.voice_opt_william">William Â· Nam, thÃ¢n thiá»‡n giá»ng Ãšc Â· Ä‘a ngÃ´n ngá»¯</option>
+                <option value="auto" data-i18n="qs.voice_opt_auto">Auto by language Â· Sweet Female Voices</option>
               </select>
             </div>
 
-            <!-- THƯƠNG HIỆU. Hai nút trước đây là hai thanh tràn ngang (một tím đặc, một
-                 viền mờ) xếp chồng cạnh ảnh 48px, to hơn cả nội dung chúng phục vụ. Nay là
-                 hai nút cỡ thường, cùng họ .gcard-btn với mọi nút khác trên trang Cài đặt. -->
+            <!-- THÆ¯Æ NG HIá»†U. Hai nÃºt trÆ°á»›c Ä‘Ã¢y lÃ  hai thanh trÃ n ngang (má»™t tÃ­m Ä‘áº·c, má»™t
+                 viá»n má») xáº¿p chá»“ng cáº¡nh áº£nh 48px, to hÆ¡n cáº£ ná»™i dung chÃºng phá»¥c vá»¥. Nay lÃ 
+                 hai nÃºt cá»¡ thÆ°á»ng, cÃ¹ng há» .gcard-btn vá»›i má»i nÃºt khÃ¡c trÃªn trang CÃ i Ä‘áº·t. -->
             <div class="qs-block" data-settings-section="general">
-              <div class="popover-label" data-i18n="qs.avatar">ẢNH ĐẠI DIỆN</div>
+              <div class="popover-label" data-i18n="qs.avatar">áº¢NH Äáº I DIá»†N</div>
               <div class="qs-avatar">
                 <img id="brandLogoPreview" src="/brand-logo" alt="logo">
                 <div class="js-actions qs-foot">
-                  <label class="gcard-btn ghost qs-file"><span data-i18n="qs.avatar_upload">Tải ảnh lên</span>
+                  <label class="gcard-btn ghost qs-file"><span data-i18n="qs.avatar_upload">Táº£i áº£nh lÃªn</span>
                     <input type="file" id="brandLogoInput" accept="image/png,image/jpeg,image/webp,image/gif" hidden></label>
-                  <button class="gcard-btn ghost" id="brandLogoReset" data-i18n="qs.avatar_reset">Khôi phục mặc định</button>
+                  <button class="gcard-btn ghost" id="brandLogoReset" data-i18n="qs.avatar_reset">KhÃ´i phá»¥c máº·c Ä‘á»‹nh</button>
                 </div>
               </div>
               <div class="opt-sub" id="brandLogoStatus"></div>
             </div>
 
-            <!-- Cộng hưởng (Resonance A1): công tắc theo TỪNG TRỢ LÝ của brain đang chọn, mặc định tắt, cùng mục
-                 "Chờ gán" cho mục tiêu có trước A1. resonance-agent.js vẽ vào #resonanceAgents qua /resonance/agents. -->
+            <!-- Cá»™ng hÆ°á»Ÿng (Resonance A1): cÃ´ng táº¯c theo Tá»ªNG TRá»¢ LÃ cá»§a brain Ä‘ang chá»n, máº·c Ä‘á»‹nh táº¯t, cÃ¹ng má»¥c
+                 "Chá» gÃ¡n" cho má»¥c tiÃªu cÃ³ trÆ°á»›c A1. resonance-agent.js váº½ vÃ o #resonanceAgents qua /resonance/agents. -->
             <div class="qs-block" data-settings-section="general" id="resonanceBlock">
-              <div class="popover-label" data-i18n="resonance.settings_title">Auto (thử nghiệm)</div>
+              <div class="popover-label" data-i18n="resonance.settings_title">Auto (thá»­ nghiá»‡m)</div>
               <div id="resonanceAgents"></div>
             </div>
 
             <div class="qs-block" data-settings-section="general">
-              <div class="popover-label" data-i18n="qs.domain">TÊN MIỀN & SSL</div>
-              <div class="opt-sub dom-intro" data-i18n="qs.domain_intro">Nhập tên miền để Javis kiểm tra DNS và hướng dẫn bật HTTPS theo đúng môi trường đang chạy.</div>
+              <div class="popover-label" data-i18n="qs.domain">TÃŠN MIá»€N & SSL</div>
+              <div class="opt-sub dom-intro" data-i18n="qs.domain_intro">Nháº­p tÃªn miá»n Ä‘á»ƒ Javis kiá»ƒm tra DNS vÃ  hÆ°á»›ng dáº«n báº­t HTTPS theo Ä‘Ãºng mÃ´i trÆ°á»ng Ä‘ang cháº¡y.</div>
               <div class="dom-field">
-                <input id="setDomain" placeholder="Ví dụ: javis.tencuaban.com" data-i18n-ph="qs.domain_ph" autocomplete="off" spellcheck="false">
-                <button class="gcard-btn" id="saveDomain" data-i18n="qs.domain_save">Lưu &amp; kiểm tra</button>
+                <input id="setDomain" placeholder="VÃ­ dá»¥: javis.tencuaban.com" data-i18n-ph="qs.domain_ph" autocomplete="off" spellcheck="false">
+                <button class="gcard-btn" id="saveDomain" data-i18n="qs.domain_save">LÆ°u &amp; kiá»ƒm tra</button>
               </div>
               <div class="dom-status" id="domStatusRow" style="display:none">
-                <span class="dom-badge" id="dnsBadge" data-i18n="qs.dns_checking">DNS: đang kiểm tra</span>
-                <span class="dom-badge" id="sslBadge" data-i18n="qs.ssl_checking">SSL: đang kiểm tra</span>
+                <span class="dom-badge" id="dnsBadge" data-i18n="qs.dns_checking">DNS: Ä‘ang kiá»ƒm tra</span>
+                <span class="dom-badge" id="sslBadge" data-i18n="qs.ssl_checking">SSL: Ä‘ang kiá»ƒm tra</span>
               </div>
               <div class="dom-ssl" id="domSslRow" style="display:none">
-                <!-- Nhãn nút này do branding.js đặt theo trạng thái (Bật SSL / Kích hoạt lại), nên
-                     KHÔNG gắn data-i18n: applyDom() quét lại DOM mỗi lần đổi ngôn ngữ và sẽ ghi đè
-                     nhãn động bằng nhãn tĩnh, tức nút nói sai một nửa thời gian. Giống nút #themeToggle. -->
-                <button class="gcard-btn" id="sslToggle">Bật SSL</button>
-                <button class="gcard-btn ghost" id="checkDomain" data-i18n="qs.recheck">Kiểm tra lại</button>
+                <!-- NhÃ£n nÃºt nÃ y do branding.js Ä‘áº·t theo tráº¡ng thÃ¡i (Báº­t SSL / KÃ­ch hoáº¡t láº¡i), nÃªn
+                     KHÃ”NG gáº¯n data-i18n: applyDom() quÃ©t láº¡i DOM má»—i láº§n Ä‘á»•i ngÃ´n ngá»¯ vÃ  sáº½ ghi Ä‘Ã¨
+                     nhÃ£n Ä‘á»™ng báº±ng nhÃ£n tÄ©nh, tá»©c nÃºt nÃ³i sai má»™t ná»­a thá»i gian. Giá»‘ng nÃºt #themeToggle. -->
+                <button class="gcard-btn" id="sslToggle">Báº­t SSL</button>
+                <button class="gcard-btn ghost" id="checkDomain" data-i18n="qs.recheck">Kiá»ƒm tra láº¡i</button>
               </div>
               <div id="domainGuide" class="dom-guide" style="display:none"></div>
               <div class="opt-sub" id="domainStatus"></div>
               <div class="dom-docs">
-                <a href="https://github.com/blogminhquy/javis-os/blob/main/docs/15-thuong-hieu-ten-mien.md" target="_blank" rel="noopener" data-i18n="qs.domain_docs">Hướng dẫn cài tên miền ↗</a>
-                <a href="https://github.com/blogminhquy/javis-os/blob/main/DEPLOY.md" target="_blank" rel="noopener" data-i18n="qs.deploy_docs">Hướng dẫn deploy/SSL ↗</a>
+                <a href="https://github.com/blogminhquy/javis-os/blob/main/docs/15-thuong-hieu-ten-mien.md" target="_blank" rel="noopener" data-i18n="qs.domain_docs">HÆ°á»›ng dáº«n cÃ i tÃªn miá»n â†—</a>
+                <a href="https://github.com/blogminhquy/javis-os/blob/main/DEPLOY.md" target="_blank" rel="noopener" data-i18n="qs.deploy_docs">HÆ°á»›ng dáº«n deploy/SSL â†—</a>
               </div>
             </div>
 
             <!-- Remote access through the built-in Cloudflare Tunnel (0.242.0). remote-access.js draws #raBox from
                  /remote-access/status; the server downloads and supervises cloudflared (remote_tunnel.py). -->
             <div class="qs-block" data-settings-section="general" id="remoteAccessBlock">
-              <div class="popover-label"><span data-i18n="ra.title">TRUY CẬP TỪ XA</span> <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giải thích" title="Xem giải thích" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button></div>
-              <div class="info-body" hidden data-i18n="ra.intro_long">Javis tự tải và chạy cloudflared (công cụ chính thức, miễn phí của Cloudflare) ngay trên máy này.</div>
-              <div class="opt-sub" data-i18n="ra.sub">Mở Javis từ điện thoại hay máy khác qua link HTTPS, không cần VPS.</div>
+              <div class="popover-label"><span data-i18n="ra.title">TRUY Cáº¬P Tá»ª XA</span> <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giáº£i thÃ­ch" title="Xem giáº£i thÃ­ch" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button></div>
+              <div class="info-body" hidden data-i18n="ra.intro_long">Javis tá»± táº£i vÃ  cháº¡y cloudflared (cÃ´ng cá»¥ chÃ­nh thá»©c, miá»…n phÃ­ cá»§a Cloudflare) ngay trÃªn mÃ¡y nÃ y.</div>
+              <div class="opt-sub" data-i18n="ra.sub">Má»Ÿ Javis tá»« Ä‘iá»‡n thoáº¡i hay mÃ¡y khÃ¡c qua link HTTPS, khÃ´ng cáº§n VPS.</div>
               <div id="raBox" class="ra"></div>
             </div>
 
@@ -570,15 +570,15 @@
       </aside>
     </div>
 
-    <!-- Việc nền đang sống của hội thoại này (app.js JavisBackground bơm nội dung, ẩn khi rỗng).
-         Nằm NGAY trên khung nhập vì đó là chỗ mắt người dùng đang ở lúc họ tự hỏi "nó có chạy
-         thật không". Được đăng ký trong CHAT_NODE_IDS (console.js) nên sang trang Trò chuyện
-         là nó đi theo, không bị bỏ lại như thanh #toolBar cũ. -->
+    <!-- Viá»‡c ná»n Ä‘ang sá»‘ng cá»§a há»™i thoáº¡i nÃ y (app.js JavisBackground bÆ¡m ná»™i dung, áº©n khi rá»—ng).
+         Náº±m NGAY trÃªn khung nháº­p vÃ¬ Ä‘Ã³ lÃ  chá»— máº¯t ngÆ°á»i dÃ¹ng Ä‘ang á»Ÿ lÃºc há» tá»± há»i "nÃ³ cÃ³ cháº¡y
+         tháº­t khÃ´ng". ÄÆ°á»£c Ä‘Äƒng kÃ½ trong CHAT_NODE_IDS (console.js) nÃªn sang trang TrÃ² chuyá»‡n
+         lÃ  nÃ³ Ä‘i theo, khÃ´ng bá»‹ bá» láº¡i nhÆ° thanh #toolBar cÅ©. -->
     <div class="bg-strip" id="bgStrip" hidden></div>
 
-    <!-- Thanh MỤC TIÊU của /goal (chat-goal.js, 0.290.0): mục tiêu đang theo đuổi, đồng hồ, nút xoá, tạm dừng,
-         xem chi tiết; nhiều mục tiêu thì có số ở đầu, bấm xổ danh sách. Ẩn khi không có mục tiêu. Nằm trong
-         CHAT_NODE_IDS (console.js) nên sang trang Trò chuyện là đi theo khung chat. -->
+    <!-- Thanh Má»¤C TIÃŠU cá»§a /goal (chat-goal.js, 0.290.0): má»¥c tiÃªu Ä‘ang theo Ä‘uá»•i, Ä‘á»“ng há»“, nÃºt xoÃ¡, táº¡m dá»«ng,
+         xem chi tiáº¿t; nhiá»u má»¥c tiÃªu thÃ¬ cÃ³ sá»‘ á»Ÿ Ä‘áº§u, báº¥m xá»• danh sÃ¡ch. áº¨n khi khÃ´ng cÃ³ má»¥c tiÃªu. Náº±m trong
+         CHAT_NODE_IDS (console.js) nÃªn sang trang TrÃ² chuyá»‡n lÃ  Ä‘i theo khung chat. -->
     <div class="goal-bar" id="goalBar" hidden></div>
 
     <!-- The Coding page's own chip row (that page inserts its chips here on desktop). Empty on the home
@@ -592,26 +592,26 @@
       <button id="voiceFocusResume" class="voice-focus-resume" hidden></button>
       <div class="attach-bar" id="attachBar"></div>
       <input type="file" id="fileInput" multiple style="display:none">
-      <textarea id="chatInput" class="voice-input" placeholder="Bạn muốn tôi làm điều gì?" data-i18n-ph="bar.input_ph" rows="1"></textarea>
+      <textarea id="chatInput" class="voice-input" placeholder="Báº¡n muá»‘n tÃ´i lÃ m Ä‘iá»u gÃ¬?" data-i18n-ph="bar.input_ph" rows="1"></textarea>
       <div class="cp-row" id="cpRow">
         <button type="button" class="cp-plus" id="plusBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="plusMenu"
-                title="Thêm file, lệnh, kết nối" data-i18n-title="cp.plus" aria-label="Thêm file, lệnh, kết nối" data-i18n-aria="cp.plus">
+                title="ThÃªm file, lá»‡nh, káº¿t ná»‘i" data-i18n-title="cp.plus" aria-label="ThÃªm file, lá»‡nh, káº¿t ná»‘i" data-i18n-aria="cp.plus">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         </button>
         <div class="cp-chips" id="cpChips">
-          <button type="button" class="mb-chip" id="mbOpen" title="Đổi model / nhà cung cấp" data-i18n-title="mb.open">
+          <button type="button" class="mb-chip" id="mbOpen" title="Äá»•i model / nhÃ  cung cáº¥p" data-i18n-title="mb.open">
             <span class="mb-dot"></span>
             <span id="mbModelTxt">Model</span>
-            <span class="mb-caret">▾</span>
+            <span class="mb-caret">â–¾</span>
           </button>
           <button type="button" class="cp-eff" id="effBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="effPop"
-                  title="Mức suy nghĩ" data-i18n-title="eff.title">
-            <span class="cp-eff-fast" id="effFast" hidden><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg></span><span id="effTxt">Off</span><span class="mb-caret">▾</span>
+                  title="Má»©c suy nghÄ©" data-i18n-title="eff.title">
+            <span class="cp-eff-fast" id="effFast" hidden><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg></span><span id="effTxt">Off</span><span class="mb-caret">â–¾</span>
           </button>
           <!-- Plan usage ring (plan-limit.js, 0.329.0): took the place of the Fast mode bolt, which moved into the
                Effort popover. Shown only for brains on a plan (Claude Code signed in, ChatGPT through Codex). -->
           <button type="button" class="cp-limit" id="limitBtn" hidden aria-haspopup="dialog" aria-expanded="false" aria-controls="limitPop"
-                  title="Hạn mức gói" data-i18n-title="lim.title" aria-label="Hạn mức gói" data-i18n-aria="lim.title" data-muc="none">
+                  title="Háº¡n má»©c gÃ³i" data-i18n-title="lim.title" aria-label="Háº¡n má»©c gÃ³i" data-i18n-aria="lim.title" data-muc="none">
             <svg width="20" height="20" viewBox="0 0 36 36" aria-hidden="true"><circle class="lim-bg" cx="18" cy="18" r="14" pathLength="100"/><circle class="lim-fg" cx="18" cy="18" r="14" pathLength="100" stroke-dasharray="0 100"/></svg>
           </button>
         </div>
@@ -620,57 +620,57 @@
              X drops the recording, the meter shows the mic level, the square stops and keeps the text to edit,
              and the send button next to it stops and sends. -->
         <div class="dict-bar" id="dictBar">
-          <button type="button" class="dict-cancel" id="dictCancel" title="Huỷ ghi âm" data-i18n-title="dict.cancel" aria-label="Huỷ ghi âm" data-i18n-aria="dict.cancel">
+          <button type="button" class="dict-cancel" id="dictCancel" title="Huá»· ghi Ã¢m" data-i18n-title="dict.cancel" aria-label="Huá»· ghi Ã¢m" data-i18n-aria="dict.cancel">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
           <canvas class="dict-wave" id="dictWave" aria-hidden="true"></canvas>
-          <span class="dict-busy" id="dictBusy" hidden data-i18n="dict.busy">Đang chuyển thành chữ...</span>
+          <span class="dict-busy" id="dictBusy" hidden data-i18n="dict.busy">Äang chuyá»ƒn thÃ nh chá»¯...</span>
           <span class="dict-time" id="dictTime" aria-live="off">0:00</span>
-          <button type="button" class="dict-stop" id="dictStop" title="Dừng ghi, giữ chữ để sửa" data-i18n-title="dict.stop" aria-label="Dừng ghi, giữ chữ để sửa" data-i18n-aria="dict.stop">
+          <button type="button" class="dict-stop" id="dictStop" title="Dá»«ng ghi, giá»¯ chá»¯ Ä‘á»ƒ sá»­a" data-i18n-title="dict.stop" aria-label="Dá»«ng ghi, giá»¯ chá»¯ Ä‘á»ƒ sá»­a" data-i18n-aria="dict.stop">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
           </button>
         </div>
         <!-- Two voice buttons (0.230.0): the mic records speech into the text box (nothing is sent by itself),
              the sound-wave button is the live voice chat (#voiceBtn, unchanged behaviour). -->
-        <button type="button" class="mic-big dict-btn" id="dictBtn" title="Ghi âm thành chữ" data-i18n-title="dict.btn" aria-label="Ghi âm thành chữ" data-i18n-aria="dict.btn">
+        <button type="button" class="mic-big dict-btn" id="dictBtn" title="Ghi Ã¢m thÃ nh chá»¯" data-i18n-title="dict.btn" aria-label="Ghi Ã¢m thÃ nh chá»¯" data-i18n-aria="dict.btn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
             <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/>
           </svg>
         </button>
-        <button type="button" class="mic-big" id="voiceBtn" title="Đàm thoại: nói chuyện trực tiếp với Javis" data-i18n-title="bar.mic" aria-label="Đàm thoại: nói chuyện trực tiếp với Javis" data-i18n-aria="bar.mic">
+        <button type="button" class="mic-big" id="voiceBtn" title="ÄÃ m thoáº¡i: nÃ³i chuyá»‡n trá»±c tiáº¿p vá»›i Javis" data-i18n-title="bar.mic" aria-label="ÄÃ m thoáº¡i: nÃ³i chuyá»‡n trá»±c tiáº¿p vá»›i Javis" data-i18n-aria="bar.mic">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M2 10v3M6 6v11M10 3v18M14 8v7M18 5v13M22 10v3"/>
           </svg>
         </button>
-        <button type="button" class="stop-btn" id="stopBtn" title="Ngắt lệnh / dừng đọc (Esc)" data-i18n-title="bar.stop" style="display:none">
+        <button type="button" class="stop-btn" id="stopBtn" title="Ngáº¯t lá»‡nh / dá»«ng Ä‘á»c (Esc)" data-i18n-title="bar.stop" style="display:none">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
         </button>
-        <button type="button" class="send-btn" id="sendBtn" aria-label="Gửi" data-i18n-aria="bar.send">
+        <button type="button" class="send-btn" id="sendBtn" aria-label="Gá»­i" data-i18n-aria="bar.send">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
         </button>
       </div>
       <div class="mb-pop" id="mbPop" hidden></div>
       <div class="eff-pop" id="effPop" role="dialog" aria-label="Effort" hidden></div>
-      <div class="eff-pop lim-pop" id="limitPop" role="dialog" aria-label="Hạn mức gói" data-i18n-aria="lim.title" hidden></div>
+      <div class="eff-pop lim-pop" id="limitPop" role="dialog" aria-label="Háº¡n má»©c gÃ³i" data-i18n-aria="lim.title" hidden></div>
       <div class="cp-menu" id="plusMenu" role="menu" hidden></div>
     </div><!-- /hudVoice -->
   </div>
 
-  <!-- Mobile-only: nền mờ khi mở ngăn kéo -->
+  <!-- Mobile-only: ná»n má» khi má»Ÿ ngÄƒn kÃ©o -->
   <div class="nav-backdrop" id="navBackdrop" hidden></div>
 
-  <!-- ===== Console layer: rail điều hướng + trang quản lý (Alpine-driven) ===== -->
+  <!-- ===== Console layer: rail Ä‘iá»u hÆ°á»›ng + trang quáº£n lÃ½ (Alpine-driven) ===== -->
   <nav class="rail" x-data x-cloak :class="{ collapsed: $store.nav.collapsed }"
        x-effect="document.body.classList.toggle('rail-collapsed', $store.nav.collapsed)">
-    <!-- ĐỈNH cố định -->
+    <!-- Äá»ˆNH cá»‘ Ä‘á»‹nh -->
     <div class="rail-top">
-      <!-- Dấu ấn và CHỮ tách làm hai ô: pet.js thay ruột của .brand-mark bằng khuôn mặt linh
-           vật (xem veDauAn), nên chữ phải nằm ngoài ô đó, không thì mỗi lần đổi hình dáng hay
-           bảng màu là chữ bị xoá theo. .brand .brand-icon trên thanh trên cũng cùng vai trò. -->
+      <!-- Dáº¥u áº¥n vÃ  CHá»® tÃ¡ch lÃ m hai Ã´: pet.js thay ruá»™t cá»§a .brand-mark báº±ng khuÃ´n máº·t linh
+           váº­t (xem veDauAn), nÃªn chá»¯ pháº£i náº±m ngoÃ i Ã´ Ä‘Ã³, khÃ´ng thÃ¬ má»—i láº§n Ä‘á»•i hÃ¬nh dÃ¡ng hay
+           báº£ng mÃ u lÃ  chá»¯ bá»‹ xoÃ¡ theo. .brand .brand-icon trÃªn thanh trÃªn cÅ©ng cÃ¹ng vai trÃ². -->
       <div class="rail-brand"><span class="brand-mark"><img src="/brand-logo" alt="Javis" style="width:30px;height:30px;border-radius:8px;display:block;object-fit:cover"></span><span class="rail-brand-text">JAVIS <i>OS</i></span></div>
     </div>
-    <!-- GIỮA cuộn được - gom theo nhóm; nhóm foot (Hệ thống) tự ghim xuống đáy -->
+    <!-- GIá»®A cuá»™n Ä‘Æ°á»£c - gom theo nhÃ³m; nhÃ³m foot (Há»‡ thá»‘ng) tá»± ghim xuá»‘ng Ä‘Ã¡y -->
     <div class="rail-nav">
       <template x-for="g in $store.nav.groups" :key="g.label">
         <div class="rail-group" :class="{ foot: g.foot, open: $store.nav.isOpen(g.label), 'has-active': g.items.some(it => it.id === $store.nav.active) }">
@@ -690,15 +690,15 @@
         </div>
       </template>
     </div>
-    <!-- Ô đổi ngôn ngữ GIAO DIỆN ngay trên hàng version: console.js đổ danh sách từ /settings
-         (lang_list - sổ đăng ký phía server, cùng nguồn với trang Cài đặt). Đổi là
-         JavisI18n.setLang áp NGAY trên máy này rồi mới lưu ui_lang lên server. Ẩn cho tới khi
-         có danh sách để không hiện một ô select trống. -->
+    <!-- Ã” Ä‘á»•i ngÃ´n ngá»¯ GIAO DIá»†N ngay trÃªn hÃ ng version: console.js Ä‘á»• danh sÃ¡ch tá»« /settings
+         (lang_list - sá»• Ä‘Äƒng kÃ½ phÃ­a server, cÃ¹ng nguá»“n vá»›i trang CÃ i Ä‘áº·t). Äá»•i lÃ 
+         JavisI18n.setLang Ã¡p NGAY trÃªn mÃ¡y nÃ y rá»“i má»›i lÆ°u ui_lang lÃªn server. áº¨n cho tá»›i khi
+         cÃ³ danh sÃ¡ch Ä‘á»ƒ khÃ´ng hiá»‡n má»™t Ã´ select trá»‘ng. -->
     <div class="rail-lang" id="railLangWrap" hidden>
       <i data-ic="globe"></i>
-      <select id="railLang" class="rail-lang-sel" aria-label="Ngôn ngữ giao diện" data-i18n-aria="settings.ui_lang.title"></select>
+      <select id="railLang" class="rail-lang-sel" aria-label="NgÃ´n ngá»¯ giao diá»‡n" data-i18n-aria="settings.ui_lang.title"></select>
     </div>
-    <!-- ĐÁY cố định: nút thu/mở + version + tác giả -->
+    <!-- ÄÃY cá»‘ Ä‘á»‹nh: nÃºt thu/má»Ÿ + version + tÃ¡c giáº£ -->
     <div class="rail-foot">
       <button class="rail-collapse-btn" @click="$store.nav.toggleCollapsed()"
               :title="($store.nav.i18nTick, $store.nav.collapsed ? t('rail.expand') : t('rail.collapse'))"
@@ -713,8 +713,8 @@
   <section class="cview" id="cview" x-data x-cloak x-show="$store.nav.active !== 'home'" x-transition.opacity.duration.200ms>
     <div class="cview-head">
       <div>
-        <!-- meta.icon là TÊN icon Lucide (VIEW_ICON trong console.js) nên phải render
-             qua ic() bằng x-html; x-text sẽ in nguyên tên ("brain", "bot"...) ra màn hình. -->
+        <!-- meta.icon lÃ  TÃŠN icon Lucide (VIEW_ICON trong console.js) nÃªn pháº£i render
+             qua ic() báº±ng x-html; x-text sáº½ in nguyÃªn tÃªn ("brain", "bot"...) ra mÃ n hÃ¬nh. -->
         <div class="cview-title"><span class="ico" x-html="ic($store.nav.meta.icon || 'sparkles')"></span> <span x-text="$store.nav.meta.label"></span></div>
         <div class="cview-sub" x-text="$store.nav.meta.sub"></div>
       </div>
@@ -722,12 +722,12 @@
     <div class="cview-body" id="cviewBody"></div>
   </section>
 
-  <!-- Studio tách thành các trang sidebar riêng (console.js render vào #cviewBody).
-       Editor + run-drawer giờ là overlay TOP-LEVEL (dùng từ trang Workflows/Agents). -->
+  <!-- Studio tÃ¡ch thÃ nh cÃ¡c trang sidebar riÃªng (console.js render vÃ o #cviewBody).
+       Editor + run-drawer giá» lÃ  overlay TOP-LEVEL (dÃ¹ng tá»« trang Workflows/Agents). -->
   <!-- Run output drawer -->
   <div class="run-drawer" id="runDrawer">
     <div class="run-head">
-      <span id="runTitle" data-i18n="run.title">Chạy workflow</span>
+      <span id="runTitle" data-i18n="run.title">Cháº¡y workflow</span>
       <button class="run-close" id="runClose"><i data-ic="x"></i></button>
     </div>
     <div class="run-steps" id="runSteps"></div>
@@ -740,33 +740,33 @@
   <!-- Vault structure banner -->
   <div class="vault-banner" id="vaultBanner">
     <i class="vb-icon" data-ic="triangle-alert"></i>
-    <span class="vb-text" id="vbText" data-i18n="vbanner.text">Cấu trúc vault chưa chuẩn cho Javis.</span>
-    <button class="vb-init" id="vbInit" data-i18n="vbanner.init">Khởi tạo cấu trúc</button>
+    <span class="vb-text" id="vbText" data-i18n="vbanner.text">Cáº¥u trÃºc vault chÆ°a chuáº©n cho Javis.</span>
+    <button class="vb-init" id="vbInit" data-i18n="vbanner.init">Khá»Ÿi táº¡o cáº¥u trÃºc</button>
     <button class="vb-close" id="vbClose"><i data-ic="x"></i></button>
   </div>
 
   <!-- Drag-drop overlay -->
   <div class="drop-overlay" id="dropOverlay">
-    <div class="drop-msg"><i data-ic="paperclip"></i> <span data-i18n="drop.msg">Thả file vào đây → lưu vào Sources</span></div>
+    <div class="drop-msg"><i data-ic="paperclip"></i> <span data-i18n="drop.msg">Tháº£ file vÃ o Ä‘Ã¢y â†’ lÆ°u vÃ o Sources</span></div>
   </div>
 
   <!-- Folder picker modal -->
   <div class="modal-overlay" id="folderModal">
     <div class="folder-modal">
       <div class="fm-head">
-        <span><i data-ic="folder-open"></i> <span data-i18n="fm.title">Chọn brain (folder chứa ghi chú .md)</span></span>
+        <span><i data-ic="folder-open"></i> <span data-i18n="fm.title">Chá»n brain (folder chá»©a ghi chÃº .md)</span></span>
         <button class="fm-close" id="fmClose"><i data-ic="x"></i></button>
       </div>
       <div class="fm-path" id="fmPath">-</div>
       <div class="fm-list" id="fmList"></div>
       <div class="fm-foot">
         <span class="fm-hint" id="fmHint"></span>
-        <button class="fm-use" id="fmUse" data-i18n="fm.use">Dùng folder này</button>
+        <button class="fm-use" id="fmUse" data-i18n="fm.use">DÃ¹ng folder nÃ y</button>
       </div>
     </div>
   </div>
 
-  <!-- Bộ cài đặt lần đầu (hiện khi chưa setup_done) -->
+  <!-- Bá»™ cÃ i Ä‘áº·t láº§n Ä‘áº§u (hiá»‡n khi chÆ°a setup_done) -->
   <div class="modal-overlay" id="setupWizard">
     <div class="settings-modal wz-modal" style="max-width:460px">
       <div class="fm-head"><img src="/brand-logo" alt="" style="width:24px;height:24px;border-radius:6px;vertical-align:middle;margin-right:6px;object-fit:cover"><span data-i18n="wz.welcome">Welcome to AAROHI</span></div>
@@ -785,20 +785,20 @@
         #wzProvHint code{background:var(--surface-3);color:var(--text);padding:1px 5px;border-radius:4px;font-size:13px;word-break:break-all}
         #wzProvHint{margin-top:8px;font-size:15px;color:var(--text2);line-height:1.5}
         </style>
-        <div class="set-note"><span data-i18n="wz.intro">Vài bước nhanh để bắt đầu. Mọi thứ đổi lại được sau trong</span> <i data-ic="settings"></i> <span data-i18n="page.settings.label">Cài đặt</span>.</div>
+        <div class="set-note"><span data-i18n="wz.intro">VÃ i bÆ°á»›c nhanh Ä‘á»ƒ báº¯t Ä‘áº§u. Má»i thá»© Ä‘á»•i láº¡i Ä‘Æ°á»£c sau trong</span> <i data-ic="settings"></i> <span data-i18n="page.settings.label">CÃ i Ä‘áº·t</span>.</div>
         <div class="set-sec">
           <h4 data-i18n="wz.s1">1. Workspace</h4>
-          <label data-i18n="wz.ws_name">Tên hiển thị</label><input id="wzWsName" placeholder="AAROHI" value="AAROHI">
+          <label data-i18n="wz.ws_name">TÃªn hiá»ƒn thá»‹</label><input id="wzWsName" placeholder="AAROHI" value="AAROHI">
         </div>
         <div class="set-sec">
-          <h4><span data-i18n="wz.s2">2. Tài khoản admin</span> <span class="dim" data-i18n="wz.s2_rec">(khuyến nghị)</span></h4>
-          <div class="set-note" data-i18n="wz.pass_note">Đặt mật khẩu để chặn người lạ - quan trọng nếu đưa lên VPS. Bỏ trống nếu chỉ chạy máy cá nhân.</div>
-          <label data-i18n="common.account">Tài khoản</label><input id="wzUser" placeholder="Ví dụ: admin" data-i18n-ph="wz.user_ph">
-          <label data-i18n="common.password">Mật khẩu</label><input id="wzPass" type="password" placeholder="Để trống nếu không đặt mật khẩu" data-i18n-ph="wz.pass_ph">
+          <h4><span data-i18n="wz.s2">2. TÃ i khoáº£n admin</span> <span class="dim" data-i18n="wz.s2_rec">(khuyáº¿n nghá»‹)</span></h4>
+          <div class="set-note" data-i18n="wz.pass_note">Äáº·t máº­t kháº©u Ä‘á»ƒ cháº·n ngÆ°á»i láº¡ - quan trá»ng náº¿u Ä‘Æ°a lÃªn VPS. Bá» trá»‘ng náº¿u chá»‰ cháº¡y mÃ¡y cÃ¡ nhÃ¢n.</div>
+          <label data-i18n="common.account">TÃ i khoáº£n</label><input id="wzUser" placeholder="VÃ­ dá»¥: admin" data-i18n-ph="wz.user_ph">
+          <label data-i18n="common.password">Máº­t kháº©u</label><input id="wzPass" type="password" placeholder="Äá»ƒ trá»‘ng náº¿u khÃ´ng Ä‘áº·t máº­t kháº©u" data-i18n-ph="wz.pass_ph">
         </div>
         <div class="set-sec">
           <h4 data-i18n="wz.s3">3. AI providers (brains)</h4>
-          <div class="set-note"><span data-i18n="wz.prov_note">Enable every brain you want. First checked = MAIN; others are fallbacks when a model denies or runs out. On Vercel, start with Free cloud — Claude/ChatGPT CLIs need your PC. Change later in</span> <i data-ic="cpu"></i> <b>Models</b>.</div>
+          <div class="set-note"><span data-i18n="wz.prov_note">Enable every brain you want. First checked = MAIN; others are fallbacks when a model denies or runs out. On Vercel, start with Free cloud â€” Claude/ChatGPT CLIs need your PC. Change later in</span> <i data-ic="cpu"></i> <b>Models</b>.</div>
           <div class="wz-prov" id="wzProv">
             <label class="wz-card sel" data-prov="openai-compat">
               <input type="checkbox" name="wzprov" value="openai-compat" checked>
@@ -808,41 +808,41 @@
             <label class="wz-card sel" data-prov="openrouter">
               <input type="checkbox" name="wzprov" value="openrouter" checked>
               <div><b><i data-ic="globe"></i> OpenRouter</b>
-                <div class="wz-pdesc" data-i18n="wz.prov_or">Many models with one API key — best fallback when others deny. Paste key below (or set OPENROUTER_API_KEY).</div></div>
+                <div class="wz-pdesc" data-i18n="wz.prov_or">Many models with one API key â€” best fallback when others deny. Paste key below (or set OPENROUTER_API_KEY).</div></div>
             </label>
             <label class="wz-card" data-prov="groq">
               <input type="checkbox" name="wzprov" value="groq">
               <div><b><i data-ic="cpu"></i> Groq (free tier)</b>
-                <div class="wz-pdesc">Ultra-fast open models. Free key at console.groq.com — optional below.</div></div>
+                <div class="wz-pdesc">Ultra-fast open models. Free key at console.groq.com â€” optional below.</div></div>
             </label>
             <label class="wz-card" data-prov="gemini">
               <input type="checkbox" name="wzprov" value="gemini">
               <div><b><i data-ic="sparkles"></i> Google Gemini (free)</b>
-                <div class="wz-pdesc">Gemini Flash free tier. Key from Google AI Studio — optional below.</div></div>
+                <div class="wz-pdesc">Gemini Flash free tier. Key from Google AI Studio â€” optional below.</div></div>
             </label>
             <label class="wz-card" data-prov="anthropic-cli">
               <input type="checkbox" name="wzprov" value="anthropic-cli">
               <div><b><i data-ic="brain"></i> Claude Code</b>
-                <div class="wz-pdesc" data-i18n="wz.prov_claude">Sign in with a Claude subscription → full MCP, skills, file read/write, self-improvement loops.</div></div>
+                <div class="wz-pdesc" data-i18n="wz.prov_claude">Sign in with a Claude subscription â†’ full MCP, skills, file read/write, self-improvement loops.</div></div>
             </label>
             <label class="wz-card" data-prov="openai-oauth">
               <input type="checkbox" name="wzprov" value="openai-oauth">
               <div><b><i data-ic="message-circle"></i> <span data-i18n="wz.prov_gpt_name">ChatGPT (subscription)</span></b>
-                <div class="wz-pdesc" data-i18n="wz.prov_gpt">Sign in with ChatGPT Plus/Pro (via Codex) → still gets AAROHI MCP.</div></div>
+                <div class="wz-pdesc" data-i18n="wz.prov_gpt">Sign in with ChatGPT Plus/Pro (via Codex) â†’ still gets AAROHI MCP.</div></div>
             </label>
           </div>
           <div id="wzKeys" style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
             <div id="wzOrKey">
-              <label>OpenRouter API key <span class="dim" data-i18n="wz.or_key_later">(optional — can paste later in Models)</span></label>
-              <input id="wzOrKeyInput" placeholder="sk-or-v1-…" data-i18n-ph="wz.or_key_ph" autocomplete="off">
+              <label>OpenRouter API key <span class="dim" data-i18n="wz.or_key_later">(optional â€” can paste later in Models)</span></label>
+              <input id="wzOrKeyInput" placeholder="sk-or-v1-â€¦" data-i18n-ph="wz.or_key_ph" autocomplete="off">
             </div>
             <div id="wzGroqKey" style="display:none">
               <label>Groq API key <span class="dim">(optional)</span></label>
-              <input id="wzGroqKeyInput" placeholder="gsk_…" autocomplete="off">
+              <input id="wzGroqKeyInput" placeholder="gsk_â€¦" autocomplete="off">
             </div>
             <div id="wzGeminiKey" style="display:none">
               <label>Gemini API key <span class="dim">(optional)</span></label>
-              <input id="wzGeminiKeyInput" placeholder="AIza…" autocomplete="off">
+              <input id="wzGeminiKeyInput" placeholder="AIzaâ€¦" autocomplete="off">
             </div>
           </div>
           <div id="wzProvHint"></div>
@@ -851,134 +851,134 @@
       <!-- Sticky footer: Start was easy to miss below a tall provider list (live report 2026-11-01). -->
       <div class="wz-footer">
         <div class="auth-err" id="wzErr"></div>
-        <div class="set-actions"><button class="s-btn" id="wzFinish" data-i18n="wz.start">Start using AAROHI →</button></div>
+        <div class="set-actions"><button class="s-btn" id="wzFinish" data-i18n="wz.start">Start using AAROHI â†’</button></div>
       </div>
     </div>
   </div>
 
-  <!-- Đăng nhập (chỉ hiện khi admin đã đặt mật khẩu & chưa đăng nhập) -->
+  <!-- ÄÄƒng nháº­p (chá»‰ hiá»‡n khi admin Ä‘Ã£ Ä‘áº·t máº­t kháº©u & chÆ°a Ä‘Äƒng nháº­p) -->
   <div class="modal-overlay" id="authOverlay">
     <div class="folder-modal auth-modal">
-      <div class="fm-head"><img src="/brand-logo" alt="" style="width:24px;height:24px;border-radius:6px;vertical-align:middle;margin-right:6px;object-fit:cover"><span id="authTitle" data-i18n="auth.title">Đăng nhập Javis</span></div>
+      <div class="fm-head"><img src="/brand-logo" alt="" style="width:24px;height:24px;border-radius:6px;vertical-align:middle;margin-right:6px;object-fit:cover"><span id="authTitle" data-i18n="auth.title">ÄÄƒng nháº­p Javis</span></div>
       <div class="auth-body">
-        <input id="authUser" placeholder="Tài khoản" data-i18n-ph="common.account" autocomplete="username">
+        <input id="authUser" placeholder="TÃ i khoáº£n" data-i18n-ph="common.account" autocomplete="username">
         <div class="auth-pw">
-          <input id="authPass" type="password" placeholder="Mật khẩu" data-i18n-ph="common.password" autocomplete="current-password">
+          <input id="authPass" type="password" placeholder="Máº­t kháº©u" data-i18n-ph="common.password" autocomplete="current-password">
           <button type="button" class="auth-pw-eye" id="authPassEye" aria-pressed="false"
-                  title="Hiện/ẩn mật khẩu" data-i18n-title="auth.show_pw" aria-label="Hiện/ẩn mật khẩu" data-i18n-aria="auth.show_pw"><i data-ic="eye"></i></button>
+                  title="Hiá»‡n/áº©n máº­t kháº©u" data-i18n-title="auth.show_pw" aria-label="Hiá»‡n/áº©n máº­t kháº©u" data-i18n-aria="auth.show_pw"><i data-ic="eye"></i></button>
         </div>
-        <!-- Ô mã 2 lớp: ẩn cho tới khi server trả needs_2fa. Hiện sẵn từ đầu thì người CHƯA bật
-             2FA phải nhìn một ô họ không hiểu, mỗi lần đăng nhập. inputmode=numeric để điện
-             thoại bật bàn phím số; autocomplete=one-time-code để iOS/Android tự điền từ SMS/app. -->
+        <!-- Ã” mÃ£ 2 lá»›p: áº©n cho tá»›i khi server tráº£ needs_2fa. Hiá»‡n sáºµn tá»« Ä‘áº§u thÃ¬ ngÆ°á»i CHÆ¯A báº­t
+             2FA pháº£i nhÃ¬n má»™t Ã´ há» khÃ´ng hiá»ƒu, má»—i láº§n Ä‘Äƒng nháº­p. inputmode=numeric Ä‘á»ƒ Ä‘iá»‡n
+             thoáº¡i báº­t bÃ n phÃ­m sá»‘; autocomplete=one-time-code Ä‘á»ƒ iOS/Android tá»± Ä‘iá»n tá»« SMS/app. -->
         <div id="authCodeWrap" style="display:none">
           <input id="authCode" inputmode="numeric" autocomplete="one-time-code"
-                 placeholder="Mã 6 số, hoặc mã khôi phục" data-i18n-ph="auth.code_ph">
-          <div class="auth-hint" data-i18n="auth.code_hint">Mở app Authenticator và nhập mã đang hiện. Mất điện thoại thì
-            nhập một mã khôi phục đã lưu lúc bật.</div>
+                 placeholder="MÃ£ 6 sá»‘, hoáº·c mÃ£ khÃ´i phá»¥c" data-i18n-ph="auth.code_ph">
+          <div class="auth-hint" data-i18n="auth.code_hint">Má»Ÿ app Authenticator vÃ  nháº­p mÃ£ Ä‘ang hiá»‡n. Máº¥t Ä‘iá»‡n thoáº¡i thÃ¬
+            nháº­p má»™t mÃ£ khÃ´i phá»¥c Ä‘Ã£ lÆ°u lÃºc báº­t.</div>
         </div>
-        <button class="fm-use" id="authSubmit" data-i18n="auth.submit">Đăng nhập</button>
+        <button class="fm-use" id="authSubmit" data-i18n="auth.submit">ÄÄƒng nháº­p</button>
         <div class="auth-err" id="authErr"></div>
-        <div class="auth-help"><span id="authForgot" data-i18n="auth.forgot">Quên mật khẩu?</span></div>
+        <div class="auth-help"><span id="authForgot" data-i18n="auth.forgot">QuÃªn máº­t kháº©u?</span></div>
         <div class="auth-reset" id="authResetInfo" style="display:none">
-          <span data-i18n="auth.reset1">Mở file</span> <code>server/settings.json</code><span data-i18n="auth.reset2">, xóa khối</span> <code>"auth"</code> <span data-i18n="auth.reset3">(hoặc đặt rỗng), rồi chạy</span>
-          <code>stop-javis.bat</code> → <code>start-javis.vbs</code>. <span data-i18n="auth.reset4">Mở lại sẽ về bộ cài đặt để tạo tài khoản mới.</span>
-          <div class="auth-reset-srv" data-i18n="auth.reset_server">Chạy trên máy chủ (Docker, Hostinger): đổi JAVIS_ADMIN_PASSWORD trong Environment rồi Redeploy. Javis đặt lại mật khẩu theo giá trị mới, 2FA giữ nguyên.</div>
+          <span data-i18n="auth.reset1">Má»Ÿ file</span> <code>server/settings.json</code><span data-i18n="auth.reset2">, xÃ³a khá»‘i</span> <code>"auth"</code> <span data-i18n="auth.reset3">(hoáº·c Ä‘áº·t rá»—ng), rá»“i cháº¡y</span>
+          <code>stop-javis.bat</code> â†’ <code>start-javis.vbs</code>. <span data-i18n="auth.reset4">Má»Ÿ láº¡i sáº½ vá» bá»™ cÃ i Ä‘áº·t Ä‘á»ƒ táº¡o tÃ i khoáº£n má»›i.</span>
+          <div class="auth-reset-srv" data-i18n="auth.reset_server">Cháº¡y trÃªn mÃ¡y chá»§ (Docker, Hostinger): Ä‘á»•i JAVIS_ADMIN_PASSWORD trong Environment rá»“i Redeploy. Javis Ä‘áº·t láº¡i máº­t kháº©u theo giÃ¡ trá»‹ má»›i, 2FA giá»¯ nguyÃªn.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Cài đặt -->
+  <!-- CÃ i Ä‘áº·t -->
   <div class="modal-overlay" id="settingsOverlay">
     <div class="settings-modal">
-      <div class="fm-head"><span><i data-ic="settings"></i> <span data-i18n="setm.title">Cài đặt Javis</span></span><button class="fm-close" id="settingsClose"><i data-ic="x"></i></button></div>
+      <div class="fm-head"><span><i data-ic="settings"></i> <span data-i18n="setm.title">CÃ i Ä‘áº·t Javis</span></span><button class="fm-close" id="settingsClose"><i data-ic="x"></i></button></div>
       <div class="settings-body">
         <div class="set-sec">
           <h4 data-i18n="setm.general">Chung</h4>
-          <label data-i18n="setm.ws_name">Tên workspace</label><input id="setWsName">
-          <button class="s-btn" id="saveGeneral" data-i18n="common.save">Lưu</button>
+          <label data-i18n="setm.ws_name">TÃªn workspace</label><input id="setWsName">
+          <button class="s-btn" id="saveGeneral" data-i18n="common.save">LÆ°u</button>
         </div>
         <div class="set-sec">
-          <h4>Model <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giải thích" title="Xem giải thích" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button></h4>
-          <div class="info-body" hidden data-i18n="setm.or_note">Danh sách model tải động từ OpenRouter. Không thấy model cần? Chọn "Nhập tên khác" rồi gõ chính xác id. OpenRouter sẽ kích hoạt ở bản kế (P2).</div>
-          <label data-i18n="setm.engine">Engine xử lý chat</label>
+          <h4>Model <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giáº£i thÃ­ch" title="Xem giáº£i thÃ­ch" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button></h4>
+          <div class="info-body" hidden data-i18n="setm.or_note">Danh sÃ¡ch model táº£i Ä‘á»™ng tá»« OpenRouter. KhÃ´ng tháº¥y model cáº§n? Chá»n "Nháº­p tÃªn khÃ¡c" rá»“i gÃµ chÃ­nh xÃ¡c id. OpenRouter sáº½ kÃ­ch hoáº¡t á»Ÿ báº£n káº¿ (P2).</div>
+          <label data-i18n="setm.engine">Engine xá»­ lÃ½ chat</label>
           <select id="setEngine">
-            <option value="cli" data-i18n="setm.engine_cli">Claude Code CLI - MCP Javis + skill + loop + lệnh máy</option>
-            <option value="openrouter" data-i18n="setm.engine_or">OpenRouter - MCP Javis + skill + loop (không lệnh máy)</option>
+            <option value="cli" data-i18n="setm.engine_cli">Claude Code CLI - MCP Javis + skill + loop + lá»‡nh mÃ¡y</option>
+            <option value="openrouter" data-i18n="setm.engine_or">OpenRouter - MCP Javis + skill + loop (khÃ´ng lá»‡nh mÃ¡y)</option>
           </select>
-          <label data-i18n="setm.claude_model">Model Claude (khi dùng CLI)</label>
-          <!-- Danh sách nạp động từ /provider/models (app.js: loadClaudeModels). Mấy option
-               dưới đây chỉ là chỗ đứng trước khi tải xong, không phải danh sách thật. -->
+          <label data-i18n="setm.claude_model">Model Claude (khi dÃ¹ng CLI)</label>
+          <!-- Danh sÃ¡ch náº¡p Ä‘á»™ng tá»« /provider/models (app.js: loadClaudeModels). Máº¥y option
+               dÆ°á»›i Ä‘Ã¢y chá»‰ lÃ  chá»— Ä‘á»©ng trÆ°á»›c khi táº£i xong, khÃ´ng pháº£i danh sÃ¡ch tháº­t. -->
           <select id="setClaudeModel">
-            <option value="" data-i18n="common.default">Mặc định</option>
+            <option value="" data-i18n="common.default">Máº·c Ä‘á»‹nh</option>
           </select>
           <label>OpenRouter API key <span class="dim" id="setKeyHint"></span></label>
-          <input id="setOrKey" type="password" placeholder="Ví dụ: sk-or-... (để trống nếu không đổi)" data-i18n-ph="setm.or_key_ph">
-          <label>OpenRouter model <button type="button" class="set-mini" id="loadModelsBtn" data-i18n="setm.load_models">↻ Tải danh sách</button></label>
-          <select id="setOrModelSel"><option value="__custom__" data-i18n="setm.custom_model">Nhập tên model khác (custom)…</option></select>
-          <input id="setOrModel" placeholder="Ví dụ: openai/gpt-4o-mini" data-i18n-ph="setm.or_model_ph" style="display:none">
-          <button class="s-btn" id="saveModel" data-i18n="common.save">Lưu</button>
+          <input id="setOrKey" type="password" placeholder="VÃ­ dá»¥: sk-or-... (Ä‘á»ƒ trá»‘ng náº¿u khÃ´ng Ä‘á»•i)" data-i18n-ph="setm.or_key_ph">
+          <label>OpenRouter model <button type="button" class="set-mini" id="loadModelsBtn" data-i18n="setm.load_models">â†» Táº£i danh sÃ¡ch</button></label>
+          <select id="setOrModelSel"><option value="__custom__" data-i18n="setm.custom_model">Nháº­p tÃªn model khÃ¡c (custom)â€¦</option></select>
+          <input id="setOrModel" placeholder="VÃ­ dá»¥: openai/gpt-4o-mini" data-i18n-ph="setm.or_model_ph" style="display:none">
+          <button class="s-btn" id="saveModel" data-i18n="common.save">LÆ°u</button>
         </div>
         <div class="set-sec">
-          <h4>Telegram <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giải thích" title="Xem giải thích" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button></h4>
-          <div class="info-body" hidden data-i18n="setm.tg_note">Nhắn Telegram ↔ Javis. Dùng đúng engine đang chọn (CLI thì có cả MCP để hỏi doanh thu/ads qua điện thoại). Có thể dùng lại token bot Morning Briefing.</div>
-          <label class="loop-row" style="padding:0"><span data-i18n="setm.tg_on">Bật bot Telegram</span>
+          <h4>Telegram <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giáº£i thÃ­ch" title="Xem giáº£i thÃ­ch" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button></h4>
+          <div class="info-body" hidden data-i18n="setm.tg_note">Nháº¯n Telegram â†” Javis. DÃ¹ng Ä‘Ãºng engine Ä‘ang chá»n (CLI thÃ¬ cÃ³ cáº£ MCP Ä‘á»ƒ há»i doanh thu/ads qua Ä‘iá»‡n thoáº¡i). CÃ³ thá»ƒ dÃ¹ng láº¡i token bot Morning Briefing.</div>
+          <label class="loop-row" style="padding:0"><span data-i18n="setm.tg_on">Báº­t bot Telegram</span>
             <label class="toggle"><input type="checkbox" id="setTgEnabled"><span></span></label></label>
           <label>Bot token <span class="dim" id="setTgHint"></span></label>
-          <input id="setTgToken" type="password" placeholder="Ví dụ: 123456:ABC... (để trống nếu không đổi)" data-i18n-ph="setm.tg_token_ph">
-          <label><span data-i18n="setm.tg_chat">Chat ID được phép dùng</span> <span class="dim" data-i18n="setm.tg_chat_dim">(nhiều ID cách nhau dấu phẩy)</span></label>
-          <input id="setTgChat" placeholder="Ví dụ: 123456789, 987654321" data-i18n-ph="setm.tg_chat_ph">
+          <input id="setTgToken" type="password" placeholder="VÃ­ dá»¥: 123456:ABC... (Ä‘á»ƒ trá»‘ng náº¿u khÃ´ng Ä‘á»•i)" data-i18n-ph="setm.tg_token_ph">
+          <label><span data-i18n="setm.tg_chat">Chat ID Ä‘Æ°á»£c phÃ©p dÃ¹ng</span> <span class="dim" data-i18n="setm.tg_chat_dim">(nhiá»u ID cÃ¡ch nhau dáº¥u pháº©y)</span></label>
+          <input id="setTgChat" placeholder="VÃ­ dá»¥: 123456789, 987654321" data-i18n-ph="setm.tg_chat_ph">
           <div class="set-note" id="setTgStatus">-</div>
           <div class="set-actions">
-            <button class="s-btn" id="saveTelegram" data-i18n="setm.tg_save">Lưu & bật</button>
-            <button class="s-btn-ghost" id="testTelegram" data-i18n="setm.tg_test">Gửi test</button>
+            <button class="s-btn" id="saveTelegram" data-i18n="setm.tg_save">LÆ°u & báº­t</button>
+            <button class="s-btn-ghost" id="testTelegram" data-i18n="setm.tg_test">Gá»­i test</button>
           </div>
         </div>
         <div class="set-sec">
-          <h4><span data-i18n="setm.auth">Tài khoản đăng nhập</span> <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giải thích" title="Xem giải thích" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button></h4>
-          <div class="info-body" hidden data-i18n="setm.auth_note">Đặt mật khẩu để chặn người lạ khi đưa Javis lên VPS. Lưu ý: trên VPS nên chạy sau HTTPS (reverse proxy).</div>
+          <h4><span data-i18n="setm.auth">TÃ i khoáº£n Ä‘Äƒng nháº­p</span> <button type="button" class="info-i" aria-expanded="false" aria-label="Xem giáº£i thÃ­ch" title="Xem giáº£i thÃ­ch" data-i18n-aria="info.more" data-i18n-title="info.more"><i data-ic="info"></i></button></h4>
+          <div class="info-body" hidden data-i18n="setm.auth_note">Äáº·t máº­t kháº©u Ä‘á»ƒ cháº·n ngÆ°á»i láº¡ khi Ä‘Æ°a Javis lÃªn VPS. LÆ°u Ã½: trÃªn VPS nÃªn cháº¡y sau HTTPS (reverse proxy).</div>
           <div class="set-note" id="setAuthState"></div>
-          <label data-i18n="common.account">Tài khoản</label><input id="setAuthUser" placeholder="Ví dụ: admin" data-i18n-ph="wz.user_ph">
-          <!-- Mật khẩu hiện tại: chỉ hiện khi ĐÃ có tài khoản (app.js refreshAuthRow bật lên).
-               Server đòi nó để một phiên bị mượn không đổi được mật khẩu rồi khoá chính chủ. -->
-          <label id="setAuthCurLbl" hidden data-i18n="setm.cur_pass">Mật khẩu hiện tại</label>
-          <input id="setAuthCur" type="password" autocomplete="current-password" placeholder="Mật khẩu đang dùng" data-i18n-ph="setm.cur_pass_ph" hidden>
-          <label data-i18n="common.password">Mật khẩu</label><input id="setAuthPass" type="password" autocomplete="new-password" placeholder="Đặt mật khẩu (để trống nếu không đổi)" data-i18n-ph="setm.pass_ph">
+          <label data-i18n="common.account">TÃ i khoáº£n</label><input id="setAuthUser" placeholder="VÃ­ dá»¥: admin" data-i18n-ph="wz.user_ph">
+          <!-- Máº­t kháº©u hiá»‡n táº¡i: chá»‰ hiá»‡n khi ÄÃƒ cÃ³ tÃ i khoáº£n (app.js refreshAuthRow báº­t lÃªn).
+               Server Ä‘Ã²i nÃ³ Ä‘á»ƒ má»™t phiÃªn bá»‹ mÆ°á»£n khÃ´ng Ä‘á»•i Ä‘Æ°á»£c máº­t kháº©u rá»“i khoÃ¡ chÃ­nh chá»§. -->
+          <label id="setAuthCurLbl" hidden data-i18n="setm.cur_pass">Máº­t kháº©u hiá»‡n táº¡i</label>
+          <input id="setAuthCur" type="password" autocomplete="current-password" placeholder="Máº­t kháº©u Ä‘ang dÃ¹ng" data-i18n-ph="setm.cur_pass_ph" hidden>
+          <label data-i18n="common.password">Máº­t kháº©u</label><input id="setAuthPass" type="password" autocomplete="new-password" placeholder="Äáº·t máº­t kháº©u (Ä‘á»ƒ trá»‘ng náº¿u khÃ´ng Ä‘á»•i)" data-i18n-ph="setm.pass_ph">
           <div class="set-actions">
-            <button class="s-btn" id="savePassword" data-i18n="setm.save_auth">Lưu tài khoản</button>
-            <button class="s-btn-ghost" id="logoutBtn" data-i18n="setm.logout">Đăng xuất</button>
-            <button class="s-btn-ghost" id="disableAuthBtn" data-i18n="setm.auth_off">Tắt đăng nhập</button>
+            <button class="s-btn" id="savePassword" data-i18n="setm.save_auth">LÆ°u tÃ i khoáº£n</button>
+            <button class="s-btn-ghost" id="logoutBtn" data-i18n="setm.logout">ÄÄƒng xuáº¥t</button>
+            <button class="s-btn-ghost" id="disableAuthBtn" data-i18n="setm.auth_off">Táº¯t Ä‘Äƒng nháº­p</button>
           </div>
-          <!-- Xác thực 2 lớp: CỐ Ý chỉ là dòng trạng thái + lối đi, không phải luồng bật đầy đủ.
-               Màn quét QR nằm ở trang Tài khoản. Bê nguyên luồng đó sang đây là có hai bản sao
-               của một tính năng bảo mật, và chỗ nào quên sửa thì chỗ đó thành lỗ.
-               Nội dung do console.js đổ vào (renderTfaRow) vì nó cần hỏi /auth/status. -->
+          <!-- XÃ¡c thá»±c 2 lá»›p: Cá» Ã chá»‰ lÃ  dÃ²ng tráº¡ng thÃ¡i + lá»‘i Ä‘i, khÃ´ng pháº£i luá»“ng báº­t Ä‘áº§y Ä‘á»§.
+               MÃ n quÃ©t QR náº±m á»Ÿ trang TÃ i khoáº£n. BÃª nguyÃªn luá»“ng Ä‘Ã³ sang Ä‘Ã¢y lÃ  cÃ³ hai báº£n sao
+               cá»§a má»™t tÃ­nh nÄƒng báº£o máº­t, vÃ  chá»— nÃ o quÃªn sá»­a thÃ¬ chá»— Ä‘Ã³ thÃ nh lá»—.
+               Ná»™i dung do console.js Ä‘á»• vÃ o (renderTfaRow) vÃ¬ nÃ³ cáº§n há»i /auth/status. -->
           <div class="set-tfa" id="setTfaRow" hidden></div>
         </div>
-        <div class="set-note" style="opacity:.7" data-i18n="setm.more">Ảnh đại diện, tên miền, giọng nói &amp; tốc độ nằm trong trang Cài đặt.</div>
+        <div class="set-note" style="opacity:.7" data-i18n="setm.more">áº¢nh Ä‘áº¡i diá»‡n, tÃªn miá»n, giá»ng nÃ³i &amp; tá»‘c Ä‘á»™ náº±m trong trang CÃ i Ä‘áº·t.</div>
       </div>
     </div>
   </div>
 
-  <!-- Holder ẩn giữ #quickSet khi KHÔNG ở trang Cài đặt (node vẫn trong DOM → handler còn sống) -->
+  <!-- Holder áº©n giá»¯ #quickSet khi KHÃ”NG á»Ÿ trang CÃ i Ä‘áº·t (node váº«n trong DOM â†’ handler cÃ²n sá»‘ng) -->
   <div id="quickSetHolder" hidden></div>
 
-  <!-- Bộ icon nạp ĐẦU TIÊN: mọi file dưới đây gọi ic() lúc render, thiếu nó thì
-       icon ra rỗng. lucide-icons.js chỉ định nghĩa dữ liệu nên phải đứng trước
-       icons.js (file dựng hàm ic / Icons). Cả hai đều không phụ thuộc DOM. -->
-  <!-- i18n phải nạp TRƯỚC mọi script vẽ giao diện: console.js dựng nhãn rail ngay lúc
-       nạp, nên từ điển chưa sẵn sàng là rail hiện ra key trần rồi mới nháy sang chữ. -->
-  <!-- Người gác cổng bản cũ. Nạp KHÔNG kèm `?v=` và được đóng dấu no-cache, vì nó phải
-       LUÔN mới: một người gác cổng cũ theo thì không gác được gì. Đứng ngay đây để
-       bắt được cả trường hợp một file phía dưới hỏng vì đang chạy bản cũ. -->
-  <script src="/static/freshness.js"></script>
+  <!-- Bá»™ icon náº¡p Äáº¦U TIÃŠN: má»i file dÆ°á»›i Ä‘Ã¢y gá»i ic() lÃºc render, thiáº¿u nÃ³ thÃ¬
+       icon ra rá»—ng. lucide-icons.js chá»‰ Ä‘á»‹nh nghÄ©a dá»¯ liá»‡u nÃªn pháº£i Ä‘á»©ng trÆ°á»›c
+       icons.js (file dá»±ng hÃ m ic / Icons). Cáº£ hai Ä‘á»u khÃ´ng phá»¥ thuá»™c DOM. -->
+  <!-- i18n pháº£i náº¡p TRÆ¯á»šC má»i script váº½ giao diá»‡n: console.js dá»±ng nhÃ£n rail ngay lÃºc
+       náº¡p, nÃªn tá»« Ä‘iá»ƒn chÆ°a sáºµn sÃ ng lÃ  rail hiá»‡n ra key tráº§n rá»“i má»›i nhÃ¡y sang chá»¯. -->
+  <!-- NgÆ°á»i gÃ¡c cá»•ng báº£n cÅ©. Náº¡p KHÃ”NG kÃ¨m `?v=` vÃ  Ä‘Æ°á»£c Ä‘Ã³ng dáº¥u no-cache, vÃ¬ nÃ³ pháº£i
+       LUÃ”N má»›i: má»™t ngÆ°á»i gÃ¡c cá»•ng cÅ© theo thÃ¬ khÃ´ng gÃ¡c Ä‘Æ°á»£c gÃ¬. Äá»©ng ngay Ä‘Ã¢y Ä‘á»ƒ
+       báº¯t Ä‘Æ°á»£c cáº£ trÆ°á»ng há»£p má»™t file phÃ­a dÆ°á»›i há»ng vÃ¬ Ä‘ang cháº¡y báº£n cÅ©. -->
+  <script defer src="/static/freshness.js"></script>
   <!-- Opened by IP on a Hostinger VPS: move to the verified https link of this VPS (auto-domain.js, 0.302.0). -->
-  <!-- Hộp đen lỗi giao diện (loi-may-khach.js, 0.416.0): đứng sớm để bắt được lỗi của mọi file phía dưới. -->
-  <script src="/static/loi-may-khach.js?v=1"></script>
-  <!-- Gộp các lượt đọc trùng nhau lúc mở app (fetch-gop.js, 0.416.0). Đứng trước mọi file gọi máy chủ. -->
-  <script src="/static/fetch-gop.js?v=1"></script>
-  <!-- Code của từng trang nạp khi cần (nap-cham.js, 0.417.0): các file LỚN chỉ một trang dùng không còn chặn lúc mở app.
-       Nhóm nào trang nào cần: console.js renderPage. Trang rảnh thì nạp nốt ở nền theo đúng thứ tự dưới đây. -->
+  <!-- Há»™p Ä‘en lá»—i giao diá»‡n (loi-may-khach.js, 0.416.0): Ä‘á»©ng sá»›m Ä‘á»ƒ báº¯t Ä‘Æ°á»£c lá»—i cá»§a má»i file phÃ­a dÆ°á»›i. -->
+  <script defer src="/static/loi-may-khach.js?v=1"></script>
+  <!-- Gá»™p cÃ¡c lÆ°á»£t Ä‘á»c trÃ¹ng nhau lÃºc má»Ÿ app (fetch-gop.js, 0.416.0). Äá»©ng trÆ°á»›c má»i file gá»i mÃ¡y chá»§. -->
+  <script defer src="/static/fetch-gop.js?v=1"></script>
+  <!-- Code cá»§a tá»«ng trang náº¡p khi cáº§n (nap-cham.js, 0.417.0): cÃ¡c file Lá»šN chá»‰ má»™t trang dÃ¹ng khÃ´ng cÃ²n cháº·n lÃºc má»Ÿ app.
+       NhÃ³m nÃ o trang nÃ o cáº§n: console.js renderPage. Trang ráº£nh thÃ¬ náº¡p ná»‘t á»Ÿ ná»n theo Ä‘Ãºng thá»© tá»± dÆ°á»›i Ä‘Ã¢y. -->
   <script id="javis-lazy" type="application/json">{
  "congviec": [
   "/static/agent-jobs.js?v=6",
@@ -1021,167 +1021,167 @@
   "/static/tasks.js?v=9"
  ]
 }</script>
-  <script src="/static/nap-cham.js?v=1"></script>
-  <script src="/static/auto-domain.js?v=1"></script>
-  <script src="/static/i18n/index.js?v=2"></script>
-  <script src="/static/vendor/lucide-icons.js?v=17"></script>
-  <script src="/static/icons.js?v=2"></script>
-  <script src="/static/info-tip.js?v=2"></script>
+  <script defer src="/static/nap-cham.js?v=1"></script>
+  <script defer src="/static/auto-domain.js?v=1"></script>
+  <script defer src="/static/i18n/index.js?v=2"></script>
+  <script defer src="/static/vendor/lucide-icons.js?v=17"></script>
+  <script defer src="/static/icons.js?v=2"></script>
+  <script defer src="/static/info-tip.js?v=2"></script>
 
-  <!-- theme.js phải nạp TRƯỚC mọi file khác: graph.js / app.js đăng ký
-       hàm vẽ lại theo tông ngay lúc parse, nếu window.javisTheme chưa có thì chúng
-       đăng ký hụt và các lớp canvas kẹt ở bảng màu tối. -->
-  <script src="/static/theme.js?v=4"></script>
-  <!-- Voice V1: đạo diễn hội thoại (thuần) phải nạp TRƯỚC voice.js và app.js. -->
-  <script src="/static/voice-turn.js?v=3"></script>
-  <script src="/static/voice-turn-policy.js?v=1"></script>
-  <script src="/static/voice-adaptive.js?v=1"></script>
-  <script src="/static/voice-adaptive-ui.js?v=2"></script>
-  <script src="/static/voice-attention.js?v=2"></script>
+  <!-- theme.js pháº£i náº¡p TRÆ¯á»šC má»i file khÃ¡c: graph.js / app.js Ä‘Äƒng kÃ½
+       hÃ m váº½ láº¡i theo tÃ´ng ngay lÃºc parse, náº¿u window.javisTheme chÆ°a cÃ³ thÃ¬ chÃºng
+       Ä‘Äƒng kÃ½ há»¥t vÃ  cÃ¡c lá»›p canvas káº¹t á»Ÿ báº£ng mÃ u tá»‘i. -->
+  <script defer src="/static/theme.js?v=4"></script>
+  <!-- Voice V1: Ä‘áº¡o diá»…n há»™i thoáº¡i (thuáº§n) pháº£i náº¡p TRÆ¯á»šC voice.js vÃ  app.js. -->
+  <script defer src="/static/voice-turn.js?v=3"></script>
+  <script defer src="/static/voice-turn-policy.js?v=1"></script>
+  <script defer src="/static/voice-adaptive.js?v=1"></script>
+  <script defer src="/static/voice-adaptive-ui.js?v=2"></script>
+  <script defer src="/static/voice-attention.js?v=2"></script>
   <script src="/static/mic-test.js?v=1" defer></script>
-  <script src="/static/voice-chunker.js?v=2"></script>
-  <script src="/static/voice-lang.js?v=1"></script>
-  <script src="/static/voice.js?v=29"></script>
-  <script src="/static/graph.js?v=17"></script>
-  <script src="/static/pan-zoom.js?v=1"></script>
-  <script src="/static/chat-render.js?v=23"></script>
-  <script src="/static/code-hl.js?v=1"></script>
-  <script src="/static/dataview.js?v=2"></script>
-  <!-- window.JavisCopy: chép một chuỗi vào bảng nhớ tạm, có đường lui cho http trần. Đứng
-       sớm vì nhiều màn dùng chung (ngăn kéo File & link, thanh trình sửa file). -->
-  <script src="/static/copy-path.js?v=1"></script>
-  <script src="/static/task-suggest.js?v=1"></script>
-  <!-- Bảng lệnh của trình soạn .md (nút thanh công cụ + phím tắt + menu "/"). PHẢI đứng
-       trước console.js: _neBuildToolbar đọc window.JavisEditorCmds để vẽ nút. -->
-  <script src="/static/editor-cmds.js?v=2"></script>
-  <!-- Đếm từ + ký tự cho trình sửa file (0.65.32). Thuần, console.js dùng qua window.JavisWordCount. -->
-  <script src="/static/word-count.js?v=1"></script>
+  <script defer src="/static/voice-chunker.js?v=2"></script>
+  <script defer src="/static/voice-lang.js?v=1"></script>
+  <script defer src="/static/voice.js?v=29"></script>
+  <script defer src="/static/graph.js?v=17"></script>
+  <script defer src="/static/pan-zoom.js?v=1"></script>
+  <script defer src="/static/chat-render.js?v=23"></script>
+  <script defer src="/static/code-hl.js?v=1"></script>
+  <script defer src="/static/dataview.js?v=2"></script>
+  <!-- window.JavisCopy: chÃ©p má»™t chuá»—i vÃ o báº£ng nhá»› táº¡m, cÃ³ Ä‘Æ°á»ng lui cho http tráº§n. Äá»©ng
+       sá»›m vÃ¬ nhiá»u mÃ n dÃ¹ng chung (ngÄƒn kÃ©o File & link, thanh trÃ¬nh sá»­a file). -->
+  <script defer src="/static/copy-path.js?v=1"></script>
+  <script defer src="/static/task-suggest.js?v=1"></script>
+  <!-- Báº£ng lá»‡nh cá»§a trÃ¬nh soáº¡n .md (nÃºt thanh cÃ´ng cá»¥ + phÃ­m táº¯t + menu "/"). PHáº¢I Ä‘á»©ng
+       trÆ°á»›c console.js: _neBuildToolbar Ä‘á»c window.JavisEditorCmds Ä‘á»ƒ váº½ nÃºt. -->
+  <script defer src="/static/editor-cmds.js?v=2"></script>
+  <!-- Äáº¿m tá»« + kÃ½ tá»± cho trÃ¬nh sá»­a file (0.65.32). Thuáº§n, console.js dÃ¹ng qua window.JavisWordCount. -->
+  <script defer src="/static/word-count.js?v=1"></script>
   <!-- .html opens on its preview with a Code tab (0.430.2): before file-editor.js and console.js. -->
-  <script src="/static/html-preview.js?v=1"></script>
-  <script src="/static/file-editor.js?v=15"></script>
+  <script defer src="/static/html-preview.js?v=1"></script>
+  <script defer src="/static/file-editor.js?v=15"></script>
   <!-- Insert images into a note (paste/drop/button): compress, then save into images/. After
        editor-cmds.js because it shares its editor lookup (contextFor). -->
-  <script src="/static/note-images.js?v=1"></script>
-  <script src="/static/chat-ask.js?v=2"></script>
-  <script src="/static/limit-resume.js?v=2"></script>
-  <script src="/static/chat-slash.js?v=5"></script>
-  <!-- Lệnh "/" hệ thống (/status /model /compact /plan /goal ...): chạy lệnh mà chat-slash.js vừa nhận
-       diện. Phải nạp TRƯỚC app.js (sendMessage gọi window.JavisLenh) và SAU chat-slash.js (đọc menu). -->
-  <script src="/static/chat-goal.js?v=1"></script>
-  <script src="/static/chat-lenh.js?v=2"></script>
-  <script src="/static/chat-acts.js?v=7"></script>
+  <script defer src="/static/note-images.js?v=1"></script>
+  <script defer src="/static/chat-ask.js?v=2"></script>
+  <script defer src="/static/limit-resume.js?v=2"></script>
+  <script defer src="/static/chat-slash.js?v=5"></script>
+  <!-- Lá»‡nh "/" há»‡ thá»‘ng (/status /model /compact /plan /goal ...): cháº¡y lá»‡nh mÃ  chat-slash.js vá»«a nháº­n
+       diá»‡n. Pháº£i náº¡p TRÆ¯á»šC app.js (sendMessage gá»i window.JavisLenh) vÃ  SAU chat-slash.js (Ä‘á»c menu). -->
+  <script defer src="/static/chat-goal.js?v=1"></script>
+  <script defer src="/static/chat-lenh.js?v=2"></script>
+  <script defer src="/static/chat-acts.js?v=7"></script>
   <!-- One POST /upload with progress and stall watch, shared by the main chat and the Team chat (app.js, teams.js). -->
-  <script src="/static/chat-upload.js?v=1"></script>
+  <script defer src="/static/chat-upload.js?v=1"></script>
   <!-- Stick to the latest message, the jump button and its "New messages" pill, shared by app.js and teams.js. -->
-  <script src="/static/chat-scroll.js?v=1"></script>
-  <script src="/static/chat-quote.js?v=2"></script>
+  <script defer src="/static/chat-scroll.js?v=1"></script>
+  <script defer src="/static/chat-quote.js?v=2"></script>
   <!-- Long paste (0.430.1): preview the whole text, then paste inline or attach .txt. Before app.js and teams.js. -->
-  <script src="/static/chat-paste.js?v=1"></script>
-  <!-- Sáu reaction dùng chung (T2 0.154.0): nạp TRƯỚC chat-reactions.js, app.js, teams.js và mobile-chat.js. -->
-  <script src="/static/reactions.js?v=3"></script>
-  <!-- Nhấn giữ tin trên điện thoại (0.179.0): nạp TRƯỚC chat-reactions.js và teams.js. -->
-  <script src="/static/msg-press.js?v=5"></script>
-  <!-- Vuốt tin sang trái để trích dẫn trên điện thoại (0.216.0): nạp TRƯỚC chat-reactions.js. -->
-  <script src="/static/msg-swipe.js?v=1"></script>
-  <script src="/static/chat-reactions.js?v=7"></script>
-  <script src="/static/chat-marks.js?v=5"></script>
-  <!-- Khối tiến trình từng bước trong khung chat: phải đứng TRƯỚC app.js vì app.js gọi
-       window.JavisSteps ngay khi khung tool_call đầu tiên về. -->
-  <script src="/static/chat-steps.js?v=2"></script>
-  <script src="/static/chat-viec.js?v=6"></script>
-  <script src="/static/chat-nho.js?v=1"></script>
-  <script src="/static/chat-doi.js?v=1"></script>
-  <script src="/static/chat-card.js?v=2"></script>
-  <script src="/static/chat-resonance.js?v=3"></script>
-  <script src="/static/resonance-agent.js?v=5"></script>
-  <!-- Voice V1: khối ngữ cảnh giao diện + bộ nhận lệnh ui_action, nạp TRƯỚC app.js. -->
-  <!-- Kéo đổi bề rộng cột ở trang đồ thị và trang Trò chuyện (0.148.0): nạp TRƯỚC app.js và console.js. -->
-  <script src="/static/col-resize.js?v=2"></script>
-  <script src="/static/ui-context.js?v=1"></script>
-  <script src="/static/ui-actions.js?v=3"></script>
-  <!-- Voice V2: nghe nói thẳng (Live), app.js gọi lười khi bấm mic ở chế độ Live. -->
-  <script src="/static/voice-live.js?v=7"></script>
-  <script src="/static/screen-awake.js?v=1"></script>
-  <script src="/static/incoming-call.js?v=1"></script>
-  <script src="/static/call-bar.js?v=1"></script>
-  <script src="/static/app.js?v=157"></script>
-  <!-- Sau app.js: dải việc nền đọc window.JavisSessions (app.js dựng) để biết phiên + brain. -->
-  <script src="/static/background-strip.js?v=3"></script>
-  <!-- Thân bảng chọn model dùng chung: phải đứng TRƯỚC model-picker.js (thanh chat) và
-       studio.js (ô Model của trợ lý) vì cả hai gọi window.JavisModelList lúc vẽ. -->
-  <script src="/static/model-list.js?v=3"></script>
-  <script src="/static/effort-slider.js?v=3"></script>
+  <script defer src="/static/chat-paste.js?v=1"></script>
+  <!-- SÃ¡u reaction dÃ¹ng chung (T2 0.154.0): náº¡p TRÆ¯á»šC chat-reactions.js, app.js, teams.js vÃ  mobile-chat.js. -->
+  <script defer src="/static/reactions.js?v=3"></script>
+  <!-- Nháº¥n giá»¯ tin trÃªn Ä‘iá»‡n thoáº¡i (0.179.0): náº¡p TRÆ¯á»šC chat-reactions.js vÃ  teams.js. -->
+  <script defer src="/static/msg-press.js?v=5"></script>
+  <!-- Vuá»‘t tin sang trÃ¡i Ä‘á»ƒ trÃ­ch dáº«n trÃªn Ä‘iá»‡n thoáº¡i (0.216.0): náº¡p TRÆ¯á»šC chat-reactions.js. -->
+  <script defer src="/static/msg-swipe.js?v=1"></script>
+  <script defer src="/static/chat-reactions.js?v=7"></script>
+  <script defer src="/static/chat-marks.js?v=5"></script>
+  <!-- Khá»‘i tiáº¿n trÃ¬nh tá»«ng bÆ°á»›c trong khung chat: pháº£i Ä‘á»©ng TRÆ¯á»šC app.js vÃ¬ app.js gá»i
+       window.JavisSteps ngay khi khung tool_call Ä‘áº§u tiÃªn vá». -->
+  <script defer src="/static/chat-steps.js?v=2"></script>
+  <script defer src="/static/chat-viec.js?v=6"></script>
+  <script defer src="/static/chat-nho.js?v=1"></script>
+  <script defer src="/static/chat-doi.js?v=1"></script>
+  <script defer src="/static/chat-card.js?v=2"></script>
+  <script defer src="/static/chat-resonance.js?v=3"></script>
+  <script defer src="/static/resonance-agent.js?v=5"></script>
+  <!-- Voice V1: khá»‘i ngá»¯ cáº£nh giao diá»‡n + bá»™ nháº­n lá»‡nh ui_action, náº¡p TRÆ¯á»šC app.js. -->
+  <!-- KÃ©o Ä‘á»•i bá» rá»™ng cá»™t á»Ÿ trang Ä‘á»“ thá»‹ vÃ  trang TrÃ² chuyá»‡n (0.148.0): náº¡p TRÆ¯á»šC app.js vÃ  console.js. -->
+  <script defer src="/static/col-resize.js?v=2"></script>
+  <script defer src="/static/ui-context.js?v=1"></script>
+  <script defer src="/static/ui-actions.js?v=3"></script>
+  <!-- Voice V2: nghe nÃ³i tháº³ng (Live), app.js gá»i lÆ°á»i khi báº¥m mic á»Ÿ cháº¿ Ä‘á»™ Live. -->
+  <script defer src="/static/voice-live.js?v=7"></script>
+  <script defer src="/static/screen-awake.js?v=1"></script>
+  <script defer src="/static/incoming-call.js?v=1"></script>
+  <script defer src="/static/call-bar.js?v=1"></script>
+  <script defer src="/static/app.js?v=157"></script>
+  <!-- Sau app.js: dáº£i viá»‡c ná»n Ä‘á»c window.JavisSessions (app.js dá»±ng) Ä‘á»ƒ biáº¿t phiÃªn + brain. -->
+  <script defer src="/static/background-strip.js?v=3"></script>
+  <!-- ThÃ¢n báº£ng chá»n model dÃ¹ng chung: pháº£i Ä‘á»©ng TRÆ¯á»šC model-picker.js (thanh chat) vÃ 
+       studio.js (Ã´ Model cá»§a trá»£ lÃ½) vÃ¬ cáº£ hai gá»i window.JavisModelList lÃºc váº½. -->
+  <script defer src="/static/model-list.js?v=3"></script>
+  <script defer src="/static/effort-slider.js?v=3"></script>
   <!-- Models page usage order (0.351.0): drag, swap, popover placement. console.js calls window.JavisModelsOrder. -->
-  <script src="/static/models-order.js?v=1"></script>
-  <script src="/static/plan-limit.js?v=2"></script>
-  <script src="/static/model-picker.js?v=18"></script>
-  <script src="/static/composer-plus.js?v=3"></script>
-  <script src="/static/composer-folder.js?v=4"></script>
-  <script src="/static/github-connect.js?v=3"></script>
-  <script src="/static/branding.js?v=11"></script>
-  <script src="/static/quick-settings.js?v=11"></script>
-  <script src="/static/remote-access.js?v=2"></script>
-  <script src="/static/chat-zoom.js?v=6"></script>
-  <script src="/static/brains-ui.js?v=9"></script>
+  <script defer src="/static/models-order.js?v=1"></script>
+  <script defer src="/static/plan-limit.js?v=2"></script>
+  <script defer src="/static/model-picker.js?v=18"></script>
+  <script defer src="/static/composer-plus.js?v=3"></script>
+  <script defer src="/static/composer-folder.js?v=4"></script>
+  <script defer src="/static/github-connect.js?v=3"></script>
+  <script defer src="/static/branding.js?v=11"></script>
+  <script defer src="/static/quick-settings.js?v=11"></script>
+  <script defer src="/static/remote-access.js?v=2"></script>
+  <script defer src="/static/chat-zoom.js?v=6"></script>
+  <script defer src="/static/brains-ui.js?v=9"></script>
   <!-- Brain picker drawn by Javis over #graphSource (0.431.0): after brains-ui.js and app.js. -->
-  <script src="/static/brain-picker.js?v=1"></script>
-  <script src="/static/sessions-ui.js?v=25"></script>
+  <script defer src="/static/brain-picker.js?v=1"></script>
+  <script defer src="/static/sessions-ui.js?v=25"></script>
   <link rel="stylesheet" href="/static/improvement-candidates.css?v=3">
-  <script src="/static/improvement-experiments.js?v=1"></script>
-  <script src="/static/improvement-candidates.js?v=3"></script>
-  <script src="/static/agent-picker.js?v=1"></script>
-  <script src="/static/studio.js?v=49"></script>
-  <!-- Trang Cộng sự: nạp SAU studio.js (mượn trình sửa agent/workflow của Studio) và TRƯỚC
-       console.js (renderWorkspace ủy quyền cho window.JavisWorkspace). -->
-  <!-- Tab Công việc của trợ lý (0.142.0): nạp TRƯỚC workspace.js, workspace.js gọi window.JavisAgentJobs. -->
-  <script src="/static/pulse-seen.js?v=1"></script>
-  <!-- Tag filter bar and tag picker shared by Cộng sự and Team (0.195.0): load BEFORE workspace.js and teams.js. -->
-  <script src="/static/tag-picker.js?v=1"></script>
-  <script src="/static/workspace.js?v=33"></script>
-  <!-- Hộp chọn thành viên kiểu Zalo (0.142.0): nạp TRƯỚC teams.js, teams.js gọi window.JavisTeamPicker. -->
-  <script src="/static/team-picker.js?v=1"></script>
-  <!-- Bộ phán xử nói / chờ / im của từng trợ lý (T3 phần J 0.156.0): lịch sử quyết định và nút sửa. Nạp TRƯỚC teams.js
-       (ngăn Nhóm gọi window.JavisAgentJudge.hydrate); góp phần "judge" vào khung nhịp qua window.JavisPulseParts. -->
-  <!-- Nút mic nhập chữ của khung soạn Nhóm (0.176.0): nạp TRƯỚC teams.js. -->
-  <script src="/static/dictate.js?v=4"></script>
-  <script src="/static/composer-dictate.js?v=4"></script>
-  <!-- Trang Hội thoại (hộp thư khách): nạp TRƯỚC console.js để renderConversations uỷ quyền được. -->
-  <script src="/static/ht-media.js?v=3"></script>
-  <!-- Dashboard Token (trang Mức dùng nâng cấp): nạp TRƯỚC console.js để renderUsage ủy quyền được. -->
-  <!-- Trang Code (terminal): nạp TRƯỚC console.js để renderCode ủy quyền được. File này CHỈ có
-       phần khung - xterm.js (285KB) nạp lười ở lần đầu mở tab, không nằm trong đường khởi động. -->
-  <script src="/static/code-term.js?v=3"></script>
-  <!-- Hộp chọn thư mục dùng chung (JavisFolderPicker). Nạp TRƯỚC file nào gọi nó. -->
-  <script src="/static/folder-picker.js?v=2"></script>
-  <!-- Trang Coding (nhóm Code): mượn khung chat của app, nên nạp TRƯỚC console.js y như
-       workspace.js để renderCoding uỷ quyền được. -->
-  <script src="/static/coding.js?v=13"></script>
-  <!-- Console layer: console.js đăng ký store TRƯỚC khi Alpine khởi động (defer) -->
-  <!-- Phần đọc cấu hình của form "Tự thêm MCP" (thuần, có test node). Nạp TRƯỚC console.js. -->
-  <script src="/static/mcp-form-parse.js?v=1"></script>
+  <script defer src="/static/improvement-experiments.js?v=1"></script>
+  <script defer src="/static/improvement-candidates.js?v=3"></script>
+  <script defer src="/static/agent-picker.js?v=1"></script>
+  <script defer src="/static/studio.js?v=49"></script>
+  <!-- Trang Cá»™ng sá»±: náº¡p SAU studio.js (mÆ°á»£n trÃ¬nh sá»­a agent/workflow cá»§a Studio) vÃ  TRÆ¯á»šC
+       console.js (renderWorkspace á»§y quyá»n cho window.JavisWorkspace). -->
+  <!-- Tab CÃ´ng viá»‡c cá»§a trá»£ lÃ½ (0.142.0): náº¡p TRÆ¯á»šC workspace.js, workspace.js gá»i window.JavisAgentJobs. -->
+  <script defer src="/static/pulse-seen.js?v=1"></script>
+  <!-- Tag filter bar and tag picker shared by Cá»™ng sá»± and Team (0.195.0): load BEFORE workspace.js and teams.js. -->
+  <script defer src="/static/tag-picker.js?v=1"></script>
+  <script defer src="/static/workspace.js?v=33"></script>
+  <!-- Há»™p chá»n thÃ nh viÃªn kiá»ƒu Zalo (0.142.0): náº¡p TRÆ¯á»šC teams.js, teams.js gá»i window.JavisTeamPicker. -->
+  <script defer src="/static/team-picker.js?v=1"></script>
+  <!-- Bá»™ phÃ¡n xá»­ nÃ³i / chá» / im cá»§a tá»«ng trá»£ lÃ½ (T3 pháº§n J 0.156.0): lá»‹ch sá»­ quyáº¿t Ä‘á»‹nh vÃ  nÃºt sá»­a. Náº¡p TRÆ¯á»šC teams.js
+       (ngÄƒn NhÃ³m gá»i window.JavisAgentJudge.hydrate); gÃ³p pháº§n "judge" vÃ o khung nhá»‹p qua window.JavisPulseParts. -->
+  <!-- NÃºt mic nháº­p chá»¯ cá»§a khung soáº¡n NhÃ³m (0.176.0): náº¡p TRÆ¯á»šC teams.js. -->
+  <script defer src="/static/dictate.js?v=4"></script>
+  <script defer src="/static/composer-dictate.js?v=4"></script>
+  <!-- Trang Há»™i thoáº¡i (há»™p thÆ° khÃ¡ch): náº¡p TRÆ¯á»šC console.js Ä‘á»ƒ renderConversations uá»· quyá»n Ä‘Æ°á»£c. -->
+  <script defer src="/static/ht-media.js?v=3"></script>
+  <!-- Dashboard Token (trang Má»©c dÃ¹ng nÃ¢ng cáº¥p): náº¡p TRÆ¯á»šC console.js Ä‘á»ƒ renderUsage á»§y quyá»n Ä‘Æ°á»£c. -->
+  <!-- Trang Code (terminal): náº¡p TRÆ¯á»šC console.js Ä‘á»ƒ renderCode á»§y quyá»n Ä‘Æ°á»£c. File nÃ y CHá»ˆ cÃ³
+       pháº§n khung - xterm.js (285KB) náº¡p lÆ°á»i á»Ÿ láº§n Ä‘áº§u má»Ÿ tab, khÃ´ng náº±m trong Ä‘Æ°á»ng khá»Ÿi Ä‘á»™ng. -->
+  <script defer src="/static/code-term.js?v=3"></script>
+  <!-- Há»™p chá»n thÆ° má»¥c dÃ¹ng chung (JavisFolderPicker). Náº¡p TRÆ¯á»šC file nÃ o gá»i nÃ³. -->
+  <script defer src="/static/folder-picker.js?v=2"></script>
+  <!-- Trang Coding (nhÃ³m Code): mÆ°á»£n khung chat cá»§a app, nÃªn náº¡p TRÆ¯á»šC console.js y nhÆ°
+       workspace.js Ä‘á»ƒ renderCoding uá»· quyá»n Ä‘Æ°á»£c. -->
+  <script defer src="/static/coding.js?v=13"></script>
+  <!-- Console layer: console.js Ä‘Äƒng kÃ½ store TRÆ¯á»šC khi Alpine khá»Ÿi Ä‘á»™ng (defer) -->
+  <!-- Pháº§n Ä‘á»c cáº¥u hÃ¬nh cá»§a form "Tá»± thÃªm MCP" (thuáº§n, cÃ³ test node). Náº¡p TRÆ¯á»šC console.js. -->
+  <script defer src="/static/mcp-form-parse.js?v=1"></script>
   <!-- Webhooks section of the Work page (0.198.0): load BEFORE console.js, which mounts window.JavisWebhooks. -->
   <!-- Health section of the Work page (0.199.0): incidents Javis Core handles and the read-only scan. -->
-  <script src="/static/health-panel.js?v=1"></script>
+  <script defer src="/static/health-panel.js?v=1"></script>
   <!-- Watch tab of the Recurring work page (0.239.0): token-free web page watching (server/web_watch.py). -->
-  <script src="/static/web-watch.js?v=3"></script>
-  <script src="/static/login-vault.js?v=2"></script>
-  <script src="/static/messenger-connect.js?v=3"></script>
-  <script src="/static/voice-catalog.js?v=1"></script>
-  <script src="/static/console.js?v=206"></script>
-  <script src="/static/mobile-chat.js?v=16"></script>
-  <script src="/static/brain-view.js?v=1"></script>
-  <script src="/static/push.js?v=3"></script>
-  <script src="/static/install-nudge.js?v=1"></script>
-  <!-- Mời tặng sao GitHub (0.324.0): thẻ hiện ở khoảnh khắc vui, xem server/star_nudge.py. -->
+  <script defer src="/static/web-watch.js?v=3"></script>
+  <script defer src="/static/login-vault.js?v=2"></script>
+  <script defer src="/static/messenger-connect.js?v=3"></script>
+  <script defer src="/static/voice-catalog.js?v=1"></script>
+  <script defer src="/static/console.js?v=206"></script>
+  <script defer src="/static/mobile-chat.js?v=16"></script>
+  <script defer src="/static/brain-view.js?v=1"></script>
+  <script defer src="/static/push.js?v=3"></script>
+  <script defer src="/static/install-nudge.js?v=1"></script>
+  <!-- Má»i táº·ng sao GitHub (0.324.0): tháº» hiá»‡n á»Ÿ khoáº£nh kháº¯c vui, xem server/star_nudge.py. -->
   <link rel="stylesheet" href="/static/star-nudge.css?v=3">
-  <script src="/static/star-nudge.js?v=2"></script>
-  <script src="/static/notifications.js?v=11"></script>
-  <!-- Linh vật ở mép màn hình. Nạp SAU app.js vì nó chỉ được app.js gọi vào
-       (setOrbState -> JavisPet.setState), và sau console.js để trang Cài đặt vẽ được thẻ chọn. -->
-  <script src="/static/pet.js?v=1"></script>
-  <script src="/static/agent-avatar.js?v=4"></script>
-  <!-- (Nút đổi tông TỐI ↔ SÁNG: theme.js đã nạp ở đầu khối script phía trên) -->
-  <!-- Alpine self-host (dashboard/vendor): bản unpkg đo được 2.1s lúc first load + chết khi offline -->
+  <script defer src="/static/star-nudge.js?v=2"></script>
+  <script defer src="/static/notifications.js?v=11"></script>
+  <!-- Linh váº­t á»Ÿ mÃ©p mÃ n hÃ¬nh. Náº¡p SAU app.js vÃ¬ nÃ³ chá»‰ Ä‘Æ°á»£c app.js gá»i vÃ o
+       (setOrbState -> JavisPet.setState), vÃ  sau console.js Ä‘á»ƒ trang CÃ i Ä‘áº·t váº½ Ä‘Æ°á»£c tháº» chá»n. -->
+  <script defer src="/static/pet.js?v=1"></script>
+  <script defer src="/static/agent-avatar.js?v=4"></script>
+  <!-- (NÃºt Ä‘á»•i tÃ´ng Tá»I â†” SÃNG: theme.js Ä‘Ã£ náº¡p á»Ÿ Ä‘áº§u khá»‘i script phÃ­a trÃªn) -->
+  <!-- Alpine self-host (dashboard/vendor): báº£n unpkg Ä‘o Ä‘Æ°á»£c 2.1s lÃºc first load + cháº¿t khi offline -->
   <script defer src="/static/vendor/alpinejs-3.14.1.min.js?v=1"></script>
 </body>
 </html>
