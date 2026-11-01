@@ -1039,7 +1039,7 @@
   "ol.connected": "Connected to Ollama",
   "ol.change_ep": "Change address",
   "ol.confirm_change": "Disconnect the current Ollama so you can enter a different address? Models already downloaded stay on that machine.",
-  "ol.err_connect": "Could not reach that address.",
+  "ol.err_connect": "Could not connect. Is Ollama running, and is the address right? Install: https://ollama.com/download (Windows: winget install Ollama.Ollama).",
   "ol.specs_title": "Specs of the machine running Ollama",
   "ol.specs_auto": "Read by Aarohi",
   "ol.specs_manual": "Entered by you",
