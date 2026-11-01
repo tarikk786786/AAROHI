@@ -84,7 +84,7 @@
   //      nhiều bản Safari/Firefox làm ngơ. Cách ăn chắc là GỠ thẻ cũ ra rồi gắn thẻ mới vào.
   //
   // Gắn lại cả `apple-touch-icon` vì index.html khai cả hai, và đó là icon dùng khi người ta
-  // thêm Javis vào màn hình chính iPhone.
+  // thêm AAROHI vào màn hình chính iPhone.
   function doiFavicon(v) {
     try {
       var head = document.head;

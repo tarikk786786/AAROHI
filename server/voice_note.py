@@ -23,7 +23,7 @@ from pathlib import Path
 
 MAX_CHARS = 1000
 VI_VOICE = "vi-VN-HoaiMyNeural"
-DEFAULT_VOICE = "en-US-EmmaMultilingualNeural"
+DEFAULT_VOICE = "en-US-AvaMultilingualNeural"
 _VI_CHARS = re.compile(r"[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]", re.I)
 _VOICE_RE = re.compile(r"^[a-z]{2,3}-[A-Z]{2}-[A-Za-z]+Neural$")
 

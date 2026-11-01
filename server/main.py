@@ -14557,7 +14557,7 @@ async def config():
     return {
         "workspace_name": s.get("workspace_name") or os.getenv("WORKSPACE_NAME", "Javis OS"),
         "user_name": os.getenv("USER_NAME", localefmt.chu("Bạn", "You")),
-        "tts_voice": os.getenv("TTS_VOICE", "en-US-EmmaMultilingualNeural"),
+        "tts_voice": os.getenv("TTS_VOICE", "en-US-AvaMultilingualNeural"),
         "tts_rate": os.getenv("TTS_RATE", "+5%"),
     }
 
@@ -16056,7 +16056,7 @@ async def _tts_elevenlabs(text: str, cfg: dict) -> bytes:
 @app.get("/tts")
 async def tts(
     text: str = Query(...),
-    voice: str = Query("en-US-EmmaMultilingualNeural"),
+    voice: str = Query("en-US-AvaMultilingualNeural"),
     rate: str = Query("+5%"),
 ):
     """Sinh audio đúng nhà cung cấp đã chọn; lỗi không được âm thầm đổi giọng."""
@@ -16065,7 +16065,7 @@ async def tts(
     if voice == "auto":
         # "Auto by language" is resolved per chunk in the browser (voice-lang.js); a page cached
         # from before 0.220.0 can still send the raw value, which Edge would refuse.
-        voice = "en-US-EmmaMultilingualNeural"
+        voice = "en-US-AvaMultilingualNeural"
     from fastapi.responses import StreamingResponse
     cfg = cfgmod.read_settings()
     provider = ((cfg.get("voice", {}) or {}).get("tts_provider") or "edge").lower()
