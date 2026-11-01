@@ -26,7 +26,7 @@ SETTINGS_PATH = STATE_DIR / "settings.json"
 BRANDING_DIR = STATE_DIR / "branding"
 
 _DEFAULT = {
-    "workspace_name": "Javis OS",
+    "workspace_name": "AAROHI",
     "setup_done": False,                       # đã qua bộ cài đặt lần đầu chưa
     # totp = xác thực 2 lớp. secret rỗng / enabled=false → cổng đăng nhập giữ nguyên như cũ.
     # `recovery` giữ BẢN BĂM của mã khôi phục (cùng cách băm mật khẩu), nên không có đường nào
@@ -46,16 +46,16 @@ _DEFAULT = {
     # Gộp ba cái làm một là chặn đứng ca dùng đáng tiền nhất: chủ Việt, giao diện Việt, brain
     # Việt, nhưng chatbot đối ngoại trả lời tiếng Nhật.
     "locale": {
-        "ui_lang": "",
+        "ui_lang": "en",
         "reply_lang": "auto",              # auto | vi | en
-        "tz": "Asia/Ho_Chi_Minh",
-        "currency": "VND",
+        "tz": "Asia/Kolkata",
+        "currency": "INR",
     },
     # Nhà cung cấp giọng đọc (TTS). edge = Edge TTS miễn phí (mặc định, dự phòng).
     # openai = OpenAI TTS (dùng model.openai_api_key). elevenlabs = ElevenLabs (key riêng).
     "voice": {
         "tts_provider": "edge",                       # edge | openai | elevenlabs
-        "openai_tts_voice": "alloy",                  # alloy|echo|fable|onyx|nova|shimmer|ash|sage|coral
+        "openai_tts_voice": "shimmer",                # alloy|echo|fable|onyx|nova|shimmer|ash|sage|coral
         "openai_tts_model": "gpt-4o-mini-tts",        # hoặc tts-1 / tts-1-hd
         "elevenlabs_key": "",
         "elevenlabs_voice": "21m00Tcm4TlvDq8ikWAM",   # Rachel (premade, đa ngôn ngữ) - đổi được
@@ -74,7 +74,7 @@ _DEFAULT = {
         "stt_model": "",               # rỗng = whisper-large-v3 (stt.STT_MODEL_MAC_DINH)
         "live_provider": "gemini",     # gemini | openai (đều cần API key ở trang Models)
         "live_model": "",              # rỗng = gợi ý trong voice_live.PROVIDERS
-        "live_voice": "",
+        "live_voice": "aoede",
         "live_proactive": True,        # Live qua API: bỏ qua tiếng không nói với Javis (TV, người bên cạnh)
         "live_turn": "normal",         # fast | normal | slow: nhịp trả lời của Live qua API
     },

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <!-- maximum-scale=1 + user-scalable=no: tắt pinch/double-tap zoom trên mobile theo yêu cầu
@@ -7,7 +7,7 @@
        dưới); ở tab Safari thường iOS 10+ vẫn cho zoom bằng tay vì lý do accessibility, nên còn
        chặn thêm bằng touch-action trong style.css làm lớp thứ hai. -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
-  <title>Javis OS</title>
+  <title>AAROHI · Your AI Girlfriend</title>
   <!-- Favicon = logo hiện tại (/brand-logo): mặc định theo logo.png, và tự đổi theo ảnh user tải lên. -->
   <link rel="icon" href="/brand-logo?v=5">
   <link rel="apple-touch-icon" href="/brand-logo?v=5">
@@ -19,7 +19,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Javis OS">
+  <meta name="apple-mobile-web-app-title" content="AAROHI">
   <meta name="theme-color" content="#0e0e16">
   <!-- manifest.json khai icon PNG vuông 192/512 có sizes rõ ràng: đó là điều kiện để
        Chrome/Edge DESKTOP coi trang là cài được (icon "any" trên PNG bị coi là không hợp lệ
@@ -52,7 +52,7 @@
       </button>
       <!-- NHÓM TRÁI: thương hiệu + chọn brain + số liệu (bám trái) -->
       <div class="hud-top-left">
-        <div class="brand"><span class="brand-icon"><img src="/brand-logo" alt="" style="width:22px;height:22px;border-radius:5px;vertical-align:middle;object-fit:cover"></span> <span class="brand-text">JAVIS OS</span></div>
+        <div class="brand"><span class="brand-icon"><img src="/brand-logo" alt="" style="width:22px;height:22px;border-radius:5px;vertical-align:middle;object-fit:cover"></span> <span class="brand-text">AAROHI</span></div>
         <!-- Select Brain: dời từ góc graph lên navbar -->
         <div class="orb-graph-ctl navbar-brain">
           <i data-ic="brain" class="brain-select-ico" data-ic-title="Bộ não đang chọn" data-i18n-title="top.brain_current"></i>
@@ -326,7 +326,7 @@
         <!-- Thanh gọi (call-bar.js, 0.65.18): hiện khi bấm mic gọi Javis. Nằm trong CHAT_NODE_IDS
              (console.js) nên sang trang Trò chuyện là đi theo khung chat. -->
         <div class="call-bar" id="callBar" hidden></div>
-        <div class="transcript" id="chatArea" data-i18n-empty="chat.empty_hint" data-empty-hint="Nói hoặc gõ để bắt đầu hội thoại với Javis."></div>
+        <div class="transcript" id="chatArea" data-i18n-empty="chat.empty_hint" data-empty-hint="Talk or type to chat with your sweet girl Aarohi ❤️"></div>
         <!-- Thanh #toolBar cũ ĐÃ BỎ: trạng thái "đang suy nghĩ / gọi tool" giờ hiện bằng
              chip hoạt động NGAY TRONG #chatArea (app.js showActivity) → tự đi theo cả khi
              phóng to chat workspace (chat-zoom chỉ dời #chatArea, trước đây toolBar bị bỏ lại). -->
@@ -494,14 +494,16 @@
               <!-- Kho giọng Edge: app.js đọc/ghi giọng Edge qua ô này (localStorage javis.voice), còn
                    người dùng chọn ở #vcVoice. Ẩn, nhưng vẫn là danh sách gốc của bảy giọng Edge. -->
               <select id="voiceSel" name="voice" hidden aria-hidden="true" tabindex="-1">
-                <option value="en-US-EmmaMultilingualNeural" data-i18n="qs.voice_opt_emma">Emma · Nữ, vui tươi rõ chữ · đa ngôn ngữ</option>
-                <option value="vi-VN-HoaiMyNeural" data-i18n="qs.voice_opt_hoaimy">Hoài My · Nữ, tự nhiên ấm áp</option>
+                <option value="en-US-AvaMultilingualNeural" selected>Ava / Aarohi · Sweet & Expressive Female Voice</option>
+                <option value="en-IN-NeerjaNeural">Neerja · Sweet Indian English Female Voice</option>
+                <option value="hi-IN-SwaraNeural">Swara · Sweet Hindi Female Voice</option>
+                <option value="en-US-EmmaMultilingualNeural" data-i18n="qs.voice_opt_emma">Emma · Cheerful & Clear Female Voice</option>
+                <option value="vi-VN-HoaiMyNeural" data-i18n="qs.voice_opt_hoaimy">Hoài My · Warm Natural Female Voice</option>
                 <option value="vi-VN-NamMinhNeural" data-i18n="qs.voice_opt_namminh">Nam Minh · Nam, trầm</option>
-                <option value="en-US-AvaMultilingualNeural" data-i18n="qs.voice_opt_ava">Ava · Nữ, dịu và biểu cảm · đa ngôn ngữ</option>
                 <option value="en-US-AndrewMultilingualNeural" data-i18n="qs.voice_opt_andrew">Andrew · Nam, ấm và tự tin · đa ngôn ngữ</option>
                 <option value="en-US-BrianMultilingualNeural" data-i18n="qs.voice_opt_brian">Brian · Nam, gần gũi đời thường · đa ngôn ngữ</option>
                 <option value="en-AU-WilliamMultilingualNeural" data-i18n="qs.voice_opt_william">William · Nam, thân thiện giọng Úc · đa ngôn ngữ</option>
-                <option value="auto" data-i18n="qs.voice_opt_auto">Tự động theo thứ tiếng · Hoài My, Emma hoặc giọng bản xứ</option>
+                <option value="auto" data-i18n="qs.voice_opt_auto">Auto by language · Sweet Female Voices</option>
               </select>
             </div>
 

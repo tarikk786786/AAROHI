@@ -28,6 +28,7 @@
     alloy: "n",
     // Edge (giọng đọc mặc định, miễn phí)
     "en-us-emmamultilingualneural": "f", "vi-vn-hoaimyneural": "f", "en-us-avamultilingualneural": "f",
+    "en-in-neerjaneural": "f", "hi-in-swaraneural": "f",
     "vi-vn-namminhneural": "m", "en-us-andrewmultilingualneural": "m", "en-us-brianmultilingualneural": "m",
     "en-au-williammultilingualneural": "m",
     // "Tự động theo thứ tiếng" chọn Hoài My, Emma hoặc giọng bản xứ, và mọi giọng bản xứ trong voice-lang.js là nữ.

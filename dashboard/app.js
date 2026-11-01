@@ -4298,7 +4298,7 @@ document.getElementById("resetBtn").addEventListener("click", () => {
 // nằm thẳng trong trang Cài đặt. KHOÁ localStorage giữ nguyên nên không ai bị reset.
 const voiceSel = document.getElementById("voiceSel");
 const rateSel = document.getElementById("rateSel");
-const savedVoice = localStorage.getItem("javis.voice") || "en-US-EmmaMultilingualNeural";
+const savedVoice = localStorage.getItem("javis.voice") || "en-US-AvaMultilingualNeural";
 const savedRate = parseFloat(localStorage.getItem("javis.rate") || "1.10");
 // Ngôn ngữ NGHE theo ngôn ngữ giao diện (0.65.19, bỏ ô "Ngôn ngữ nghe"): en thì en-US, còn lại
 // vi-VN. Câu Việt xen tiếng Anh đã có tai nghe lại (voice_ear) lo, không cần chọn tay nữa.

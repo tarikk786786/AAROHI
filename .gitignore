@@ -208,3 +208,10 @@ server/notify_policy.json
 server/engine_down_notified.json
 server/client_errors.json
 server/client_errors.tmp
+
+# Runtime sqlite and db files
+server/*.sqlite3*
+server/*.db*
+server/cache/
+server/*.json
+!ANNOUNCEMENTS.json
