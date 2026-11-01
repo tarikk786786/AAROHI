@@ -17,49 +17,56 @@
      DUYỆT tự vẽ vẫn giữ mặc định sáng/tối cũ: thanh cuộn hệ thống, caret, ô date,
      select popup, checkbox, và nền vàng của autofill. CSS không với tới chúng. */
   color-scheme: dark;
-  --bg: #0c0a17;
-  --bg2: #161226;
-  --bg3: #1f1a35;
-  --border: #352c52;
-  --accent: #f43f5e;
-  --accent2: #d946ef;
-  --text: #fdf2f8;
-  --text2: #e2d4e8;
-  --text3: #a89bb8;
-  --green: #34d399;
-  --red: #f43f5e;
-  --yellow: #fbbf24;
-  --font: 'Be Vietnam Pro', 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --bg: #0e0e16;
+  --bg2: #181822;
+  --bg3: #22222e;
+  --border: #36364c;
+  --accent: #ff7a3c;
+  --accent2: #8b5cf6;
+  --text: #f3f3fb;
+  --text2: #c0c0da;
+  --text3: #9a9ab6;
+  --green: #34d36b;
+  --red: #f4565a;
+  --yellow: #f0c020;
+  --font: 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif;
   --font-chat: var(--font);
   --mono: 'SF Mono', 'Fira Code', 'Consolas', ui-monospace, monospace;
 
-  /* --- Mực: màu dùng cho CHỮ. --- */
-  --text-hi: #ffffff;
-  --accent-ink: #fda4af;
-  --accent2-ink: #f0abfc;
-  --accent-solid: #e11d48;
+  /* --- Mực: màu dùng cho CHỮ. Khác --accent/--accent2 (dùng để tô nền, viền,
+         quầng sáng). Trên nền tối chữ nhấn phải sáng hơn nền; trên nền trắng nó
+         phải đậm hơn hẳn, nếu bê nguyên #ff7a3c sang chỉ đạt 3.4:1 - đọc mỏi. --- */
+  --text-hi: #ffffff;              /* chữ bật lên khi hover/chọn */
+  --accent-ink: #ffab81;
+  --accent2-ink: #d5b5ff;
+  /* Cam để TÔ ĐẶC nút có chữ đè lên. Tách khỏi --accent vì tương phản là ĐỐI XỨNG:
+     một màu vừa nổi trên nền trắng vừa đỡ được chữ trắng là bất khả. --accent giữ
+     cam thương hiệu cho chấm/gạch/viền (không mang chữ), --accent-solid sẫm hơn
+     để chữ trắng đặt lên vẫn đạt chuẩn đọc. */
+  --accent-solid: #ff7a3c;
 
   /* --- Mặt phẳng nổi chồng lên nền (nút mờ, thẻ, dòng hover) --- */
-  --surface-1: rgba(255, 255, 255, 0.035);
-  --surface-2: rgba(255, 255, 255, 0.065);
-  --surface-3: rgba(255, 255, 255, 0.10);
-  --hairline: rgba(244, 63, 94, 0.18);
-  --sunken: rgba(0, 0, 0, 0.35);
+  --surface-1: rgba(255, 255, 255, 0.025);
+  --surface-2: rgba(255, 255, 255, 0.052);
+  --surface-3: rgba(255, 255, 255, 0.085);
+  --hairline: rgba(255, 255, 255, 0.08);      /* viền mảnh trên mặt kính */
+  --sunken: rgba(0, 0, 0, 0.25);              /* ô nhập liệu chìm xuống */
 
   /* --- Bóng đổ theo 3 độ cao --- */
-  --shadow-1: 0 4px 14px rgba(0, 0, 0, 0.35);
-  --shadow-2: 0 8px 30px rgba(0, 0, 0, 0.52);
-  --shadow-3: 0 24px 70px rgba(0, 0, 0, 0.72);
-  --shadow-veil: rgba(0, 0, 0, 0.6);
+  --shadow-1: 0 4px 14px rgba(0, 0, 0, 0.28);
+  --shadow-2: 0 8px 30px rgba(0, 0, 0, 0.45);
+  --shadow-3: 0 24px 70px rgba(0, 0, 0, 0.62);
+  --shadow-veil: rgba(0, 0, 0, 0.5);          /* MÀU bóng (không phải cả box-shadow) cho
+                                                 mép ngăn kéo trượt - cần tự đặt offset */
 
-  /* --- Vùng nhuộm màu nhấn phong cách Aarohi (Rose / Violet Glow) --- */
-  --accent-wash: rgba(244, 63, 94, 0.09);
-  --accent-wash-2: rgba(244, 63, 94, 0.16);
-  --accent-line: rgba(251, 113, 133, 0.35);
-  --accent-ring: 0 0 22px rgba(244, 63, 94, 0.30);
-  --accent2-wash: rgba(217, 70, 239, 0.12);
-  --accent2-wash-2: rgba(217, 70, 239, 0.22);
-  --accent2-line: rgba(217, 70, 239, 0.40);
+  /* --- Vùng nhuộm màu nhấn (nền cảnh báo, thẻ chưa đọc, nút chính) --- */
+  --accent-wash: rgba(255, 101, 45, 0.07);
+  --accent-wash-2: rgba(255, 105, 45, 0.12);
+  --accent-line: rgba(255, 130, 67, 0.30);
+  --accent-ring: 0 0 18px rgba(255, 107, 43, 0.20);
+  --accent2-wash: rgba(159, 104, 255, 0.12);
+  --accent2-wash-2: rgba(124, 58, 237, 0.22);
+  --accent2-line: rgba(124, 58, 237, 0.4);
 
   /* --- Nền của khối chứa chữ. Tách riêng vì đây là cụm làm vỡ tông sáng nặng
          nhất: chỗ nào gõ cứng nền tối mà chữ lấy từ var(--text) thì lật sáng

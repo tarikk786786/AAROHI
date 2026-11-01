@@ -66,6 +66,13 @@ Dates are local owner context (**2026-11-01**, Asia/Kolkata) unless noted.
 - **Supabase / Render / extra tokens** — provided for “use if needed”; AAROHI core does **not** require `SUPABASE_*` env vars (Supabase appears only as optional MCP). Do not commit keys.
 - **Ollama** — local models need Ollama running (e.g. `winget install Ollama.Ollama` / https://ollama.com/download). UI string `ol.err_connect` explains this.
 
+### 2026-11-01 — OpenRouter fallback brain via env
+
+- **What:** `OPENROUTER_API_KEY` / `OPENROUTER_MODEL` seed `model.openrouter_key` and append OpenRouter to the Models usage order as a fallback when other brains deny/quota-fail.
+- **How:** `server/config.py` `apply_model_env()` at startup; documented in `env.example`.
+- **Why:** Owner wants a reliable API brain when Claude/Codex/etc are unavailable, without only using the Models UI.
+- **Never commit real keys** — set locally or in Vercel env only.
+
 ## Runtime cheat sheet
 
 | Mode | URL / command |

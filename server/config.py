@@ -967,20 +967,6 @@ def read_settings():
         _transform_secret_fields(cfg, secrets_store.decrypt)
     except Exception as e:
         print(f"[config] giải mã secret lỗi: {e}", file=__import__('sys').stderr)
-
-    # Nạp tự động API key từ môi trường nếu trong settings chưa có
-    m = cfg.setdefault("model", {})
-    if not m.get("openrouter_key") and os.getenv("OPENROUTER_API_KEY"):
-        m["openrouter_key"] = os.getenv("OPENROUTER_API_KEY")
-    if not m.get("gemini_api_key") and (os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")):
-        m["gemini_api_key"] = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
-    if not m.get("openai_api_key") and os.getenv("OPENAI_API_KEY"):
-        m["openai_api_key"] = os.getenv("OPENAI_API_KEY")
-    if not m.get("anthropic_api_key") and os.getenv("ANTHROPIC_API_KEY"):
-        m["anthropic_api_key"] = os.getenv("ANTHROPIC_API_KEY")
-    if not m.get("groq_api_key") and os.getenv("GROQ_API_KEY"):
-        m["groq_api_key"] = os.getenv("GROQ_API_KEY")
-
     if sig is not None and not tu_bak:
         _SETTINGS_CACHE["sig"] = sig
         _SETTINGS_CACHE["cfg"] = json.dumps(cfg, ensure_ascii=False)
@@ -1156,6 +1142,66 @@ def apply_tool_env(cfg=None):
     # Windows: helper Python con (vd video-use) in Unicode ra console cp1252 sẽ crash
     # (UnicodeEncodeError) -> ép UTF-8 cho mọi tiến trình con. Tôn trọng giá trị user tự đặt.
     child_utf8_env()
+
+
+def apply_model_env(cfg=None):
+    """Seed OpenRouter (and optional model id) from environment into settings.
+
+    Used so Vercel/Docker/PowerShell can inject a fallback brain without opening Models:
+      export OPENROUTER_API_KEY=sk-or-v1-...
+      export OPENROUTER_MODEL=openai/gpt-4o-mini   # optional
+
+    When the key is present, OpenRouter is appended to the usage order as a FALLBACK brain
+    (MAIN stays whatever is already first). If there is no usage order yet, OpenRouter becomes MAIN.
+    Env fills an empty settings key by default; set JAVIS_ENV_KEYS_OVERRIDE=1 to always win.
+    Returns True when settings were written.
+    """
+    try:
+        if cfg is None:
+            cfg = read_settings()
+        m = cfg.setdefault("model", {})
+        key = (os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENROUTER_KEY") or "").strip()
+        model = (os.getenv("OPENROUTER_MODEL") or "").strip()
+        override = os.getenv("JAVIS_ENV_KEYS_OVERRIDE", "").strip().lower() in ("1", "true", "yes", "on")
+        changed = False
+        if key and (override or not str(m.get("openrouter_key") or "").strip()):
+            m["openrouter_key"] = key
+            changed = True
+        if model:
+            if m.get("openrouter_model") != model:
+                m["openrouter_model"] = model
+                changed = True
+            prof = m.setdefault("profiles", {}).setdefault("openrouter", {})
+            if prof.get("model") != model:
+                prof["model"] = model
+                changed = True
+        if key:
+            order = [str(x).strip() for x in (m.get("order") or []) if str(x).strip()]
+            if "openrouter" not in order:
+                if not order:
+                    order = ["openrouter"]
+                    m["main"] = {
+                        "provider": "openrouter",
+                        "model": model or m.get("openrouter_model") or "openai/gpt-4o-mini",
+                    }
+                    m["engine"] = "openrouter"
+                    if not m.get("openrouter_model"):
+                        m["openrouter_model"] = m["main"]["model"]
+                else:
+                    order.append("openrouter")
+                m["order"] = order
+                changed = True
+            elif not order:
+                m["order"] = ["openrouter"]
+                changed = True
+        if changed:
+            write_settings(cfg)
+            print("[config] OpenRouter env keyed into model settings (fallback brain ready)",
+                  file=__import__("sys").stderr)
+        return changed
+    except Exception as e:
+        print(f"[config] apply_model_env: {e}", file=__import__("sys").stderr)
+        return False
 
 
 def child_utf8_env(env=None, os_name=None) -> dict:
