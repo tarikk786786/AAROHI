@@ -967,6 +967,20 @@ def read_settings():
         _transform_secret_fields(cfg, secrets_store.decrypt)
     except Exception as e:
         print(f"[config] giải mã secret lỗi: {e}", file=__import__('sys').stderr)
+
+    # Nạp tự động API key từ môi trường nếu trong settings chưa có
+    m = cfg.setdefault("model", {})
+    if not m.get("openrouter_key") and os.getenv("OPENROUTER_API_KEY"):
+        m["openrouter_key"] = os.getenv("OPENROUTER_API_KEY")
+    if not m.get("gemini_api_key") and (os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")):
+        m["gemini_api_key"] = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    if not m.get("openai_api_key") and os.getenv("OPENAI_API_KEY"):
+        m["openai_api_key"] = os.getenv("OPENAI_API_KEY")
+    if not m.get("anthropic_api_key") and os.getenv("ANTHROPIC_API_KEY"):
+        m["anthropic_api_key"] = os.getenv("ANTHROPIC_API_KEY")
+    if not m.get("groq_api_key") and os.getenv("GROQ_API_KEY"):
+        m["groq_api_key"] = os.getenv("GROQ_API_KEY")
+
     if sig is not None and not tu_bak:
         _SETTINGS_CACHE["sig"] = sig
         _SETTINGS_CACHE["cfg"] = json.dumps(cfg, ensure_ascii=False)

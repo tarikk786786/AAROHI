@@ -84,15 +84,17 @@ body.in-console .hud-actions { display: none; }
    cũng phát sáng cam theo. */
 .rail-brand .brand-mark {
   display: flex; flex: none;
-  filter: drop-shadow(0 0 8px rgba(255, 107, 43, 0.55));
+  filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.7));
 }
-/* Chữ hiệu: cùng kiểu với .brand-text trên thanh trên (đậm, giãn chữ) để hai chỗ là một
-   thương hiệu chứ không phải hai. "OS" nhạt hơn, đúng như thanh trên vẫn vẽ. */
+/* Chữ hiệu AAROHI OS với hiệu ứng gradient ánh hồng fuchsia */
 .rail-brand-text {
-  font-family: var(--font); font-size: 14px; font-weight: 700; letter-spacing: 2.5px;
-  color: var(--text); white-space: nowrap; filter: none;
+  font-family: var(--font); font-size: 15px; font-weight: 800; letter-spacing: 2px;
+  background: linear-gradient(135deg, #f43f5e 0%, #fb7185 50%, #d946ef 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap; filter: none;
 }
-.rail-brand-text i { font-style: normal; font-weight: 400; color: var(--text3); }
+.rail-brand-text i { font-style: normal; font-weight: 500; opacity: 0.85; }
 .rail-item {
   position: relative; background: transparent; border: 0; cursor: pointer;
   color: var(--text3); border-radius: 9px; padding: 7px 8px 7px 16px;

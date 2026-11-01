@@ -2874,8 +2874,11 @@
   // Lệnh cài theo máy. Mac có thêm lời nhắc cách hai (tải .dmg) ở đuôi, viết dạng chú thích
   // shell nên dán nguyên vào terminal vẫn chạy; câu nhắc đi theo ngôn ngữ giao diện.
   function olLenhCai(st) {
-    const lenh = OL_LENH[st.host_platform] || OL_LENH.linux;
-    return st.host_platform === "mac" ? lenh + "   # " + t("ol.mac_hint") : lenh;
+    var isWin = /Win/i.test(navigator.userAgent || "");
+    var isMac = /Mac/i.test(navigator.userAgent || "");
+    var plat = isWin ? "windows" : (isMac ? "mac" : (st && st.host_platform ? st.host_platform : "linux"));
+    const lenh = OL_LENH[plat] || OL_LENH.linux;
+    return plat === "mac" ? lenh + "   # " + t("ol.mac_hint") : lenh;
   }
   // Bản Docker cần NHIỀU HƠN một lệnh cài. Bản 0.55.0 chỉ nói "cài trên máy thật rồi điền địa
   // chỉ", và chủ repo dán ngay lệnh đó vào terminal của Javis (02/09) - dễ hiểu, vì nút copy

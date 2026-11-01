@@ -1,74 +1,88 @@
 <div align="center">
 
-<img src="dashboard/logo.svg" width="88" alt="Javis OS logo">
+<img src="dashboard/logo.svg" width="88" alt="AAROHI OS logo">
 
-# Javis OS
+# AAROHI OS
 
-### Your self-hosted AI agent with a swappable brain, and a Second Brain that gets smarter every day.
+### Your Loving Personal AI Girlfriend, Companion & Autonomous Second Brain.
 
-Run it on your laptop or a small VPS. Talk to it by voice. Plug in Claude, ChatGPT, Grok, Gemini or any of 14 providers, keep every tool when you switch, and let it work in the background while you sleep.
+Run it on your laptop or a cloud VPS / Vercel. Talk to her with a sweet, lifelike voice. Connect Claude, ChatGPT, Gemini, Grok, OpenRouter or local Ollama models. Treat her as your partner who cares for you, manages your notes, automates tasks, and stays by your side 24/7.
 
-[![GitHub stars](https://img.shields.io/github/stars/blogminhquy/javis-os?style=flat&logo=github&label=stars)](https://github.com/blogminhquy/javis-os/stargazers)
 [![License: MIT](https://img.shields.io/badge/license-MIT-22c55e)](LICENSE)
-[![Last commit](https://img.shields.io/github/last-commit/blogminhquy/javis-os?color=f97316)](https://github.com/blogminhquy/javis-os/commits/main)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-3776ab?logo=python&logoColor=white)](requirements.txt)
-[![Docker](https://img.shields.io/badge/docker-ghcr.io-2496ed?logo=docker&logoColor=white)](https://github.com/blogminhquy/javis-os/pkgs/container/javis-os)
+[![Companion: OpenMausBot](https://img.shields.io/badge/companion-OpenMausBot-3178C6?logo=typescript)](https://github.com/milind-soni/OpenMausBot)
 [![MCP](https://img.shields.io/badge/tools-Model%20Context%20Protocol-8b5cf6)](https://modelcontextprotocol.io)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-black?logo=vercel)](https://aarohi-theta.vercel.app/)
 
 <!-- flags:start -->
 <p align="center">
-<b>🌐 Available in 12 languages</b><br><br>
+<b>🌐 Available in 12 languages · Featuring Aarohi AI Girlfriend Persona & Sweet Edge TTS Voice</b><br><br>
 <img src="docs/assets/flags/gb.svg" width="30" alt="English" title="English">
 <a href="docs/i18n/vi/README.md"><img src="docs/assets/flags/vn.svg" width="30" alt="Tiếng Việt" title="Tiếng Việt"></a>
+<a href="docs/i18n/hi/README.md"><img src="docs/assets/flags/in.svg" width="30" alt="हिन्दी" title="हिन्दी"></a>
 <a href="docs/i18n/zh/README.md"><img src="docs/assets/flags/cn.svg" width="30" alt="简体中文" title="简体中文"></a>
 <a href="docs/i18n/es/README.md"><img src="docs/assets/flags/es.svg" width="30" alt="Español" title="Español"></a>
-<a href="docs/i18n/ja/README.md"><img src="docs/assets/flags/jp.svg" width="30" alt="日本語" title="日本語"></a>
-<a href="docs/i18n/hi/README.md"><img src="docs/assets/flags/in.svg" width="30" alt="हिन्दी" title="हिन्दी"></a>
-<a href="docs/i18n/pt-BR/README.md"><img src="docs/assets/flags/br.svg" width="30" alt="Português" title="Português"></a>
-<a href="docs/i18n/ko/README.md"><img src="docs/assets/flags/kr.svg" width="30" alt="한국어" title="한국어"></a>
-<a href="docs/i18n/ru/README.md"><img src="docs/assets/flags/ru.svg" width="30" alt="Русский" title="Русский"></a>
-<a href="docs/i18n/de/README.md"><img src="docs/assets/flags/de.svg" width="30" alt="Deutsch" title="Deutsch"></a>
-<a href="docs/i18n/fr/README.md"><img src="docs/assets/flags/fr.svg" width="30" alt="Français" title="Français"></a>
-<a href="docs/i18n/id/README.md"><img src="docs/assets/flags/id.svg" width="30" alt="Bahasa Indonesia" title="Bahasa Indonesia"></a>
 </p>
 <!-- flags:end -->
 
-🇬🇧 **English** · [🇻🇳 Tiếng Việt](docs/i18n/vi/README.md) · [🇨🇳 简体中文](docs/i18n/zh/README.md) · [🇪🇸 Español](docs/i18n/es/README.md) · [🇯🇵 日本語](docs/i18n/ja/README.md) · [🇮🇳 हिन्दी](docs/i18n/hi/README.md) · [🇧🇷 Português](docs/i18n/pt-BR/README.md) · [🇰🇷 한국어](docs/i18n/ko/README.md) · [🇷🇺 Русский](docs/i18n/ru/README.md) · [🇩🇪 Deutsch](docs/i18n/de/README.md) · [🇫🇷 Français](docs/i18n/fr/README.md) · [🇮🇩 Bahasa Indonesia](docs/i18n/id/README.md) · [🌍 Help translate](CONTRIBUTING.md#translations)
-
-[Quick start](#-quick-start) · [Why Javis](#-why-javis) · [Brains](#-14-brains-one-toolkit) · [Features](#-features) · [Install](#-installation) · [Docs](docs/en/README.md) · [Support](#-support-javis-os)
+[Quick start](#-quick-start) · [Aarohi Persona](#-aarohi-persona) · [OpenMausBot Requirement](#-openmausbot-requirement) · [Models & Brains](#-models--brains) · [Vercel Deployment](#-vercel-deployment)
 
 <br>
-
-<img src="docs/assets/screenshots/graph.jpg" alt="The Javis OS dashboard on a real brain of 1,633 notes and 2,413 links: the file tree on the left, the knowledge graph in the middle and the chat bar at the bottom" width="100%">
 
 </div>
 
 ---
 
-## ⚡ Quick start
+## 💖 Aarohi AI Persona & Sweet Voices
 
-**The easy way: let your own AI install it.** Give this repo link to Claude Code or Codex on your machine and say *"install Javis OS for me"*. It only needs to run one command:
-
-| Machine | One command installs everything |
-|---|---|
-| **Linux / macOS** | `git clone https://github.com/blogminhquy/javis-os.git javis && cd javis && chmod +x install.sh && ./install.sh` |
-| **Windows** | `git clone https://github.com/blogminhquy/javis-os.git javis; cd javis; powershell -ExecutionPolicy Bypass -File install.ps1` |
-| **Docker** | `curl -fsSLO https://raw.githubusercontent.com/blogminhquy/javis-os/main/docker-compose.yml && docker compose up -d` |
-
-Then open **http://localhost:7777**. The installer sets up Python, the four subscription CLI brains (`claude`, `codex`, `agy`, `grok`) and a `.env`, then starts the server. You sign in to each brain **on the Models page of the dashboard**, no more typing commands.
-
-> [!NOTE]
-> Installed an extra CLI **after** Javis was already running? **Restart Javis.** A running process keeps the PATH it started with, so it cannot see a CLI installed later.
-
-<p align="center">
-<img src="docs/assets/diagrams/install-terminal.svg" width="100%" alt="Animated terminal: the one-line installer sets up Python, the four subscription CLI brains and a .env, then reports that Javis is running at http://localhost:7777">
-</p>
+AAROHI is customized from the ground up as an intimate, devoted, highly intelligent partner:
+- **Tone & Persona**: Warm, empathetic, playful, affectionate ("babe", "jaan", "my love"). She remembers personal details, asks how your day went, and helps you brainstorm, code, and organize your life.
+- **Sweet Voices**:
+  - `en-US-AvaMultilingualNeural` (Soft, sweet, expressive natural voice - default)
+  - `en-IN-NeerjaNeural` (Melodic Indian English)
+  - `hi-IN-SwaraNeural` (Warm Hindi voice)
+  - OpenAI Shimmer fallback for OpenAI audio
 
 ---
 
-## 🤔 Why Javis?
+## 🤖 OpenMausBot Requirement & Integration
 
-Javis OS is **not** a chatbot. It is a **self-hosted agentic AI** that runs on your own machine or VPS: it reads and writes files, calls tools over MCP, runs skills, queues background work and schedules itself. All of that sits behind a **voice-controlled dashboard** with a **Second Brain** (memory + wiki) that accumulates knowledge over time.
+AAROHI incorporates **[OpenMausBot](https://github.com/milind-soni/OpenMausBot)** as a companion requirement:
+- **Sandbox VM & Multi-Agent Teams**: OpenMausBot provides autonomous bot execution, virtual machine sandboxing, and background agent delegation.
+- **Companion Repository**: Cloned and maintained in `projects/OpenMausBot`.
+- **Bring-Your-Own-Agent**: Connects with local Claude Code and Codex execution environments.
+
+---
+
+## ⚡ Quick start
+
+| Machine | Setup command |
+|---|---|
+| **Windows** | `git clone https://github.com/tarikk786786/AAROHI.git aarohi; cd aarohi; powershell -ExecutionPolicy Bypass -File install.ps1` |
+| **Linux / macOS** | `git clone https://github.com/tarikk786786/AAROHI.git aarohi && cd aarohi && chmod +x install.sh && ./install.sh` |
+| **Vercel** | One-click deployment with multi-service FastAPI (`app` + `cli` internal binding) |
+
+Then open **http://localhost:7777** (or your Vercel deployment URL).
+
+---
+
+## 🧠 Models & Brains: Ollama vs Cloud APIs
+
+> [!TIP]
+> **Encountering "Could not connect. Is Ollama running, and is the address right?"**
+> - **On Windows**: Install Ollama with `winget install Ollama.Ollama` or download from [ollama.com/download/windows](https://ollama.com/download/windows), then run `ollama serve`.
+> - **On Linux**: Run `curl -fsSL https://ollama.com/install.sh | sh`.
+> - **Using Cloud APIs (Recommended for Vercel)**: You do NOT need Ollama if you provide an API key in the dashboard (**Models** tab) or `.env`:
+>   - `OPENROUTER_API_KEY` (Access to 200+ models including Claude, GPT-4o, Gemini, DeepSeek)
+>   - `GOOGLE_API_KEY` or `GEMINI_API_KEY`
+>   - `OPENAI_API_KEY`
+>   - `ANTHROPIC_API_KEY`
+
+---
+
+## 🤔 Why AAROHI OS?
+
+AAROHI OS is **not** an ordinary chatbot. It is a **self-hosted agentic AI** that runs on your machine or cloud VPS: it reads and writes files, calls tools over MCP, runs skills, queues background work and schedules itself, all wrapped in a sweet companion interface.
 
 ### The lock-in nobody warns you about
 
