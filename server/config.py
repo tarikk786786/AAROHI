@@ -54,9 +54,11 @@ _DEFAULT = {
     # Nhà cung cấp giọng đọc (TTS). edge = Edge TTS miễn phí (mặc định, dự phòng).
     # openai = OpenAI TTS (dùng model.openai_api_key). elevenlabs = ElevenLabs (key riêng).
     "voice": {
-        "tts_provider": "edge",                       # edge | openai | elevenlabs
-        # AAROHI girlfriend default: Swara = sweet Hindi girl (Hinglish-friendly Edge TTS)
+        "tts_provider": "edge",                       # edge | openai | elevenlabs | indic_speak
+        # Girlfriend voice ladder: Indic-Speak Kavya (best Hinglish) → Edge Swara (free always-on).
         "edge_voice": "hi-IN-SwaraNeural",
+        "indic_speak_speaker": "Kavya",               # Bodhan Indic-Speak soft Hindi/English girl
+        "indic_speak_style": "warm and caring",       # soft romantic delivery hint when supported
         "openai_tts_voice": "shimmer",                # alloy|echo|fable|onyx|nova|shimmer|ash|sage|coral
         "openai_tts_model": "gpt-4o-mini-tts",        # hoặc tts-1 / tts-1-hd
         "elevenlabs_key": "",
@@ -1291,17 +1293,24 @@ def apply_model_env(cfg=None):
             if _append_provider_order(m, "openai-compat", as_main_if_empty=False, main_model=""):
                 changed = True
 
-        # Sweet Hindi/Hinglish girlfriend voice (Edge TTS free). Env TTS_VOICE wins when empty/override.
+        # Soft Indian girlfriend voice. Env TTS_VOICE / TTS_RATE win when empty/override.
+        # Ladder: Indic-Speak Kavya (best Hinglish) when ready, else free Edge Swara at −8%.
         v = cfg.setdefault("voice", {})
         tts_voice = (os.getenv("TTS_VOICE") or "").strip() or "hi-IN-SwaraNeural"
-        tts_rate = (os.getenv("TTS_RATE") or "").strip() or "-5%"
+        tts_rate = (os.getenv("TTS_RATE") or "").strip() or "-8%"
         if override or not str(v.get("edge_voice") or "").strip():
             v["edge_voice"] = tts_voice
             changed = True
-        if override or not str(v.get("tts_provider") or "").strip():
-            v["tts_provider"] = "edge"
+        if override or not str(v.get("indic_speak_speaker") or "").strip():
+            v["indic_speak_speaker"] = "Kavya"
             changed = True
-        # Keep a soft romantic pace for Aarohi
+        if override or not str(v.get("tts_provider") or "").strip():
+            try:
+                import tts_indic_speak
+                v["tts_provider"] = "indic_speak" if tts_indic_speak.available(cfg) else "edge"
+            except Exception:
+                v["tts_provider"] = "edge"
+            changed = True
         cfg.setdefault("_tts_rate_hint", tts_rate)
 
         if changed:

@@ -73,6 +73,12 @@ Dates are local owner context (**2026-11-01**, Asia/Kolkata) unless noted.
 - **Why:** Owner wants a reliable API brain when Claude/Codex/etc are unavailable, without only using the Models UI.
 - **Never commit real keys** — set locally or in Vercel env only.
 
+### 2026-11-02 — Soft Indian girlfriend voice (Kavya + Shruti)
+
+- **What:** Persona deepened (caring romantic Hinglish girlfriend). TTS ladder: optional **Indic-Speak Kavya**, else Edge **Swara @ −8%**. STT ear: optional **Shruti** offline Hinglish in `voice_ear` ranking. Settings can pick Kavya when available.
+- **How:** `server/tts_indic_speak.py`, `server/stt_shruti.py`, voice_brain/CLAUDE/user_profile prompts, `docs/aarohi/VOICE_GIRLFRIEND.md`, `scripts/install-aarohi-voice.ps1`. Heavy models stay optional.
+- **Why:** Owner wants the best free Indian girlfriend sound + hearing without forcing 6.6 GB on every install.
+
 ### 2026-11-02 — Desktop presence trilogy (Mark-inspired, clean rewrite)
 
 - **What:** Ported *ideas* from FatihMakes Mark-LVI into AAROHI without copying CC BY-NC code: (1) `system/plugins/desktop-control` screenshot/type/click/hotkey/scroll; (2) wake phrases `aarohi`/`arohi` (+ mishears) in `voice-attention.js`; (3) speaking lip cycle on `JavisPet` mouth SVG.

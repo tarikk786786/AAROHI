@@ -6245,9 +6245,10 @@ async def settings_set(section: str = Form(...), data: str = Form("{}")):
             cfg["image"]["strip_c2pa"] = bool(patch["strip_c2pa"])
     elif section == "voice":
         v = cfg.setdefault("voice", {})
-        if patch.get("tts_provider") in ("edge", "openai", "elevenlabs"):
+        if patch.get("tts_provider") in ("edge", "openai", "elevenlabs", "indic_speak"):
             v["tts_provider"] = patch["tts_provider"]
-        for k in ("openai_tts_voice", "openai_tts_model", "elevenlabs_voice"):
+        for k in ("openai_tts_voice", "openai_tts_model", "elevenlabs_voice",
+                  "indic_speak_speaker", "indic_speak_style"):
             if patch.get(k):
                 v[k] = str(patch[k]).strip()
         # 0.298.0: the Edge voice is kept here too, not only in one browser's localStorage. Before, a voice
@@ -16313,6 +16314,15 @@ async def tts(
     from fastapi.responses import StreamingResponse
     cfg = cfgmod.read_settings()
     provider = ((cfg.get("voice", {}) or {}).get("tts_provider") or "edge").lower()
+    # Auto-promote girlfriend voice: if Edge is selected but Indic-Speak Kavya is ready, use Kavya.
+    if provider == "edge":
+        try:
+            import tts_indic_speak
+            if tts_indic_speak.available(cfg) and (
+                    (cfg.get("voice") or {}).get("prefer_indic_speak", True) is not False):
+                provider = "indic_speak"
+        except Exception:
+            pass
     # Edge đi đường STREAM (Voice V1): byte đầu tới trình duyệt ngay khi Edge sinh ra, thẻ
     # <audio> của Chrome phát dần mp3 chunked. `Accept-Ranges: none` để trình duyệt khỏi hỏi
     # Range trên một stream không có Content-Length.
@@ -16327,21 +16337,32 @@ async def tts(
         return StreamingResponse(gen, media_type="audio/mpeg", headers=_stream_headers)
 
     audio = b""
+    media = "audio/mpeg"
     try:
-        if provider == "openai":
+        if provider == "indic_speak":
+            import tts_indic_speak
+            audio = await tts_indic_speak.synth(text, cfg)
+            media = "audio/wav"
+        elif provider == "openai":
             audio = await _tts_openai(text, rate, cfg)
         elif provider == "elevenlabs":
             audio = await _tts_elevenlabs(text, cfg)
         else:
             return await _edge_streaming()
     except Exception as e:
-        print(f"[TTS {provider}] {type(e).__name__}", file=sys.stderr)
+        print(f"[TTS {provider}] {type(e).__name__}: {e}", file=sys.stderr)
+        # Soft fall back to Edge Swara so the girlfriend never goes silent.
+        if provider == "indic_speak":
+            try:
+                return await _edge_streaming()
+            except Exception:
+                pass
         raise HTTPException(502, localefmt.chu(
             "Giọng đã chọn hiện không phát được. Vui lòng thử lại hoặc chọn giọng khác.",
             "The selected voice cannot play right now. Please try again or choose another voice."))
     if not audio:
         raise HTTPException(502, localefmt.chu("TTS không trả audio.", "TTS returned no audio."))
-    return Response(content=audio, media_type="audio/mpeg", headers={"Cache-Control": "no-cache"})
+    return Response(content=audio, media_type=media, headers={"Cache-Control": "no-cache"})
 
 
 # ============================================
@@ -16548,8 +16569,27 @@ async def voice_options(brains: int = 1):
                 "elevenlabs_voice": v.get("elevenlabs_voice") or "",
                 "elevenlabs_model": v.get("elevenlabs_model") or "",
                 "elevenlabs_models": _eleven_models(),
-                "elevenlabs_key_set": bool(str(v.get("elevenlabs_key") or "").strip())},
+                "elevenlabs_key_set": bool(str(v.get("elevenlabs_key") or "").strip()),
+                "indic_speak": _indic_speak_status(cfg),
+                "indic_speak_speaker": v.get("indic_speak_speaker") or "Kavya"},
+        "ear_shruti": _shruti_status(),
     }
+
+
+def _indic_speak_status(cfg: dict) -> dict:
+    try:
+        import tts_indic_speak
+        return tts_indic_speak.status(cfg)
+    except Exception as e:
+        return {"available": False, "reason": str(e)[:160]}
+
+
+def _shruti_status() -> dict:
+    try:
+        import stt_shruti
+        return stt_shruti.status()
+    except Exception as e:
+        return {"available": False, "reason": str(e)[:160]}
 
 
 def _eleven_models() -> list:

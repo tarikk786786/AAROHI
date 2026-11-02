@@ -25,7 +25,7 @@ import stt
 
 # Giá trị hợp lệ của `voice.ear`. "auto" là mặc định: chủ dự án chốt 01/10/2026 "tự chọn, bật
 # sẵn", vì máy suy ra được tai nào dùng được thì không bắt người dùng phải chọn.
-CHOICES = ("auto", "groq", "openai", "off")
+CHOICES = ("auto", "groq", "openai", "shruti", "off")
 DEFAULT = "auto"
 
 # Các tai Javis biết chạy. `kind`:
@@ -35,12 +35,15 @@ EARS = {
     # 0.231.0: a machine with an OpenAI key but no Groq key used to have no ear at all, so a Vietnamese sentence with
     # English words in it stayed as Chrome heard it ("Claude Code" -> "lót code"). gpt-4o-transcribe keeps both.
     "openai": {"label": "OpenAI gpt-4o-transcribe", "kind": "upload", "key_field": "openai_api_key"},
+    # AAROHI: offline Hindi/English/Hinglish ear (Udgam Labs Shruti). No cloud key.
+    "shruti": {"label": "Shruti (offline Hinglish)", "kind": "upload", "key_field": None, "local": True},
 }
 
 # Thứ tự khi `auto` mà bộ não chính không có tai cùng hãng. Xếp theo bộ đo tools/stt_bench:
 # có số mới thì sửa ở đây.
-# Groq stays first: it is the ear tools/stt_bench measured. OpenAI joins as the next choice (0.231.0).
-RANKING = ("groq", "openai")
+# Groq stays first when keyed. Shruti is preferred next for local Hinglish (no key, ~30 MB).
+# OpenAI joins after that (0.231.0).
+RANKING = ("groq", "shruti", "openai")
 
 # Provider của bộ não chính (main._effective_main) -> tai cùng hãng. Bộ não Claude không có
 # tai: model Claude không nhận âm thanh, còn giọng nói của Claude Code cần token đăng nhập mà
@@ -80,6 +83,13 @@ def availability(cfg: dict) -> dict:
     out = {}
     for name, ear in EARS.items():
         key_field = ear.get("key_field")
+        if name == "shruti":
+            try:
+                import stt_shruti
+                out[name] = bool(stt_shruti.available())
+            except Exception:
+                out[name] = False
+            continue
         out[name] = bool(m.get(key_field)) if key_field else True
     return out
 
@@ -163,7 +173,13 @@ async def transcribe_upload(cfg: dict, data: bytes, filename: str = "voice.webm"
     v = (cfg or {}).get("voice") or {}
     tv = nghe_sua.tu_vung(cfg)
     hotwords = nghe_sua.goi_y_whisper(vocab(cfg))
-    if provider == "openai":
+    if provider == "shruti":
+        import stt_shruti
+        lang_hint = whisper_lang(lang)
+        shruti_lang = lang_hint if lang_hint in ("hi", "en") else None
+        res = await stt_shruti.transcribe(data, filename or "voice.webm",
+                                          language=shruti_lang, keywords=list(vocab(cfg))[:32] or None)
+    elif provider == "openai":
         res = await stt.openai_nghe(data, filename or "voice.webm", m.get("openai_api_key", ""), "",
                                     whisper_lang(lang), hotwords=hotwords)
     else:
