@@ -765,11 +765,13 @@ class ClaudeSDK:
         # claude_cli._THU_MUC_BIN_THEM). Chặn "_bundled" để một PATH trỏ nhầm về chính binary
         # Bun không lọt qua cửa này.
         if "cli_path" in fields:
-            _cli = (os.environ.get("JAVIS_CLAUDE_CLI") or "").strip()
+            # Prefer find_claude_cli() so Windows gets the native claude.exe, not npm's
+            # claude.CMD (Agent SDK refuses .bat/.cmd: "no reliable escaping for cmd.exe").
+            _cli = (os.environ.get("JAVIS_CLAUDE_CLI") or os.environ.get("JAVIS_CLAUDE_BIN") or "").strip()
             if not _cli:
                 try:
-                    from claude_cli import tim_binary as _tim
-                    _cli = _tim("claude") or ""
+                    from claude_cli import find_claude_cli as _tim
+                    _cli = _tim() or ""
                 except Exception:
                     _cli = ""
             if _cli and "_bundled" not in _cli.replace("\\", "/"):

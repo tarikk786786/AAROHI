@@ -73,6 +73,12 @@ Dates are local owner context (**2026-11-01**, Asia/Kolkata) unless noted.
 - **Why:** Owner wants a reliable API brain when Claude/Codex/etc are unavailable, without only using the Models UI.
 - **Never commit real keys** — set locally or in Vercel env only.
 
+### 2026-11-02 — Mark-inspired voice ladder (no Mark-LVI code)
+
+- **What:** Patterns only from FatihMakes Mark-LVI (CC BY-NC - do not vendor): pick STT+LLM+TTS stack, soft TTS pace, never break girlfriend Hinglish audio.
+- **How:** Skip `phien_am.doc_viet` for `reply_lang=hi` / `hi-*` / `en-IN` Edge voices (was mangling Hinglish); pin voice brain to Groq; TTS Swara @ −8%; Claude SDK/voice use `find_claude_cli()` → native `claude.exe` (not `claude.CMD`).
+- **Why:** User reported broken/imperfect audio and Claude batch-script refuse on Windows; Mark-style choose-your-engine fixes reliability without copying Mark source.
+
 ### 2026-11-02 — Soft Indian girlfriend voice (Kavya + Shruti)
 
 - **What:** Persona deepened (caring romantic Hinglish girlfriend). TTS ladder: optional **Indic-Speak Kavya**, else Edge **Swara @ −8%**. STT ear: optional **Shruti** offline Hinglish in `voice_ear` ranking. Settings can pick Kavya when available.
@@ -86,6 +92,12 @@ Dates are local owner context (**2026-11-01**, Asia/Kolkata) unless noted.
 - **Why:** Owner asked for computer control + wake word + avatar HUD as a phased clean rewrite into AAROHI.
 - **License note:** Do not vendor Mark-LVI source (CC BY-NC). Patterns only.
 
+### 2026-11-02 — Full surface branding + Hinglish voice fix
+
+- **What:** Visible "JAVIS OS" / "Javis Foundation" → **AAROHI**; en.json user strings branded; `reply_lang=hi` (Hinglish); call path `basic` + Edge Swara; Edge TTS upgraded to **7.3.1** (fixes Bing 403 silence); browser TTS fallback if Edge fails; model order skips Claude until SDK ready (`groq` → `openai-compat` → `openrouter`); brain label `AAROHI`.
+- **How:** `dashboard/index.html` + `server/dashboard/` mirror; `i18n/en.json`; `lang_registry` + `lexicon/hi.py`; `voice.js` `_chunkFailed` → speechSynthesis; `settings.json` order/usage_order; `Javis/brain.json` label (folder path stays `Javis/` for engines).
+- **Why:** Screenshot still showed JAVIS OS rail + silent mic after Edge 403 + Groq→Claude hop with no SDK.
+
 ### 2026-11-01 — Free LLM wake (401/429 fix)
 
 - **What:** Bad LLM7 keys caused `401 authentication_error`; daily quota caused `429`. Chat stuck.
@@ -93,14 +105,28 @@ Dates are local owner context (**2026-11-01**, Asia/Kolkata) unless noted.
 - **Why:** Free-first always-on brain without inventing API keys.
 - **Vercel:** leave `OPENAI_COMPAT_KEY` empty; set `OPENAI_COMPAT_MODEL=turbo`. Optional free keys: Groq / Gemini / OpenRouter.
 
+### 2026-11-02 — Companion OS (Mark-capability, clean-room)
+
+- **What:** Web-first companion HUD parity with Mark-LVI *behaviors* only (no CC BY-NC source): one-click Windows setup, warm-night home, PTT + self-echo guard + Hinglish ack, hardened desktop plugins, wizard one-click Cloudflare remote, memory strip + optional clipboard plugin.
+- **How:**
+  - Install: `AAROHI-setup.bat` / `AAROHI-start.bat`, `install.ps1` adds `pyautogui`+`pillow`, Desktop shortcut, Swara/−8%/Hinglish pins.
+  - HUD: `dashboard/companion.css` warm rose/amber night; `body.companion-home`; engine strip on orb; status strings → Aarohi.
+  - Voice: `dashboard/companion-voice.js` (hold Space / hold mic PTT, echo guard vs last TTS, instant ack on long turns).
+  - Desktop: `javis_app_raise`; force-close needs `confirm=true`; Docker still refused; honest `[done]/`/`[unverified]`/`[ask]`.
+  - Remote: wizard step “Open AAROHI from your phone” → `/remote-access/enable` quick tunnel (password required); Settings block unchanged.
+  - Polish: `companion-memory.js` facts filter; `system/plugins/clipboard-assist` (enabled:false until user turns on).
+- **Why:** Owner asked for Mark-like companion OS usable from any device without forking Mark-LVI.
+- **License:** Patterns only. Never vendor `FatihMakes/Mark-LVI` (`ui.py`, `actions/`, `core/`).
+
 ## Runtime cheat sheet
 
 | Mode | URL / command |
 |------|----------------|
-| Local dashboard (typical) | `http://localhost:7788` (or port from start scripts) |
+| Local dashboard (typical) | `http://127.0.0.1:7777` (or port from start scripts) |
+| One-click Windows | `AAROHI-setup.bat` then `AAROHI-start.bat` (alias: `start-javis.bat`) |
 | Production (historical) | `https://aarohi-theta.vercel.app/` |
-| Start (Windows) | `start-javis.bat` / `server\main.py` via venv |
-| Python deps | `requirements.txt` |
+| Start (Windows) | `AAROHI-start.bat` / `server\main.py` via venv |
+| Python deps | `requirements.txt` (+ optional `pyautogui pillow` for desktop control) |
 | Node/turbo CI helpers | `package.json` + `turbo.json` (lint/typecheck/test stubs) |
 
 ## How other AIs should work here

@@ -575,9 +575,34 @@ def _title_hit(cum: str, title: str) -> bool:
     return cum in t
 
 
+def _raise(args, ctx) -> str:
+    """Bring an already-running app window to the front. Honest outcomes only."""
+    name = str((args or {}).get("name") or "")
+    running = _list_running()
+    if not name.strip():
+        return f"{ASK} Provide name: the running app or window title to raise."
+    mine = _running_for(name, running)
+    if not mine:
+        return (f"{ASK} No running window matched '{name}'. "
+                "Call javis_app_list first, or javis_app_open to launch it.")
+    asked, verified = _raise_window(mine[0], running)
+    label = mine[0].get("title") or mine[0].get("image") or name
+    if asked and verified:
+        return f"{DONE} Raised window to front: {label}."
+    if asked:
+        return (f"{UNVERIFIED} Asked Windows to raise {label}, but could not confirm "
+                "(taskbar may only flash). Do not claim it is in front.")
+    return f"{FAILED} Could not raise {label} (no window API / tray-only process)."
+
+
 def _close(args, ctx) -> str:
     name = str((args or {}).get("name") or "")
     force = bool((args or {}).get("force"))
+    confirm = bool((args or {}).get("confirm"))
+    # Destructive force-kill needs an explicit confirm=true (companion OS safety).
+    if force and not confirm:
+        return (f"{ASK} Force-closing is destructive. Call again with force=true AND confirm=true "
+                "only after the user clearly asked to force-quit / kill the app.")
     running = _list_running()
     image, why = resolve_close(name, running)
     if not image:
@@ -591,7 +616,7 @@ def _close(args, ctx) -> str:
     con = [r for r in _list_running() if r["image"].lower() == image.lower()]
     if con and not force:
         return (f"{UNVERIFIED} Đã gửi lệnh đóng tới {image} nhưng nó vẫn đang chạy ({len(con)} cửa sổ), có thể "
-                f"đang hỏi lưu tài liệu. Người dùng muốn ép tắt thì gọi lại với force=true.")
+                f"đang hỏi lưu tài liệu. Người dùng muốn ép tắt thì gọi lại với force=true và confirm=true.")
     if con:
         return f"{FAILED} đã ép tắt {image} nhưng nó vẫn đang chạy ({len(con)} tiến trình)."
     return f"{DONE} Đã đóng {image}." + (" (ép tắt)" if force else "")
@@ -618,13 +643,21 @@ def register(ctx):
         schema={"type": "object", "properties": {"name": {"type": "string"}}, "required": ["name"]},
     )
     ctx.register_tool(
+        name="javis_app_raise",
+        description=("Bring an already-running app window to the front on the machine running Aarohi. "
+                     "name: running app image or window title. Prefer this over opening a second copy. "
+                     + OUTCOME_RULE),
+        handler=_raise, min_mode="safe", check_fn=check_ready,
+        schema={"type": "object", "properties": {"name": {"type": "string"}}, "required": ["name"]},
+    )
+    ctx.register_tool(
         name="javis_app_close",
-        description=("ĐÓNG một app đang chạy trên máy đang chạy Javis, làm ngay không hỏi lại. name: tên "
-                     "app hoặc tiêu đề cửa sổ. Mặc định đóng lịch sự (app có tài liệu chưa lưu sẽ tự hỏi "
-                     "lưu); force=true chỉ khi người dùng nói 'ép tắt' / 'tắt hẳn'. Dùng khi người dùng nói "
-                     "'tắt Chrome', 'đóng Excel'. " + OUTCOME_RULE),
+        description=("Close a running app on the machine running Aarohi. name: app or window title. "
+                     "Default is polite close (save dialog may appear). force=true only when the user "
+                     "says force-quit/kill - then confirm=true is also required. " + OUTCOME_RULE),
         handler=_close, min_mode="full", check_fn=check_ready,
         schema={"type": "object", "properties": {"name": {"type": "string"},
-                                                 "force": {"type": "boolean"}},
+                                                 "force": {"type": "boolean"},
+                                                 "confirm": {"type": "boolean"}},
                 "required": ["name"]},
     )

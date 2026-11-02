@@ -1,0 +1,158 @@
+/* AAROHI Companion OS — warm-night call home (clean-room Mark-capability HUD).
+   Soft rose/amber intimacy; keeps existing layout, softens "OS console" first paint. */
+
+:root {
+  color-scheme: dark;
+  --bg: #120e12;
+  --bg2: #1c1418;
+  --bg3: #2a1c22;
+  --border: #4a3340;
+  --accent: #e8a07a;
+  --accent2: #d4789a;
+  --text: #fff4ee;
+  --text2: #e0c4bc;
+  --text3: #b8969c;
+  --accent-ink: #ffc9a8;
+  --accent2-ink: #f0b0c8;
+  --accent-solid: #d4784a;
+  --accent-wash: rgba(232, 160, 122, 0.09);
+  --accent-wash-2: rgba(232, 160, 122, 0.16);
+  --accent-line: rgba(232, 160, 122, 0.38);
+  --accent-ring: 0 0 22px rgba(232, 140, 110, 0.28);
+  --accent2-wash: rgba(212, 120, 154, 0.12);
+  --accent2-wash-2: rgba(212, 120, 154, 0.22);
+  --accent2-line: rgba(212, 120, 154, 0.4);
+  --accent2-solid: #b85a7a;
+  --field-bg: rgba(28, 18, 22, 0.88);
+  --panel-bg: rgba(22, 14, 18, 0.82);
+  --panel-solid: rgba(16, 10, 14, 0.97);
+  --scrim: rgba(8, 4, 6, 0.82);
+  --pet-face: #e8a07a;
+  --companion-glow: radial-gradient(ellipse 70% 55% at 50% 42%,
+    rgba(232, 140, 120, 0.18) 0%,
+    rgba(180, 80, 110, 0.08) 42%,
+    transparent 72%);
+}
+
+:root[data-theme="light"] {
+  --bg: #faf4f0;
+  --bg2: #f3e8e2;
+  --bg3: #ead8d0;
+  --border: #d4b8ae;
+  --accent: #c86a48;
+  --accent2: #b85a7a;
+  --text: #2a1814;
+  --text2: #5a3e38;
+  --text3: #7a5a54;
+  --accent-ink: #9a4428;
+  --accent2-ink: #8a3a5a;
+  --accent-solid: #b85430;
+  --companion-glow: radial-gradient(ellipse 70% 55% at 50% 40%,
+    rgba(232, 160, 122, 0.22) 0%, transparent 70%);
+}
+
+/* Soft night atmosphere behind the graph / chat home */
+.hud-center {
+  background-image: var(--companion-glow);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.hud-center::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(180, 70, 100, 0.08), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(232, 160, 100, 0.07), transparent 40%);
+  z-index: 0;
+}
+
+.orb-overlay {
+  z-index: 2;
+}
+
+.orb-state {
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-shadow: 0 0 24px rgba(232, 140, 110, 0.35);
+}
+
+/* Brand-first rail: AAROHI as hero mark */
+.rail-brand {
+  padding: 14px 12px 10px;
+  gap: 10px;
+}
+.rail-brand-text {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent-ink);
+}
+.brand-mark {
+  box-shadow: 0 0 18px rgba(232, 140, 110, 0.35);
+  border-radius: 10px;
+}
+.brand .brand-text {
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--accent-ink);
+}
+
+/* Chat empty state: companion invitation, not console */
+.transcript:empty::before,
+.transcript[data-empty]::before {
+  color: var(--text2) !important;
+  opacity: 0.85;
+}
+
+/* Soften dense OS chrome on first paint (companion mode) */
+body.companion-home .hud-left,
+body.companion-home .studio-open-btn {
+  opacity: 0.88;
+}
+body.companion-home .hud-center #starfield {
+  opacity: 0.55;
+}
+
+/* Engine / companion status strip under orb */
+.companion-engine-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 10px;
+  margin-top: 8px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text3);
+}
+.companion-engine-strip span {
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-line);
+  background: var(--accent-wash);
+  color: var(--accent-ink);
+}
+
+/* Mic / PTT affordance */
+.mic-btn.ptt-held,
+#micBtn.ptt-held {
+  box-shadow: 0 0 0 3px var(--accent-wash-2), var(--accent-ring);
+  border-color: var(--accent);
+}
+
+/* Memory companion panel chips */
+.mem-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  margin: 2px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-line);
+  background: var(--accent-wash);
+  color: var(--text2);
+  font-size: 12px;
+}

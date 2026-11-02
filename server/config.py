@@ -47,7 +47,7 @@ _DEFAULT = {
     # Việt, nhưng chatbot đối ngoại trả lời tiếng Nhật.
     "locale": {
         "ui_lang": "en",
-        "reply_lang": "auto",              # auto | vi | en
+        "reply_lang": "hi",                # AAROHI default: Hinglish (auto | vi | en | hi)
         "tz": "Asia/Kolkata",
         "currency": "INR",
     },

@@ -9,11 +9,12 @@
   "use strict";
   // AAROHI: wake on Aarohi / Arohi first, keep Javis/Jarvis as legacy aliases.
   // Web Speech often mangles Hindi names - nearWake catches common mishears without opening the gate alone.
-  const wake = /^(?:(?:hey|hi|hello|ê|này|alo|chào|meri?|yaar)\s+)?(?:aarohi|arohi|aaruhi|javis|jarvis)(?=$|[\s,.!?:;])/iu;
-  // Near-misses ("David ơi", "Arohi" as "arrow he", "Rahi") only unlock re-listen, not the gate.
-  const IDLE_MS = 30000;      // chủ dự án 01/10: 20 giây hơi ít
-  const WAKE_MIN_WORDS = 2;   // "ừ", tiếng ho không đủ; "mở lịch" là đủ
-  const nearWake = /^(?:(?:hey|hi|hello|ê|này|alo|chào|meri?)\s+)?(?:david|davis|javix|jarvix|đa\s*vít|gia\s*vít|ja\s*vít|ja\s*vịt|giá\s*vít|chavis|arrow\s*he|a\s*rohi|rahi|arohie|aaravi)(?=$|[\s,.!?:;])/iu;
+  // AAROHI: always-ready wake - full name PLUS common mic stubs (Ar/Ro/Rahi).
+  const wake = /^(?:(?:hey|hi|hello|oye|sun|suno|meri?|yaar|babe|baby|ê|này|alo|chào)\s+)?(?:aarohi|arohi|aaruhi|aarohie|arrohi|ar|aro|ro|roh|rahi|javis|jarvis)(?=$|[\s,.!?:;])/iu;
+  // Near-misses only unlock re-listen, not the gate alone.
+  const IDLE_MS = 120000;     // AAROHI: stay awake longer so she feels always ready
+  const WAKE_MIN_WORDS = 1;   // any real word reopens Live after idle
+  const nearWake = /^(?:(?:hey|hi|hello|oye|sun|suno|meri?|babe|ê|này|alo|chào)\s+)?(?:david|davis|javix|jarvix|đa\s*vít|gia\s*vít|ja\s*vít|ja\s*vịt|giá\s*vít|chavis|arrow\s*he|a\s*rohi|rahi|arohie|aaravi|arohee|ahrohi|ar|aro|ro)(?=$|[\s,.!?:;])/iu;
   class Attention {
     constructor({ now = Date.now, idleMs = IDLE_MS, candidateMs = 120000 } = {}) {
       this.now = now; this.idleMs = idleMs; this.candidateMs = candidateMs;

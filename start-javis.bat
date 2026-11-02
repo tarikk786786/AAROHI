@@ -1,14 +1,13 @@
 @echo off
 chcp 65001 >nul
-title Khoi dong Javis OS
+title Start AAROHI
 cd /d "%~dp0"
 
-echo Bat Javis OS chay NEN - khong con cua so den (port 7777)...
-REM Viec tat instance cu + chay server AN giao het cho start-javis.vbs (cua so an hoan toan).
-REM Log ghi vao server\javis.log (mo file do neu can xem loi). Tat server: stop-javis.bat.
+echo Starting AAROHI in the background (port 7777)...
+REM Hidden start via start-javis.vbs. Log: server\javis.log. Stop: stop-javis.bat.
 wscript //nologo start-javis.vbs
 
 echo.
-echo Da bat. Cho ~10 giay roi mo http://localhost:7777 va bam Ctrl+Shift+R.
-echo (Tat server: chay stop-javis.bat. Xem loi: mo file server\javis.log)
+echo Started. Wait ~10s then open http://127.0.0.1:7777 and press Ctrl+Shift+R.
+echo (Stop: stop-javis.bat. Errors: server\javis.log)
 timeout /t 4 >nul

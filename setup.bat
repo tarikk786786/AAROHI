@@ -1,13 +1,12 @@
 @echo off
 chcp 65001 >nul
-title Javis OS
+title AAROHI
 echo.
 echo  ==========================================
-echo   JAVIS OS
+echo   AAROHI Companion
 echo  ==========================================
-echo   Muon cai MOT LUOT ca 4 bo nao CLI
-echo   (claude, codex, agy, grok) thi chay:
-echo     powershell -ExecutionPolicy Bypass -File install.ps1
+echo   Prefer one-click: AAROHI-setup.bat
+echo   Or: powershell -ExecutionPolicy Bypass -File install.ps1
 echo  ==========================================
 echo.
 

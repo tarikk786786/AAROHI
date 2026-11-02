@@ -436,9 +436,15 @@ def resolve(*, turn_text: str = "", reply_pref: str = "auto", chatbot_pin: str =
 def call_language(said: str, recognition_lang: str = "") -> str:
     """Ngôn ngữ ghim cho bộ não chính khi việc tới từ CUỘC GỌI giọng nói, "" = để model tự bám.
 
-    Lấy theo câu người dùng VỪA NÓI, không theo câu giao việc mà model giọng nói viết lại (có
-    lúc là tiếng Anh dù người dùng nói tiếng Việt). Không dò ra thì theo ngôn ngữ nhận dạng của
-    mic ("vi-VN"); mic để "auto" thì không ghim gì."""
+    AAROHI: if Settings pins reply_lang (e.g. hi/Hinglish), that wins over mic detect so a
+    mangled one-word stub like "Ar" never falls back to Vietnamese."""
+    try:
+        import localefmt
+        pinned = lang_registry.chuan_hoa(localefmt.ngon_ngu_tra_loi() or "")
+        if pinned and pinned != "auto":
+            return pinned
+    except Exception:
+        pass
     code, _ = detect(said)
     if lang_registry.duoc_ho_tro(code):
         return lang_registry.chuan_hoa(code)
@@ -448,12 +454,26 @@ def call_language(said: str, recognition_lang: str = "") -> str:
 def khoi_ngon_ngu(quyet_dinh: LangDecision) -> str:
     """Khối "# === NGÔN NGỮ ===" nối vào system prompt.
 
-    Bản thân khối viết bằng TIẾNG VIỆT có chủ ý (spec quyết định số hai: một bản CLAUDE.md,
-    không dịch luật hành xử ra N bản - model không cần đọc luật bằng tiếng Anh để trả lời
-    bằng tiếng Anh). Chỉ câu `nudge` cuối là viết bằng chính ngôn ngữ đích, dành cho model
-    nhỏ vốn trôi theo ngôn ngữ của prompt.
+    For AAROHI pinned Hinglish (`hi`), the whole block is English so small models do not
+    drift into Vietnamese from a Vietnamese wrapper. Other langs keep the original VN shell
+    plus the target nudge (upstream Javis behavior).
     """
     l = lang_registry.get(quyet_dinh.lang)
+    # AAROHI: pinned Hinglish must not be wrapped in Vietnamese instructions.
+    if (quyet_dinh.lang or "").lower() == "hi" and not quyet_dinh.theo_nguoi_dung:
+        dong = [
+            "",
+            "",
+            "# === LANGUAGE ===",
+            f"Reply language: {l.lang_directive} ({l.code}).",
+            "Write the ENTIRE answer in natural Hinglish (Hindi + English mix). Prefer Roman "
+            "Hinglish; Devanagari when warm. Do NOT use Vietnamese. Do NOT use pure formal "
+            "English only. Do NOT use pure formal Hindi only.",
+            "Leave untranslated: proper nouns, file paths, tool names, code, vault excerpts.",
+            l.nudge,
+        ]
+        return "\n".join(dong)
+
     chung = [
         "Giữ nguyên KHÔNG dịch: tên riêng, đường dẫn file, tên tool, tên brain, khối mã, và "
         "đoạn trích nguyên văn từ brain hoặc từ kết quả tool.",
@@ -462,8 +482,6 @@ def khoi_ngon_ngu(quyet_dinh: LangDecision) -> str:
     ]
 
     if quyet_dinh.theo_nguoi_dung:
-        # Không ai ghim gì: để model bám. Nó làm việc này tốt hơn bộ dò của mình, và làm được
-        # với MỌI thứ tiếng chứ không riêng hai thứ có trong sổ đăng ký.
         return "\n".join([
             "",
             "",

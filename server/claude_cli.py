@@ -303,6 +303,43 @@ def tim_binary(ten: str) -> Optional[str]:
     return _binary_da_nho(ten)
 
 
+def _claude_exe_tu_npm_cmd(cmd_path: str) -> Optional[str]:
+    """Resolve npm's claude.cmd → the real bin/claude.exe (Win32 PE).
+
+    A blocked postinstall leaves a ~500-byte stub that CreateProcess rejects as
+    'not a valid Win32 application', so auth login prints no URL. Prefer the real
+    binary under node_modules/@anthropic-ai/claude-code/bin/ when it is >1 MB."""
+    try:
+        p = Path(cmd_path)
+        # .../npm/claude.cmd → .../npm/node_modules/@anthropic-ai/claude-code/bin/claude.exe
+        exe = p.parent / "node_modules" / "@anthropic-ai" / "claude-code" / "bin" / "claude.exe"
+        if exe.is_file() and exe.stat().st_size > 1_000_000:
+            return str(exe)
+    except Exception:
+        pass
+    return None
+
+
+def _claude_cli_hop_le(path: Optional[str]) -> Optional[str]:
+    """Return a runnable Claude CLI path, or None if the file is a broken stub."""
+    if not path:
+        return None
+    try:
+        p = Path(path)
+        if not p.exists():
+            return None
+        low = p.name.lower()
+        if low.endswith(".cmd") or low.endswith(".bat"):
+            exe = _claude_exe_tu_npm_cmd(str(p))
+            return exe or str(p)
+        if low.endswith(".exe") and p.stat().st_size < 1_000_000:
+            # Tiny stub after npm blocked install-scripts - unusable for auth login.
+            return None
+        return str(p)
+    except Exception:
+        return None
+
+
 def find_claude_cli() -> Optional[str]:
     """Tìm claude CLI trên máy. Cửa thoát JAVIS_CLAUDE_BIN cho máy cài chỗ lạ.
 
@@ -311,40 +348,41 @@ def find_claude_cli() -> Optional[str]:
     đường chỉ tay, nên máy cài vào chỗ lạ thì hết cách ngoài sửa PATH."""
     envp = (os.environ.get("JAVIS_CLAUDE_BIN") or "").strip()
     if envp:
-        try:
-            if Path(envp).exists():
-                return envp
-        except Exception:
-            pass
-    cli = tim_binary("claude")
+        got = _claude_cli_hop_le(envp)
+        if got:
+            return got
+    cli = _claude_cli_hop_le(tim_binary("claude"))
     if cli:
         return cli
     if os.name == "nt":
-        # npm global có thể nằm ở APPDATA hoặc LOCALAPPDATA tuỳ cách cài Node; nvm-windows
-        # thì mỗi bản Node một thư mục riêng. Liệt kê thẳng vì đây là ca hay gặp nhất khi
-        # cài mới trên Windows.
+        # Prefer the real PE under node_modules first - npm's .cmd wrapper is fine for
+        # shells, but a blocked postinstall stub breaks Popen auth login (no URL).
         goc = [os.environ.get("APPDATA", ""), os.environ.get("LOCALAPPDATA", "")]
-        candidates = [
+        candidates = []
+        for g in goc:
+            if g:
+                candidates += [
+                    Path(g) / "npm" / "node_modules" / "@anthropic-ai" / "claude-code" / "bin" / "claude.exe",
+                    Path(g) / "npm" / "claude.exe",
+                    Path(g) / "npm" / "claude.cmd",
+                ]
+        candidates += [
             Path(os.environ.get("USERPROFILE", "")) / ".local" / "bin" / "claude.exe",
             Path(os.environ.get("USERPROFILE", "")) / ".local" / "bin" / "claude.EXE",
         ]
-        for g in goc:
-            if g:
-                candidates += [Path(g) / "npm" / "claude.cmd", Path(g) / "npm" / "claude.exe"]
         for d in _thu_muc_bin_windows():
-            candidates += [Path(d) / "claude.cmd", Path(d) / "claude.exe"]
+            candidates += [Path(d) / "claude.exe", Path(d) / "claude.cmd"]
         for p in candidates:
-            try:
-                if p.exists():
-                    _nho_binary("claude", str(p))
-                    return str(p)
-            except Exception:
-                pass
+            got = _claude_cli_hop_le(str(p))
+            if got:
+                _nho_binary("claude", got)
+                return got
     for p in ("/usr/local/bin/claude", "~/.local/bin/claude", "~/.npm-global/bin/claude"):
         path = Path(p).expanduser()
-        if path.exists():
-            return str(path)
-    return _binary_da_nho("claude")
+        got = _claude_cli_hop_le(str(path))
+        if got:
+            return got
+    return _claude_cli_hop_le(_binary_da_nho("claude"))
 
 
 # Câu nói khi KHÔNG tìm thấy một CLI. Phải nói ba thứ, vì thiếu thứ nào người dùng cũng tắc:
@@ -959,13 +997,25 @@ def auth_login_ui_start(env: Optional[dict] = None):
             except Exception:
                 pass
     threading.Thread(target=_reader, daemon=True).start()
-    for _ in range(60):   # đợi tối đa ~12s để có URL / xong sớm / lỗi
+    for _ in range(100):   # wait up to ~20s for URL / early done / error (cold start on Windows)
         if _LOGIN["url"] or _LOGIN["done"] or _LOGIN["error"]:
             break
         time.sleep(0.2)
     if not (_LOGIN["url"] or _LOGIN["done"] or _LOGIN["error"]):
+        # Dead process with no output = almost always a broken/stub binary.
+        tip = ""
+        try:
+            if proc.poll() is not None:
+                tip = " " + localefmt.chu(
+                    "Gợi ý: cài lại Claude Code với postinstall - "
+                    "`npm i -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-code`.",
+                    "Hint: reinstall Claude Code with postinstall - "
+                    "`npm i -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-code`.")
+        except Exception:
+            pass
         return {"ok": False, "error": localefmt.chu("Không lấy được link đăng nhập (claude CLI không in URL).",
-                                                    "Could not get the sign-in link (the claude CLI printed no URL).")}
+                                                    "Could not get the sign-in link (the claude CLI printed no URL).")
+                + tip}
     return {"ok": True, "url": _LOGIN["url"], "done": _LOGIN["done"], "error": _LOGIN["error"]}
 
 

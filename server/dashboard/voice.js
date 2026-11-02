@@ -86,7 +86,7 @@ class JavisVoice {
     // Edge TTS backend (server)
     this.ttsBackend = opts.ttsBackend || "/tts"; // "/tts" hoặc null để dùng browser
     this.ttsVoice = opts.ttsVoice || "hi-IN-SwaraNeural"; // AAROHI: Swara sweet Hindi girlfriend; Neerja = Hinglish
-    this.ttsRate = opts.ttsRate || "-5%";
+    this.ttsRate = opts.ttsRate || "-8%"; // Mark-style soft pace - slower reads warmer
     this.currentAudio = null;
     this.ttsQueue = [];
     this.speechQueue = [];   // hàng đợi đọc nối tiếp (các bước trung gian + kết quả)
@@ -673,11 +673,18 @@ class JavisVoice {
   _loadVoices() {
     const load = () => {
       const voices = this.synth.getVoices();
-      // Tìm giọng Vietnamese tốt nhất theo thứ tự ưu tiên
+      // AAROHI: prefer sweet Hindi/Hinglish girl voices; keep Vietnamese as legacy fallback.
+      const by = (pred) => voices.find(pred);
+      this.girlfriendVoice =
+        by(v => /^hi(-IN)?$/i.test(v.lang) && /swara|neerja|female|zira|google/i.test(v.name)) ||
+        by(v => /^hi(-IN)?$/i.test(v.lang)) ||
+        by(v => /^en-IN$/i.test(v.lang) && /female|neerja|heera|google/i.test(v.name)) ||
+        by(v => /^en-IN$/i.test(v.lang)) ||
+        null;
       this.vietnameseVoice =
-        voices.find(v => v.lang === "vi-VN" && v.name.includes("Google")) ||
-        voices.find(v => v.lang === "vi-VN") ||
-        voices.find(v => v.lang.startsWith("vi")) ||
+        by(v => v.lang === "vi-VN" && v.name.includes("Google")) ||
+        by(v => v.lang === "vi-VN") ||
+        by(v => v.lang.startsWith("vi")) ||
         null;
     };
     load();
@@ -1378,10 +1385,22 @@ class JavisVoice {
     if (this._treoTimer) { clearInterval(this._treoTimer); this._treoTimer = null; }
   }
 
-  // Retry the selected voice once. A different voice requires an explicit selection.
+  // Retry Edge once; if still dead, fall back to browser speech so Aarohi never goes silent.
   _chunkFailed(i, retry) {
     if (!this.ttsChunks || i >= this.ttsChunks.length) { this._pumpQueue(); return; }
     if (!retry) { this._playChunk(i, true); return; }
+    const rest = (this.ttsChunks || []).slice(i).join(" ").trim();
+    this.ttsChunks = null;
+    this._huyCanhTreo();
+    if (this.currentAudio) {
+      try { this.currentAudio.onended = null; this.currentAudio.onerror = null; this.currentAudio.pause(); } catch (e) {}
+      this.currentAudio = null;
+    }
+    if (rest && this.synth) {
+      try { this.onPlaybackError("tts-fallback-browser"); } catch (e) {}
+      this._speakBrowser(rest, () => this._pumpQueue());
+      return;
+    }
     this.stopSpeaking();
     this.onPlaybackError("tts-unavailable");
   }
@@ -1397,9 +1416,12 @@ class JavisVoice {
       if (idx >= chunks.length) { done(); return; }
       const piece = chunks[idx++];
       const utter = new SpeechSynthesisUtterance(piece);
-      utter.lang = this.lang;
-      if (this.vietnameseVoice) utter.voice = this.vietnameseVoice;
-      utter.rate = 1.05;
+      // AAROHI girlfriend default: Hindi/Hinglish, then current lang, then legacy Vietnamese.
+      const pick = this.girlfriendVoice || this.vietnameseVoice;
+      utter.lang = (pick && pick.lang) || (String(this.lang || "").startsWith("hi") ? this.lang : "hi-IN");
+      if (pick) utter.voice = pick;
+      utter.rate = 0.95;
+      utter.pitch = 1.05;
       utter.onstart = () => this._audioActuallyStarted(epoch);
       utter.onend = () => { if (epoch !== this._ttsEpoch) return; if (this._countThis) this._wordsDone += JavisVoice.demTu(piece); playNext(); };
       utter.onerror = playNext;
