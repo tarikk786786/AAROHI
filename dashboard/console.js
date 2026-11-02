@@ -3644,7 +3644,32 @@
         <button type="button" class="ord-more" id="ordMore" aria-expanded="${showOff ? "true" : "false"}">＋ ${esc(t("models.ord_more", { n: offList.length }))}</button>
         <div class="prov-list ord-off" id="ordOff" ${showOff ? "" : "hidden"}>${offList.map(p => provCard(p, null)).join("")}</div>
       </div>` : "";
+    // AAROHI: one-click connect strip for the brains the owner asked for.
+    const _on = (id) => {
+      if (id === "anthropic-cli") return claudeOn;
+      const p = pById(id);
+      return !!(p && p.configured);
+    };
+    const qcBtn = (id, label, kind) => {
+      const on = _on(id);
+      return `<button type="button" class="gcard-btn${on ? " ghost" : ""}" data-qc="${esc(id)}" data-qc-kind="${esc(kind)}" ${on ? "disabled" : ""}>${on ? "✓ " : ""}${esc(label)}</button>`;
+    };
+    const quickConnect = `<div class="cview-section">
+        <h3>◆ ${esc(t("models.qc_title"))} <span style="opacity:.5">${esc(t("models.qc_sub"))}</span></h3>
+        <div class="gcard" style="padding:14px 16px">
+          <div class="prov-action" style="flex-wrap:wrap;gap:8px">
+            ${qcBtn("anthropic-cli", t("models.qc_claude"), "claude")}
+            ${qcBtn("openai-oauth", t("models.qc_chatgpt"), "chatgpt")}
+            ${qcBtn("gemini", t("models.qc_gemini"), "gemini")}
+            ${qcBtn("deepseek", t("models.qc_deepseek"), "deepseek")}
+          </div>
+          <div id="qcMsg" class="gcard-meta" style="margin-top:10px;min-height:1.4em"></div>
+          <div id="qcBox" style="margin-top:8px"></div>
+          <div class="prov-note" style="margin-top:8px">${esc(t("models.qc_note"))}</div>
+        </div>
+      </div>`;
     el.innerHTML = `
+      ${quickConnect}
       ${connList.length ? "" : moreHtml}
       ${connList.length ? `<div class="cview-section">
         <h3>◆ ${esc(t("models.h_order"))} <span style="opacity:.5">${esc(t("models.h_order_sub"))}</span>${infoBtn()}</h3>
@@ -3747,6 +3772,10 @@
     if (ol) ol.onclick = () => startOauthLogin(el);
     const ob = el.querySelector("[data-oauth-browser]");
     if (ob) ob.onclick = () => startOauthBrowser(el);
+    // AAROHI one-click connect strip
+    el.querySelectorAll("[data-qc]").forEach((b) => {
+      b.onclick = () => quickConnectBrain(el, b.dataset.qc, b.dataset.qcKind || "");
+    });
     const agk = el.querySelector("[data-agycheck]");
     if (agk) agk.onclick = async () => {
       const msg = el.querySelector("#agyMsg");
@@ -4494,6 +4523,153 @@
       if (rr.ok) { stopped = true; refreshClaudeCard(el); }
       else if (m2) m2.innerHTML = Icons.warn(rr.error || t("models.code_wrong"));
     };
+  }
+
+  // AAROHI: one-click connect for Claude / ChatGPT / Gemini / DeepSeek from the Models strip.
+  // Always paint into #qcMsg/#qcBox - ChatGPT/Claude provider cards may be folded away, so
+  // never rely on #oauthMsg / card-local nodes or the user only sees "Sign-in has not started".
+  async function quickConnectBrain(el, id, kind) {
+    const msg = el.querySelector("#qcMsg");
+    const box = el.querySelector("#qcBox");
+    const say = (html, warn) => {
+      if (!msg) return;
+      msg.innerHTML = warn ? Icons.warn(html) : html;
+    };
+    if (msg) msg.textContent = t("models.opening");
+    if (box) box.innerHTML = "";
+
+    const saveKeyForever = async (patch, label) => {
+      await saveSetting("model", patch);
+      say(OK_ICON + " " + esc(label) + " · " + esc(t("models.qc_saved")), false);
+      renderModelsCloudTab(el);
+    };
+
+    if (kind === "claude" || id === "anthropic-cli") {
+      let r;
+      try { r = await (await fetch("/claude/login-start", { method: "POST" })).json(); }
+      catch (e) { say(t("common.net_err"), true); return; }
+      if (r && (r.connected || r.done) && !r.error && !r.url) {
+        say(OK_ICON + " Claude · " + esc(t("models.oauth_done")), false);
+        renderModelsCloudTab(el);
+        return;
+      }
+      const url = (r && (r.url || r.verification_uri)) || "";
+      if (!r || r.error || !url) {
+        // CLI broken / no URL: still let them paste an Anthropic API key so chat stays usable.
+        say((r && r.error) || t("models.cant_open"), true);
+        if (box) {
+          box.innerHTML = `<div class="prov-note">${esc(t("models.qc_claude_key_fallback"))}</div>
+            <div class="prov-action" style="flex-wrap:wrap;gap:6px;margin-top:8px">
+              <input class="js-input" id="qcClaudeKey" type="password" placeholder="sk-ant-…" style="flex:1;min-width:180px">
+              <button type="button" class="gcard-btn" id="qcClaudeKeySave">${esc(t("models.connect"))}</button></div>`;
+          const kb = box.querySelector("#qcClaudeKeySave");
+          if (kb) kb.onclick = async () => {
+            const key = (box.querySelector("#qcClaudeKey").value || "").trim();
+            if (!key) return;
+            kb.disabled = true;
+            await saveKeyForever({ anthropic_api_key: key }, "Anthropic API");
+          };
+        }
+        return;
+      }
+      try { window.open(url, "_blank"); } catch (e) {}
+      say(`${esc(t("models.cli_s1"))} <a href="${esc(safeHref(url))}" target="_blank" rel="noopener">${esc(t("models.oauth_open"))}</a>`, false);
+      if (box) {
+        box.innerHTML = `<div class="ord-plink" style="word-break:break-all;margin-bottom:8px"><a href="${esc(safeHref(url))}" target="_blank" rel="noopener">${esc(url)}</a></div>
+          <div class="prov-action" style="flex-wrap:wrap;gap:6px">
+            <input class="js-input" id="qcClaudeCode" placeholder="${esc(t("models.pacct_paste"))}" style="flex:1;min-width:160px" autocomplete="off">
+            <button type="button" class="gcard-btn" id="qcClaudeBtn">${esc(t("models.confirm"))}</button></div>`;
+        const btn = box.querySelector("#qcClaudeBtn");
+        const inp = box.querySelector("#qcClaudeCode");
+        if (btn) btn.onclick = async () => {
+          const code = ((inp && inp.value) || "").replace(/\s+/g, "");
+          if (!code) { say(t("models.code_empty"), true); return; }
+          btn.disabled = true;
+          const fd = new FormData(); fd.append("code", code);
+          let rr;
+          try { rr = await (await fetch("/claude/login-code", { method: "POST", body: fd })).json(); }
+          catch (e) { btn.disabled = false; say(t("common.net_err"), true); return; }
+          btn.disabled = false;
+          if (rr && rr.ok) { say(OK_ICON + " Claude · " + esc(t("models.qc_saved")), false); renderModelsCloudTab(el); }
+          else say((rr && rr.error) || t("models.code_wrong"), true);
+        };
+      }
+      return;
+    }
+
+    if (kind === "chatgpt" || id === "openai-oauth") {
+      // Self-contained device-code flow (do NOT depend on #oauthMsg on a folded card).
+      let d;
+      try { d = await (await fetch("/oauth/openai/start", { method: "POST" })).json(); }
+      catch (e) { say(t("models.server_err"), true); return; }
+      if (d.error) { say(esc(t("models.err") + " " + d.error), true); return; }
+      const vuri = d.verification_uri || "https://auth.openai.com/codex/device";
+      try { window.open(vuri, "_blank"); } catch (e) {}
+      say(`${esc(t("models.oauth_open"))} <a href="${esc(safeHref(vuri))}" target="_blank" rel="noopener">${esc(vuri)}</a>
+        · ${esc(t("models.oauth_enter"))} <b style="font-size:1.2em;letter-spacing:1px">${esc(d.user_code || "")}</b>
+        <span style="opacity:.65"> ${esc(t("models.oauth_wait"))}</span>`, false);
+      if (box) {
+        box.innerHTML = `<div class="prov-note">${esc(t("models.qc_chatgpt_hint"))}</div>
+          <div style="font-size:1.35em;letter-spacing:2px;font-weight:700;margin:8px 0">${esc(d.user_code || "")}</div>
+          <div class="gcard-meta">${ic("loader", { cls: "ic-spin" })} ${esc(t("models.pacct_wait"))}</div>`;
+      }
+      const iv = Math.max(2, (d.interval || 5)) * 1000;
+      const t0 = Date.now();
+      const poll = async () => {
+        if (!el.isConnected) return;
+        if (Date.now() - t0 > 16 * 60 * 1000) { say(t("models.expired"), true); return; }
+        let p;
+        try { p = await (await fetch("/oauth/openai/poll", { method: "POST" })).json(); }
+        catch (e) { setTimeout(poll, iv); return; }
+        if (p.status === "connected") {
+          try { _daHoiModel.delete("openai-oauth"); } catch (e) {}
+          say(OK_ICON + " ChatGPT · " + esc(t("models.qc_saved")), false);
+          renderModelsCloudTab(el);
+          return;
+        }
+        if (p.status === "error") { say(esc(t("models.err") + " " + (p.error || "")), true); return; }
+        setTimeout(poll, iv);
+      };
+      setTimeout(poll, iv);
+      return;
+    }
+
+    if (kind === "gemini" || id === "gemini") {
+      try { window.open("https://aistudio.google.com/apikey", "_blank"); } catch (e) {}
+      say(esc(t("models.qc_key_hint_gemini")), false);
+      if (box) {
+        box.innerHTML = `<div class="prov-action" style="flex-wrap:wrap;gap:6px">
+          <input class="js-input" id="qcGemKey" type="password" placeholder="AIza…" style="flex:1;min-width:180px" autocomplete="off">
+          <button type="button" class="gcard-btn" id="qcGemSave">${esc(t("models.connect"))}</button></div>`;
+        const btn = box.querySelector("#qcGemSave");
+        if (btn) btn.onclick = async () => {
+          const key = (box.querySelector("#qcGemKey").value || "").trim();
+          if (!key) return;
+          btn.disabled = true;
+          await saveKeyForever({ gemini_api_key: key }, "Gemini");
+        };
+      }
+      return;
+    }
+
+    if (kind === "deepseek" || id === "deepseek") {
+      try { window.open("https://platform.deepseek.com/api_keys", "_blank"); } catch (e) {}
+      say(esc(t("models.qc_key_hint_deepseek")), false);
+      if (box) {
+        box.innerHTML = `<div class="prov-action" style="flex-wrap:wrap;gap:6px">
+          <input class="js-input" id="qcDsKey" type="password" placeholder="sk-…" style="flex:1;min-width:180px" autocomplete="off">
+          <button type="button" class="gcard-btn" id="qcDsSave">${esc(t("models.connect"))}</button></div>`;
+        const btn = box.querySelector("#qcDsSave");
+        if (btn) btn.onclick = async () => {
+          const key = (box.querySelector("#qcDsKey").value || "").trim();
+          if (!key) return;
+          btn.disabled = true;
+          await saveKeyForever({ deepseek_api_key: key }, "DeepSeek");
+        };
+      }
+      return;
+    }
+    say(t("models.no_feature"), true);
   }
 
   // ---- ChatGPT OAuth device-code: lấy mã → mở link → poll tới khi kết nối ----

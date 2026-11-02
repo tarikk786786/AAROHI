@@ -1304,6 +1304,7 @@ async def root():
     # nó đứng yên ở 5 qua hàng chục bản.
     html = html.replace("/brand-logo?v=5", "/brand-logo?v=" + ver).replace(
         "/brand-logo?v=aarohi6", "/brand-logo?v=" + ver).replace(
+        "/brand-logo?v=aarohi7", "/brand-logo?v=" + ver).replace(
         'src="/brand-logo"', 'src="/brand-logo?v=' + ver + '"')
     # Nhúng phiên bản + vân tay vào chính trang. index.html luôn tải mới (no-store) nên khối
     # này LUÔN đúng, kể cả khi mọi file JS quanh nó đã cũ - đó chính là điểm tựa để
@@ -16301,7 +16302,7 @@ async def _tts_elevenlabs(text: str, cfg: dict) -> bytes:
 async def tts(
     text: str = Query(...),
     voice: str = Query("hi-IN-SwaraNeural"),
-    rate: str = Query("-5%"),
+    rate: str = Query("-8%"),
 ):
     """Sinh audio đúng nhà cung cấp đã chọn; lỗi không được âm thầm đổi giọng."""
     import sys
@@ -16329,10 +16330,15 @@ async def tts(
     _stream_headers = {"Cache-Control": "no-cache", "Accept-Ranges": "none"}
 
     async def _edge_streaming():
-        # Câu tiếng Việt xen từ tiếng Anh: đọc từ tiếng Anh theo kiểu người Việt nói ("GitHub
-        # Actions" -> "ghít hắp ác sừn"), cả câu một giọng người dùng đã chọn. Chỉ đổi chữ ĐƯA
-        # CHO LOA; khung chat vẫn hiện chữ gốc. Câu thuần tiếng Anh giữ nguyên. Xem phien_am.py.
-        doc = phien_am.doc_viet(text)
+        # Vietnamese mixed with English: rewrite English words the way a Vietnamese speaker
+        # would say them (phien_am.doc_viet). AAROHI Hinglish / Hindi / en-IN voices must
+        # NEVER go through that path - it mangles "haan jaan" into broken audio.
+        _rl = str(((cfg.get("locale") or {}).get("reply_lang") or "")).lower()
+        _vi_phonetics = (
+            _rl.startswith("vi")
+            and not (voice or "").startswith(("hi-", "en-IN", "en-US"))
+        )
+        doc = phien_am.doc_viet(text) if _vi_phonetics else text
         _first, gen = await _tts_edge_stream(doc, voice, rate)
         return StreamingResponse(gen, media_type="audio/mpeg", headers=_stream_headers)
 
@@ -17575,7 +17581,7 @@ async def websocket_endpoint(ws: WebSocket):
 
             await ws.send_text(json.dumps({
                 "type": "status",
-                "content": localefmt.chu("Javis đang suy nghĩ...", "Javis is thinking...")
+                "content": localefmt.chu("Aarohi đang suy nghĩ...", "Aarohi is thinking...")
             }))
 
             if _persona and _persona[0] == "agent":
@@ -18993,8 +18999,8 @@ async def websocket_endpoint(ws: WebSocket):
 
             async def _giu_cau_goc():
                 await send_raw({"type": "status", "session_id": conv_sid,
-                                "content": localefmt.chu("Javis đang kiểm tra lại câu vừa nghe...",
-                                                         "Javis is double-checking what it just heard...")})
+                                "content": localefmt.chu("Aarohi đang kiểm tra lại câu vừa nghe...",
+                                                         "Aarohi is double-checking what she just heard...")})
                 # Kho phiên và bong bóng giữ câu gốc; chỉ lời gửi bộ não chính kèm ghi chú để
                 # nó tự hiểu từ nghe nhầm mà không giải thích ra (voice_brain.GHI_CHU_CAU_NGHE).
                 await run_turn(conv_sid, original_message + "\n\n" + voice_brain.GHI_CHU_CAU_NGHE,
@@ -19046,8 +19052,8 @@ async def websocket_endpoint(ws: WebSocket):
 
             try:
                 brain_obj = await voice_brain.get_brain(conv_sid, conf)
-                await send_raw({"type": "status", "content": localefmt.chu("Javis đang trả lời nhanh...",
-                                                                           "Javis is answering quickly..."),
+                await send_raw({"type": "status", "content": localefmt.chu("Aarohi đang trả lời nhanh...",
+                                                                           "Aarohi is answering quickly..."),
                                 "session_id": conv_sid})
                 # Đang có việc nền thì dặn bộ não giọng (V3): kết quả tự hiện, đừng bịa, đừng giao lại.
                 _dan = [x for x in (voice_brain.pending_note(conv_sid),
@@ -19542,9 +19548,17 @@ async def websocket_endpoint(ws: WebSocket):
                     _tv = nghe_sua.tu_vung(_cfg_luot)
                     _ctx, _speech = nghe_sua.split_ui_context(user_message)
                     _sua = nghe_sua.sua(_speech, _tv)
+                    # Mic stubs "Ar"/"Ro" → clear wake so Aarohi greets instead of asking in Vietnamese.
+                    if nghe_sua.wake_stub(_sua):
+                        _sua = nghe_sua.normalize_wake_name(_sua)
                     if _sua != _speech:
                         _nghe_tho, user_message = _speech, _ctx + _sua
                         _voice_raw = nghe_sua.sua(_voice_raw, _tv)
+                        if nghe_sua.wake_stub(_voice_raw):
+                            _voice_raw = nghe_sua.normalize_wake_name(_voice_raw)
+                    elif nghe_sua.wake_stub(_speech):
+                        user_message = _ctx + nghe_sua.normalize_wake_name(_speech)
+                        _voice_raw = nghe_sua.normalize_wake_name(_voice_raw)
                 except Exception as e:
                     print(f"[voice nghe_sua] lỗi, giữ nguyên câu: {type(e).__name__}", file=sys.stderr)
             # Phiên đã ghim model riêng thì engine_label phải suy từ provider HIỆU LỰC

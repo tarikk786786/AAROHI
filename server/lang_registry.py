@@ -174,6 +174,55 @@ LANGS: Dict[str, Lang] = {
         ),
         lang_directive="English",
     ),
+    # AAROHI: Hindi + Hinglish as the girlfriend's spoken/reply language.
+    # Roman Hinglish is the default surface; Devanagari when it feels natural.
+    "hi": Lang(
+        code="hi",
+        native="हिन्दी / Hinglish",
+        english="Hindi (Hinglish)",
+        script="devanagari",
+        stopwords=(
+            # Devanagari function words
+            "और", "का", "की", "के", "है", "हैं", "नहीं", "में", "से", "पर",
+            "यह", "वह", "मैं", "तुम", "आप", "हम", "क्या", "कैसे", "कब", "क्यों",
+            "भी", "तो", "ही", "लिए", "बाद", "पहले", "अभी", "बहुत",
+            # Roman Hinglish people actually type
+            "hai", "hain", "nahi", "nahin", "kya", "kaise", "kab", "kyun", "kyunki",
+            "aur", "mein", "me", "se", "par", "yeh", "woh", "mai", "main", "tum",
+            "aap", "hum", "bhi", "toh", "hi", "liye", "baad", "pehle", "abhi", "bahut",
+            "kar", "karo", "karna", "ho", "hoon", "hua", "thi", "tha", "the",
+            "yaar", "na", "bas", "accha", "theek", "mat", "sirf", "thoda",
+        ),
+        request_words=(
+            "hindi", "hinglish", "हिन्दी", "हिंदी", "in hindi", "hinglish mein",
+            "hindi mein", "bol hindi", "baat hindi",
+        ),
+        stt="hi",
+        tts={
+            "edge": "hi-IN-SwaraNeural",
+            "openai": "shimmer",
+            "elevenlabs": "",
+            "indic_speak": "Kavya",
+        },
+        tz_default="Asia/Kolkata",
+        currency="INR",
+        first_day=1,
+        number_locale="hi-IN",
+        plural=True,
+        nudge=(
+            "Reply in natural Hinglish like an Indian girlfriend texting her boyfriend: "
+            "mix Hindi and English the way couples talk (e.g. 'haan jaan, main yahan hoon', "
+            "'khana kha liya?', 'miss kar rahi thi'). Prefer Roman Hinglish; use Devanagari "
+            "when it feels warm. Keep replies short and speakable. Do not answer in pure "
+            "formal English only, and do not use pure formal Hindi only."
+        ),
+        weekdays=("सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार", "रविवार"),
+        clock_template=(
+            "Abhi {hm} hai, {weekday} {date}, timezone {tz}. Yeh ASLI time hai is sawaal ke "
+            "waqt ka - aaj/abhi ke liye seedha use karo, andaza mat lagao, tool mat bulao."
+        ),
+        lang_directive="Hinglish (Hindi + English mix)",
+    ),
 }
 
 

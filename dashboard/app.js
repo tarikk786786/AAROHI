@@ -179,7 +179,7 @@ function setOrbState(state, label, petState) {
 // ============================================
 const attention = new window.JavisVoiceAttention.Attention();
 const voice = new JavisVoice({
-  lang: "vi-VN",
+  lang: "hi-IN",  // AAROHI: Hindi/Hinglish ear (was vi-VN - mangled Aarohi into Ar/Ro)
   // KHÔNG bật preserveTranscript (0.64.73). 0.64.32 bật nó: chữ Groq Whisper chỉ còn là "gợi
   // ý", tin gửi đi luôn là chữ Chrome, nên người đã CHỌN Groq cũng chỉ nhận được bản Chrome
   // tiếng Việt chép tiếng Anh thành "clash", "cloud Play". Chủ dự án 27/09: "lần trước có bản
@@ -592,21 +592,47 @@ async function napCaiDatGiong() {
       fetch("/voice/call").then(r => r.json()).catch(() => null),
     ]);
     const v = (s && s.voice) || {};
-    // 0.298.0: the Edge voice saved on the server wins over the one this browser remembered. It used to live
-    // only in localStorage, so a voice picked on the laptop never reached the phone, which kept speaking with
-    // its old voice however many times the owner saved (report 23/10/2026).
+    const loc = (s && s.locale) || {};
+    // Pin mic + TTS from server so Hinglish survives refresh.
+    window.__AAROHI_REPLY_LANG = String(loc.reply_lang || "hi").toLowerCase();
     const vs = document.getElementById("voiceSel");
     if (vs && v.edge_voice && v.edge_voice !== vs.value
         && Array.from(vs.options).some(o => o.value === v.edge_voice)) {
       vs.value = v.edge_voice;
       vs.dispatchEvent(new Event("change"));
+    } else if (v.edge_voice) {
+      try { voice.setVoice(v.edge_voice); } catch (e) {}
     }
+    // Mark-style: always apply the pinned girlfriend rate from settings (Swara @ -8%).
+    try {
+      const wantRate = (v.tts_rate || v.edge_rate || "-8%").toString();
+      if (voice.setRate) voice.setRate(wantRate);
+      else voice.ttsRate = wantRate;
+    } catch (e) {}
+    try {
+      const rl = recLangTheoGiaoDien();
+      if (rl !== voice.lang) voice.setRecognitionLang(rl);
+    } catch (e) {}
     const upload = !!(ear && ear.kind === "upload");
     if (call && call.voice_mode) _callInfo = call;
-    const mode = (call && call.voice_mode) || v.mode || "standard";
+    const mode = (call && call.voice_mode) || v.mode || "fast";
     if (voiceMode !== mode || voice.sttUpload !== upload) tatRanhTay();
     datCheDoGiong(mode);
     voice.sttUpload = upload;
+    // Companion engine strip: STT · LLM · TTS (Mark-capability HUD, own UI)
+    try {
+      const sttEl = document.getElementById("cesStt");
+      const llmEl = document.getElementById("cesLlm");
+      const ttsEl = document.getElementById("cesTts");
+      if (sttEl) sttEl.textContent = "STT · " + (upload ? ((ear && ear.label) || "upload") : "browser");
+      if (llmEl) {
+        const m = (s && s.model) || {};
+        const eng = m.engine || (m.main && m.main.provider) || "brain";
+        const mod = (m.main && m.main.model) || m.model || "";
+        llmEl.textContent = "LLM · " + eng + (mod ? " / " + String(mod).split("/").pop() : "");
+      }
+      if (ttsEl) ttsEl.textContent = "TTS · " + String(v.edge_voice || "Swara").replace(/Neural$/i, "").split("-").pop();
+    } catch (e2) {}
   } catch (e) {}
 }
 napCaiDatGiong();
@@ -1315,7 +1341,13 @@ function handleMessage(data) {
   if (data.type === "status") {
     if (t) t.running = true;
     setSessionRunning(sid, true);
-    if (isActive) { runActions(turn.turnStart()); showActivity(escapeHtml(data.content || "")); syncActiveUI(); }
+    if (isActive) {
+      runActions(turn.turnStart());
+      showActivity(escapeHtml(data.content || ""));
+      syncActiveUI();
+      try { if (window.AarohiCompanionVoice) window.AarohiCompanionVoice.maybeAck(data.content || ""); } catch (e) {}
+      try { if (typeof window.onAarohiStatus === "function") window.onAarohiStatus(data.content || ""); } catch (e) {}
+    }
   } else if (data.type === "tool_call") {
     if (t && window.JavisSteps) t.buoc = window.JavisSteps.nhan(t.buoc, data);
     if (isActive) {
@@ -1325,6 +1357,7 @@ function handleMessage(data) {
       // ("Chay lenh: git status") thay cho "Dang goi: Bash" (0.64.44).
       const _nhan = window.JavisSteps ? window.JavisSteps.nhanDong(data) : (data.content || "");
       showActivity(escapeHtml(_nhan));
+      try { if (window.AarohiCompanionVoice) window.AarohiCompanionVoice.maybeAck("working tool " + (data.tool || "")); } catch (e) {}
     }
   } else if (data.type === "tool_result") {
     if (t && window.JavisSteps) t.buoc = window.JavisSteps.nhan(t.buoc, data);
@@ -4300,10 +4333,16 @@ const voiceSel = document.getElementById("voiceSel");
 const rateSel = document.getElementById("rateSel");
 const savedVoice = localStorage.getItem("javis.voice") || "en-US-AvaMultilingualNeural";
 const savedRate = parseFloat(localStorage.getItem("javis.rate") || "1.10");
-// Ngôn ngữ NGHE theo ngôn ngữ giao diện (0.65.19, bỏ ô "Ngôn ngữ nghe"): en thì en-US, còn lại
-// vi-VN. Câu Việt xen tiếng Anh đã có tai nghe lại (voice_ear) lo, không cần chọn tay nữa.
+// AAROHI: mic language follows reply_lang when pinned to Hindi/Hinglish; else UI lang.
+// vi-VN was mangling "Aarohi" into "Ar"/"Ro" and the brain asked Vietnamese clarifying questions.
 function recLangTheoGiaoDien() {
-  try { return (window.JavisI18n && window.JavisI18n.lang() === "en") ? "en-US" : "vi-VN"; } catch (e) { return "vi-VN"; }
+  try {
+    const pinned = (window.__AAROHI_REPLY_LANG || "").toLowerCase();
+    if (pinned === "hi" || pinned.indexOf("hi") === 0) return "hi-IN";
+    if (window.JavisI18n && window.JavisI18n.lang() === "en") return "en-US";
+    if (window.JavisI18n && window.JavisI18n.lang() === "hi") return "hi-IN";
+  } catch (e) {}
+  return "hi-IN";
 }
 function rateToPct(r) { const p = ((r - 1) * 100).toFixed(0); return (p >= 0 ? "+" : "") + p + "%"; }
 // Gán value cho <select> mà giá trị đó không có trong danh sách thì select về RỖNG (ô trắng,
@@ -4930,6 +4969,13 @@ if (document.getElementById("wzFinish")) {
       return _soiOTrong(document.getElementById("wzPass"),
                         window.t("app.wz_pw_required"));
     }
+    const wantRemote = !!(document.getElementById("wzRemoteOn") || {}).checked;
+    if (wantRemote && !pass) {
+      const warn = document.getElementById("wzRemoteWarn");
+      if (warn) warn.hidden = false;
+      return _soiOTrong(document.getElementById("wzPass"),
+                        window.t("wz.remote_need_pass") || "Set an admin password before enabling remote access.");
+    }
     try {
       if (pass) {
         const d = await (await fetch("/auth/setup", { method: "POST", body: _fd({ username: user || "admin", password: pass }) })).json();
@@ -4963,9 +5009,30 @@ if (document.getElementById("wzFinish")) {
       if (_grk) _mp.groq_api_key = _grk;
       if (_gmk) _mp.gemini_api_key = _gmk;
       await fetch("/settings", { method: "POST", body: _fd({ section: "model", data: JSON.stringify(_mp) }) });
+      // Companion OS: one-click phone remote (Cloudflare quick tunnel) when requested.
+      if (wantRemote && pass) {
+        try {
+          const fd = new FormData();
+          fd.append("mode", "quick");
+          await fetch("/remote-access/enable", { method: "POST", body: fd });
+        } catch (e) { /* Settings → Remote access can retry */ }
+      }
       location.reload();
     } catch (e) { err.textContent = window.t("app.err_net"); btn.disabled = false; btn.textContent = window.t("app.wz_start"); }
   });
+  // Live password gate for the remote toggle
+  (function () {
+    const rem = document.getElementById("wzRemoteOn");
+    const passEl = document.getElementById("wzPass");
+    const warn = document.getElementById("wzRemoteWarn");
+    if (!rem || !passEl) return;
+    function sync() {
+      const need = rem.checked && !String(passEl.value || "").trim();
+      if (warn) warn.hidden = !need;
+    }
+    rem.addEventListener("change", sync);
+    passEl.addEventListener("input", sync);
+  })();
 }
 
 // Wizard - multi-select brains (MAIN = first checked) + free API keys + hints

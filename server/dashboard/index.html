@@ -9,8 +9,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <title>AAROHI Â· Your AI Girlfriend</title>
   <!-- Favicon = logo hiá»‡n táº¡i (/brand-logo): máº·c Ä‘á»‹nh theo logo.png, vÃ  tá»± Ä‘á»•i theo áº£nh user táº£i lÃªn. -->
-  <link rel="icon" href="/brand-logo?v=aarohi6" type="image/png">
-  <link rel="apple-touch-icon" href="/brand-logo?v=aarohi6">
+  <link rel="icon" href="/brand-logo?v=aarohi7" type="image/png">
+  <link rel="apple-touch-icon" href="/brand-logo?v=aarohi7">
   <!-- ThÃªm vÃ o mÃ n hÃ¬nh chÃ­nh iPhone = KHÃ”NG thanh Ä‘á»‹a chá»‰: iOS chá»‰ má»Ÿ app "standalone"
        (áº©n chrome Safari) khi cÃ³ Äá»¦ cá»¥m apple-mobile-web-app-* nÃ y VÃ€ manifest.json bÃªn dÆ°á»›i -
        thiáº¿u má»™t trong hai lÃ  má»™t sá»‘ báº£n iOS váº«n hiá»‡n thanh Ä‘á»‹a chá»‰ dÃ¹ báº£n khÃ¡c thÃ¬ khÃ´ng.
@@ -20,12 +20,12 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="AAROHI">
-  <meta name="theme-color" content="#0e0e16">
+  <meta name="theme-color" content="#120e12">
   <!-- manifest.json khai icon PNG vuÃ´ng 192/512 cÃ³ sizes rÃµ rÃ ng: Ä‘Ã³ lÃ  Ä‘iá»u kiá»‡n Ä‘á»ƒ
        Chrome/Edge DESKTOP coi trang lÃ  cÃ i Ä‘Æ°á»£c (icon "any" trÃªn PNG bá»‹ coi lÃ  khÃ´ng há»£p lá»‡
        nÃªn trÆ°á»›c Ä‘Ã¢y chá»‰ mobile cháº¡y dáº¡ng app, desktop khÃ´ng bao giá» cÃ³ nÃºt cÃ i). NÃºt
        "Má»Ÿ nhÆ° app" trÃªn thanh tráº¡ng thÃ¡i + icon cÃ i trong thanh Ä‘á»‹a chá»‰ Äƒn theo file nÃ y. -->
-  <link rel="manifest" href="/static/manifest.json?v=aarohi6">
+  <link rel="manifest" href="/static/manifest.json?v=aarohi7">
   <!-- Font tá»± chá»©a (0.416.0, dashboard/fonts/): khÃ´ng cÃ²n gá»i fonts.googleapis.com / fonts.gstatic.com lÃºc má»Ÿ trang. -->
   <link rel="stylesheet" href="/static/fonts/fonts.css?v=1">
   <!-- Biáº¿n --ic-* cho icon dÃ¹ng trong content: cá»§a CSS. Pháº£i Ä‘á»©ng TRÆ¯á»šC style.css
@@ -33,13 +33,14 @@
   <link rel="stylesheet" href="/static/vendor/lucide-icons.css?v=1">
   <link rel="stylesheet" href="/static/style.css?v=156">
   <link rel="stylesheet" href="/static/console.css?v=130">
+  <link rel="stylesheet" href="/static/companion.css?v=1">
   <!-- Ãp tÃ´ng Ä‘Ã£ lÆ°u TRÆ¯á»šC khi váº½ Ä‘á»ƒ khÃ´ng nhÃ¡y tá»‘i rá»“i má»›i Ä‘á»•i sang sÃ¡ng.
        GiÃ¡ trá»‹ cÅ© "dim" (tÃ´ng tá»‘i-nháº¡t, gá»¡ á»Ÿ 0.9.250) quy vá» tá»‘i; theme.js sáº½ ghi Ä‘Ã¨ láº¡i.
        Cháº¿ Ä‘á»™ "auto" (0.74.0, máº·c Ä‘á»‹nh khi chÆ°a chá»n gÃ¬ tá»« 0.75.1) tÃ­nh theo khung giá» "HH:MM-HH:MM", cÃ¹ng quy táº¯c vá»›i lightAt() trong
        theme.js (váº¯t qua ná»­a Ä‘Ãªm Ä‘Æ°á»£c, hai má»‘c trÃ¹ng lÃ  tá»‘i): sá»­a má»™t bÃªn thÃ¬ sá»­a cáº£ bÃªn kia. -->
   <script>(function(){try{var m=localStorage.getItem('javis.theme'),L=m==='light';if(m!=='light'&&m!=='dark'&&m!=='dim'){var p=/^(\d{1,2}):(\d{2})-(\d{1,2}):(\d{2})$/.exec(localStorage.getItem('javis.theme.schedule')||'')||[0,6,0,18,0],a=p[1]*60+ +p[2],b=p[3]*60+ +p[4],d=new Date(),n=d.getHours()*60+d.getMinutes();L=a!==b&&(a<b?n>=a&&n<b:n>=a||n<b);}if(L)document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
-<body>
+<body class="companion-home">
   <div class="hud">
 
     <!-- ===== TOP BAR ===== -->
@@ -147,7 +148,7 @@
       <div class="noti-head">
         <div>
           <div class="noti-title" data-i18n="noti.label">ThÃ´ng bÃ¡o</div>
-          <div class="noti-sub" id="notificationSummary" data-i18n="noti.summary">Cáº­p nháº­t má»›i vÃ  tin tá»« Javis OS</div>
+          <div class="noti-sub" id="notificationSummary" data-i18n="noti.summary">Updates and news from AAROHI</div>
         </div>
         <div class="noti-head-actions">
           <button class="noti-text-btn" id="notificationReadAll" type="button" data-i18n="noti.read_all">Äá»c táº¥t cáº£</button>
@@ -230,6 +231,11 @@
         <div class="orb-overlay">
           <div class="orb-state" id="orbState" data-i18n="orb.ready">Sáº´N SÃ€NG</div>
           <div class="orb-interim" id="voiceInterim"></div>
+          <div class="companion-engine-strip" id="companionEngineStrip" title="STT · LLM · TTS">
+            <span id="cesStt">STT · ear</span>
+            <span id="cesLlm">LLM · brain</span>
+            <span id="cesTts">TTS · Swara</span>
+          </div>
         </div>
         <button class="brain-overlay-toggle" id="brainOverlayToggle" type="button"
                 aria-pressed="false" aria-label="áº¨n nhÃ£n vÃ  sá»‘ liá»‡u brain" data-i18n-aria="orb.overlay_aria"
@@ -668,7 +674,7 @@
       <!-- Dáº¥u áº¥n vÃ  CHá»® tÃ¡ch lÃ m hai Ã´: pet.js thay ruá»™t cá»§a .brand-mark báº±ng khuÃ´n máº·t linh
            váº­t (xem veDauAn), nÃªn chá»¯ pháº£i náº±m ngoÃ i Ã´ Ä‘Ã³, khÃ´ng thÃ¬ má»—i láº§n Ä‘á»•i hÃ¬nh dÃ¡ng hay
            báº£ng mÃ u lÃ  chá»¯ bá»‹ xoÃ¡ theo. .brand .brand-icon trÃªn thanh trÃªn cÅ©ng cÃ¹ng vai trÃ². -->
-      <div class="rail-brand"><span class="brand-mark"><img src="/brand-logo" alt="Javis" style="width:30px;height:30px;border-radius:8px;display:block;object-fit:cover"></span><span class="rail-brand-text">JAVIS <i>OS</i></span></div>
+      <div class="rail-brand"><span class="brand-mark"><img src="/brand-logo" alt="AAROHI" style="width:30px;height:30px;border-radius:8px;display:block;object-fit:cover"></span><span class="rail-brand-text">AAROHI</span></div>
     </div>
     <!-- GIá»®A cuá»™n Ä‘Æ°á»£c - gom theo nhÃ³m; nhÃ³m foot (Há»‡ thá»‘ng) tá»± ghim xuá»‘ng Ä‘Ã¡y -->
     <div class="rail-nav">
@@ -705,7 +711,7 @@
               x-html="$store.nav.collapseIcon"></button>
       <div class="rf-meta">
         <div class="rf-ver" id="railVersion">v0.0.0</div>
-        <a class="rf-author" href="https://javisos.com" target="_blank" rel="noopener">by Javis Foundation</a>
+        <a class="rf-author" href="https://github.com/tarikk786786/AAROHI" target="_blank" rel="noopener">by AAROHI</a>
       </div>
     </div>
   </nav>
@@ -846,6 +852,16 @@
             </div>
           </div>
           <div id="wzProvHint"></div>
+        </div>
+        <div class="set-sec" id="wzRemoteSec">
+          <h4 data-i18n="wz.remote_title">4. Open AAROHI from your phone</h4>
+          <div class="set-note" data-i18n="wz.remote_note">Optional Cloudflare tunnel so any device can reach this PC. Mic needs HTTPS (the tunnel provides it). A login password is required while the tunnel is on - set one in step 2.</div>
+          <label class="wz-card" id="wzRemoteCard" style="cursor:pointer;margin-top:6px">
+            <input type="checkbox" id="wzRemoteOn">
+            <div><b data-i18n="wz.remote_toggle">Turn on remote access after start</b>
+              <div class="wz-pdesc" data-i18n="wz.remote_desc">Starts a quick trycloudflare.com link. Manage or copy the URL later in Settings → Remote access.</div></div>
+          </label>
+          <div class="set-note dim" id="wzRemoteWarn" hidden style="color:var(--yellow);margin-top:6px" data-i18n="wz.remote_need_pass">Set an admin password above before enabling remote access.</div>
         </div>
       </div>
       <!-- Sticky footer: Start was easy to miss below a tall provider list (live report 2026-11-01). -->
@@ -1042,6 +1058,8 @@
   <script defer src="/static/voice-chunker.js?v=2"></script>
   <script defer src="/static/voice-lang.js?v=1"></script>
   <script defer src="/static/voice.js?v=29"></script>
+  <script defer src="/static/companion-voice.js?v=1"></script>
+  <script defer src="/static/companion-memory.js?v=1"></script>
   <script defer src="/static/graph.js?v=17"></script>
   <script defer src="/static/pan-zoom.js?v=1"></script>
   <script defer src="/static/chat-render.js?v=23"></script>

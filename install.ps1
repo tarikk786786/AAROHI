@@ -1,10 +1,11 @@
 # ============================================================
-# JAVIS OS - CAI MOT LAN TREN WINDOWS
+# AAROHI Companion - one-shot Windows setup
 #
 #   powershell -ExecutionPolicy Bypass -File install.ps1
+#   Or double-click AAROHI-setup.bat
 #
-# Cai het trong mot luot: Python deps (venv) + BON bo nao CLI chay bang goi thue bao
-# (claude, codex, agy, grok) + .env + giai phong port 7777, roi bat server.
+# Installs Python deps (venv) + optional desktop control + four CLI brains
+# (claude, codex, agy, grok) + .env + frees port 7777, then starts the server.
 #
 # Vi sao co file nay: truoc day nguoi dung Windows phai tu di bon duong khac nhau (setup.bat
 # chi cai claude + codex; agy va grok phai tu mo PowerShell go tung lenh cua nha cung cap),
@@ -51,7 +52,7 @@ function Have($cmd) { return [bool](Get-Command $cmd -ErrorAction SilentlyContin
 
 Line ""
 Line " =========================================="
-Line "  JAVIS OS - cai dat tren Windows"
+Line "  AAROHI Companion - Windows setup"
 Line " =========================================="
 
 # ---------------------------------------------------------------- [1] Python
@@ -87,6 +88,12 @@ if ($LASTEXITCODE -ne 0) {
   exit 1
 }
 Ok "Da cai xong thu vien (gom claude-agent-sdk)"
+
+# Desktop control (Mark-capability clean-room): optional but installed for companion OS
+Step "2b" "Cai desktop control (pyautogui + pillow)"
+& $vpy -m pip install pyautogui pillow -q
+if ($LASTEXITCODE -eq 0) { Ok "Desktop control deps ready" }
+else { Warn "pyautogui/pillow chua cai duoc - Aarohi van chay; screenshot/click se bao thieu goi" }
 
 # ---------------------------------------------------------------- [3] Node + 4 CLI
 if ($SkipCli) {
@@ -143,6 +150,34 @@ if ((-not (Test-Path ".env")) -and (Test-Path "env.example")) {
   Ok ".env da co"
 }
 
+# Companion voice defaults (Hinglish Swara at -8%) when settings exist
+$settingsPath = Join-Path $Root "server\settings.json"
+if (Test-Path $settingsPath) {
+  try {
+    & $vpy -c @"
+import json
+from pathlib import Path
+p = Path(r'$settingsPath')
+cfg = json.loads(p.read_text(encoding='utf-8'))
+loc = cfg.setdefault('locale', {})
+loc.setdefault('reply_lang', 'hi')
+loc.setdefault('ui_lang', 'en')
+v = cfg.setdefault('voice', {})
+v.setdefault('edge_voice', 'hi-IN-SwaraNeural')
+v['tts_rate'] = v.get('tts_rate') or '-8%'
+cfg['_tts_rate_hint'] = '-8%'
+# Enable desktop plugins when present
+for slug in ('desktop-control', 'desktop-apps'):
+    plugs = cfg.setdefault('plugins', {})
+    if isinstance(plugs, dict) and slug in plugs:
+        plugs[slug] = True if not isinstance(plugs[slug], dict) else {**plugs[slug], 'enabled': True}
+p.write_text(json.dumps(cfg, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+print('ok')
+"@
+    Ok "Companion defaults: Hinglish + Swara -8%"
+  } catch { Warn "Could not pin voice defaults in settings.json" }
+}
+
 # ---------------------------------------------------------------- [5] port 7777
 Step 5 "Giai phong port 7777"
 $conns = Get-NetTCPConnection -LocalPort 7777 -State Listen -ErrorAction SilentlyContinue
@@ -176,38 +211,53 @@ foreach ($it in @(
 }
 Line ""
 Line "  Dang nhap tung bo nao NGAY TRONG trang Models cua dashboard - khong can go lenh."
-Line "  Cai them CLI sau nay thi phai KHOI DONG LAI Javis (stop-javis.bat roi start-javis.vbs),"
-Line "  vi tien trinh dang chay giu PATH cua luc no bat."
+Line "  After installing more CLIs, restart AAROHI (stop-javis.bat then AAROHI-start.bat),"
+Line "  because the running process keeps the PATH from when it started."
 Line ""
 
+# Desktop shortcut
+Step "5c" "Desktop shortcut"
+try {
+  $desk = [Environment]::GetFolderPath("Desktop")
+  $lnkPath = Join-Path $desk "AAROHI.lnk"
+  $w = New-Object -ComObject WScript.Shell
+  $lnk = $w.CreateShortcut($lnkPath)
+  $lnk.TargetPath = Join-Path $Root "AAROHI-start.bat"
+  $lnk.WorkingDirectory = $Root
+  $lnk.Description = "AAROHI Companion"
+  $ico = Join-Path $Root "dashboard\logo.png"
+  if (Test-Path $ico) { $lnk.IconLocation = "$ico,0" }
+  $lnk.Save()
+  Ok "Desktop shortcut: AAROHI.lnk"
+} catch { Warn "Could not create Desktop shortcut: $($_.Exception.Message)" }
+
 # ---------------------------------------------------------------- [5b] tu khoi dong
-# 0.306.0, chu repo 24/10/2026: "mac dinh cai javis tren win hoac mac thi cai khoi dong cung trinh duyet".
-# Dang nhap may la Javis tu chay nen roi tu mo dashboard. Tat: -NoAutostart, javis-autostart.bat uninstall,
-# hoac nut trong trang Cai dat.
+# 0.306.0: default autostart on Windows. Off: -NoAutostart, javis-autostart.bat uninstall,
+# or Settings in the dashboard.
 if (-not $NoAutostart) {
   $as = Join-Path $Root "javis-autostart.ps1"
   if (Test-Path $as) {
     & powershell -NoProfile -ExecutionPolicy Bypass -File $as install | Out-Null
-    if ($LASTEXITCODE -eq 0) { Ok "Tu khoi dong cung Windows: BAT (dang nhap may la Javis tu mo)" }
-    else { Warn "Chua bat duoc tu khoi dong. Bat sau: javis-autostart.bat install" }
+    if ($LASTEXITCODE -eq 0) { Ok "Windows autostart: ON (AAROHI opens after login)" }
+    else { Warn "Autostart not set. Later: javis-autostart.bat install" }
   }
 }
 
 # ---------------------------------------------------------------- [6] bat server
 if ($NoStart) {
-  Line "  Cai xong. Bat server: start-javis.vbs (chay nen) hoac setup.bat (hien cua so)."
+  Line "  Setup done. Start with AAROHI-start.bat (background) or setup.bat (console)."
   exit 0
 }
-Step 6 "Bat Javis"
+Step 6 "Start AAROHI"
 $vbs = Join-Path $Root "start-javis.vbs"
 if (Test-Path $vbs) {
-  # /open: cho server len roi mo dashboard luon (0.306.0).
+  # /open: wait for server then open dashboard (0.306.0).
   Start-Process "wscript.exe" -ArgumentList "//nologo `"$vbs`" /open" -WorkingDirectory $Root
-  Ok "Server dang chay nen, dashboard se tu mo. Log: server\javis.log"
+  Ok "Server running in background; dashboard will open. Log: server\javis.log"
 } else {
   Start-Process $vpy -ArgumentList "main.py" -WorkingDirectory (Join-Path $Root "server")
-  Ok "Server dang chay"
+  Ok "Server running"
 }
 Line ""
-Line "  Mo: http://localhost:7777"
+Line "  Open: http://127.0.0.1:7777"
 Line ""

@@ -1,0 +1,14 @@
+name: Clipboard assist
+name_en: "Clipboard assist"
+slug: clipboard-assist
+version: 1.0.0
+description: Đọc / ghi clipboard trên máy đang chạy Aarohi; tóm tắt hoặc dịch ngắn nội dung đã dán vào chat. Chặn trong Docker.
+description_en: "Read/write the host clipboard; summarize or translate short pasted text for chat. Blocks itself in Docker."
+author: AAROHI (bundled)
+enabled: false
+min_mode: safe
+tools:
+  - javis_clipboard_get
+  - javis_clipboard_set
+  - javis_clipboard_summarize
+hooks: []

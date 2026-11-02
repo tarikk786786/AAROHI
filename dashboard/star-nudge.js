@@ -99,7 +99,7 @@
     if (laDienThoai()) {
       return '<div class="sn-gh sn-gh-dt" aria-hidden="true">'
         + '<div class="sn-gh-ten"><span class="sn-gh-ava"></span>blogminhquy / <b>javis-os</b></div>'
-        + '<div class="sn-gh-mota">Javis OS</div>'
+        + '<div class="sn-gh-mota">AAROHI</div>'
         + '<div class="sn-gh-hang">' + nutStar + '<span class="sn-gh-nut">' + ic("git-branch") + " Fork</span></div></div>";
     }
     return '<div class="sn-gh" aria-hidden="true">'

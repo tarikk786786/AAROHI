@@ -39,7 +39,18 @@ import unicodedata
 # Tên trợ lý luôn có mặt, không cần người dùng khai. Bộ từ vựng người dùng thêm nằm ở
 # settings `voice.hotwords` (chuỗi, ngăn bằng dấu phẩy hoặc xuống dòng).
 # AAROHI first; keep Javis as legacy alias so old transcripts still map cleanly.
-TU_VUNG_GOC = ("Aarohi", "Arohi", "Javis")
+# Short mic stubs ("Ar", "Ro") are handled by `wake_stub` below - too short for fuzzy match.
+TU_VUNG_GOC = ("Aarohi", "Arohi", "Aaruhi", "Javis")
+# Exact (case-insensitive) whole-utterance stubs the mic often emits for "Aarohi".
+# Keep multi-word phrases as single entries - never whitespace-split "hey aarohi"
+# or bare "hey"/"hello" become false wake stubs.
+_WAKE_STUBS = frozenset({
+    "ar", "aro", "aar", "aaro", "ro", "roh", "rahi", "aaruhi", "arohi",
+    "aarohi", "aarohie", "arrowhe", "arrow", "arrohi",
+    "hey aarohi", "hi aarohi", "hello aarohi", "oye aarohi", "suno aarohi",
+    "hey arohi", "hi arohi", "hey ar", "hi ar", "oye ar",
+    "javis", "jarvis", "hey javis", "hi javis",
+})
 MAX_TU_VUNG = 60          # Whisper chỉ nhìn ~224 token cuối của prompt; hơn nữa là vô ích
 MAX_GHEP = 3              # ghép tối đa 3 tiếng liền nhau làm một ứng viên ("Gia vít", "Open Router")
 MAX_GOI_Y = 600           # trần độ dài prompt gửi Whisper (stt.groq_nghe cũng cắt ở mức này)
@@ -171,6 +182,30 @@ def tu_vung(cfg: dict) -> list:
             da.add(t.lower())
             ra.append(t)
     return ra[:MAX_TU_VUNG]
+
+
+def wake_stub(text: str) -> bool:
+    """True when the mic only caught a name-call for Aarohi (Ar / Ro / hey Aarohi).
+
+    Those stubs must not become a confused 'what does Ar mean?' turn - greet or ignore."""
+    s = " ".join(str(text or "").lower().split())
+    s = re.sub(r"[^\w\s]", "", s, flags=re.U).strip()
+    if not s:
+        return False
+    if s in _WAKE_STUBS:
+        return True
+    # "hey ar", "oye ro", "aarohi suno" already covered; also bare 1-2 syllable name starts
+    return bool(re.fullmatch(
+        r"(?:hey|hi|hello|oye|sun|suno|meri?|yaar|babe)?\s*"
+        r"(?:aarohi|arohi|aaruhi|ar|aro|ro|roh|rahi|arrohi|javis|jarvis)",
+        s, re.I))
+
+
+def normalize_wake_name(text: str) -> str:
+    """Rewrite a wake-only stub into a clear 'Hey Aarohi' so the brain greets, not quizzes."""
+    if wake_stub(text):
+        return "Hey Aarohi"
+    return str(text or "")
 
 
 def goi_y_whisper(tv, ky_thuat=TU_TIENG_ANH_MOI) -> str:
