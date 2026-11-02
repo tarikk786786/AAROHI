@@ -16,9 +16,11 @@ for (const text of ['mua ngay hôm nay', 'ừ', 'Ich habe dich', 'anh vừa xem 
 }
 assert.equal(gate.waiting(), true, 'noise must not extend the conversation');
 assert.equal(gate.preview('Javis'), true);
+assert.equal(gate.preview('Hey Aarohi'), true, 'AAROHI wake phrase');
 assert.equal(gate.waiting(), true, 'interim wake is not permission to accept a revised final');
 assert.equal(gate.accept('David'), false);
 assert.equal(gate.accept('Javis ơi, đưa anh về trò chuyện'), true);
+assert.equal(gate.accept('Aarohi, open Chrome'), true, 'Aarohi wake accepts');
 assert.equal(gate.accept('không'), true, 'short followup preserved');
 now += 29000;
 assert.equal(gate.preview('anh muốn nói một câu dài'), true);
@@ -41,7 +43,7 @@ assert.equal(gate.waiting(), false);
 
 // 0.65.22: nối lại phiên Live đã ngắt bằng CÂU NÓI THẬT, không bắt buộc gọi tên.
 const w = new Attention({ now: () => 0 });
-for (const text of ['Javis', 'mở lịch', 'David ơi mở trang kết nối', 'Gia vít ơi', 'tiếng TV đang nói', 'ok Javis']) {
+for (const text of ['Javis', 'Aarohi', 'hey Aarohi open notes', 'mở lịch', 'David ơi mở trang kết nối', 'Gia vít ơi', 'tiếng TV đang nói', 'ok Javis']) {
   assert.equal(w.wakes(text), true, text);
 }
 for (const text of ['', '  ', 'ừ', 'ok.', '!!', '123 456']) {

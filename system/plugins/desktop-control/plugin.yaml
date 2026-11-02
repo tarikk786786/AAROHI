@@ -1,0 +1,17 @@
+name: Điều khiển màn hình máy
+name_en: "Desktop screen control"
+slug: desktop-control
+version: 1.0.0
+description: Chụp màn hình, gõ phím, bấm chuột, phím tắt và cuộn trên CHÍNH MÁY đang chạy Aarohi. Dùng cùng desktop-apps (mở/đóng app). Chặn khi chạy Docker trên máy chủ. Cần pyautogui + Pillow (pip install pyautogui pillow).
+description_en: "Screenshot, type, click, hotkeys and scroll on THE MACHINE running Aarohi. Pair with desktop-apps (open/close apps). Blocks itself in Docker. Needs pyautogui + Pillow (pip install pyautogui pillow)."
+author: AAROHI (bundled)
+enabled: true
+min_mode: safe
+tools:
+  - javis_screen_shot
+  - javis_screen_info
+  - javis_type_text
+  - javis_click
+  - javis_hotkey
+  - javis_scroll
+hooks: []

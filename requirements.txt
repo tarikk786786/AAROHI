@@ -86,3 +86,9 @@ yt-dlp>=2026.8.19
 # đính kèm thay vì một đống mã nhị phân. Thuần Python, giấy phép BSD, không kéo dependency nào. Thiếu nó app VẪN chạy: đọc PDF
 # trả một câu báo thiếu thư viện thay cho chữ.
 pypdf==6.18.1
+
+# OPTIONAL - desktop-control plugin (screenshot / type / click). Not installed by default:
+# several hundred MB of transitive GUI deps on some platforms, and headless/Docker hosts
+# cannot use them. Local desktop owners who want Aarohi to drive the screen:
+#   pip install pyautogui pillow
+# Plugin returns a clear install hint when these are missing.

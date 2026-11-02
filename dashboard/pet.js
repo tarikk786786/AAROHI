@@ -259,6 +259,16 @@
   var NGU_SAU = 90000;
 
   var el = null, svg = null, nutBody = null, menu = null;
+  var gMouth = null;
+  // Soft lip shapes for speaking (AAROHI phase 3). Closed when idle; cycles while speaking.
+  var MOUTHS = {
+    closed: '<path class="pet-line" d="M-10 8 Q0 12 10 8"/>',
+    smile:  '<path class="pet-line" d="M-11 6 Q0 16 11 6"/>',
+    open:   '<ellipse class="pet-line" cx="0" cy="12" rx="7" ry="5"/>',
+    oh:     '<ellipse class="pet-line" cx="0" cy="11" rx="5" ry="6.5"/>',
+  };
+  var miengTen = "closed";
+  var miengLuc = 0;
   var pRing = null, pFace = null, gEyes = null, gRig = null;
   var cfg = Object.assign({}, MAC_DINH);
   var state = "idle", mood = "neutral", dangChop = false;
@@ -449,6 +459,7 @@
             '<path class="pet-ring" pathLength="360"></path>' +
             '<path class="pet-face"></path>' +
             '<g class="pet-eyes"></g>' +
+            '<g class="pet-mouth"></g>' +
           '</g>' +
         '</svg>' +
       '</button>' +
@@ -461,6 +472,7 @@
     pRing = el.querySelector(".pet-ring");
     pFace = el.querySelector(".pet-face");
     gEyes = el.querySelector(".pet-eyes");
+    gMouth = el.querySelector(".pet-mouth");
     noiTuongTac();
   }
 
@@ -599,6 +611,16 @@
     gEyes.innerHTML =
       '<g transform="translate(' + (160 + a[0]) + " " + (160 + a[1]) + ")" + co + '">' + trai + "</g>" +
       '<g transform="translate(' + (160 + b[0]) + " " + (160 + b[1]) + ")" + co + '">' + phai + "</g>";
+    veMieng(miengTen);
+  }
+
+  function veMieng(ten) {
+    if (!gMouth) return;
+    miengTen = MOUTHS[ten] ? ten : "closed";
+    var mx = 160;
+    if (el && el.dataset.out !== "1") mx = cfg.side === "right" ? 126 : 194;
+    gMouth.innerHTML =
+      '<g transform="translate(' + mx + ' 168)">' + (MOUTHS[miengTen] || MOUTHS.closed) + "</g>";
   }
 
   // ---- Vòng vẽ ----
@@ -676,6 +698,21 @@
       mood = NGHI_MAT[nghiPha];
       veMat(mood);
       nghiLuc = now + NGHI_LAU[nghiPha % NGHI_LAU.length] + Math.random() * 500;
+    }
+
+    // Speaking lip cycle (AAROHI): open / oh / smile while TTS plays; closed otherwise.
+    if (state === "speaking") {
+      if (now > miengLuc) {
+        var cycle = ["open", "smile", "oh", "open", "closed"];
+        veMieng(cycle[Math.floor(Math.random() * cycle.length)]);
+        miengLuc = now + 90 + Math.random() * 110;
+      }
+    } else if (miengTen !== "closed" && state !== "hearing") {
+      veMieng(state === "listening" ? "smile" : "closed");
+      miengLuc = now + 400;
+    } else if (state === "hearing" && miengTen === "closed" && now > miengLuc) {
+      veMieng("smile");
+      miengLuc = now + 800;
     }
 
     // Chớp mắt: ngắn và KHÔNG đều nhịp. Đều nhịp là cảm giác máy móc.

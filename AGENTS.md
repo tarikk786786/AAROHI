@@ -73,6 +73,13 @@ Dates are local owner context (**2026-11-01**, Asia/Kolkata) unless noted.
 - **Why:** Owner wants a reliable API brain when Claude/Codex/etc are unavailable, without only using the Models UI.
 - **Never commit real keys** — set locally or in Vercel env only.
 
+### 2026-11-02 — Desktop presence trilogy (Mark-inspired, clean rewrite)
+
+- **What:** Ported *ideas* from FatihMakes Mark-LVI into AAROHI without copying CC BY-NC code: (1) `system/plugins/desktop-control` screenshot/type/click/hotkey/scroll; (2) wake phrases `aarohi`/`arohi` (+ mishears) in `voice-attention.js`; (3) speaking lip cycle on `JavisPet` mouth SVG.
+- **How:** New bundled plugin + tests; mirrored `dashboard/` → `server/dashboard/` for attention + pet; optional `pip install pyautogui pillow`. Existing `desktop-apps` still opens/closes apps.
+- **Why:** Owner asked for computer control + wake word + avatar HUD as a phased clean rewrite into AAROHI.
+- **License note:** Do not vendor Mark-LVI source (CC BY-NC). Patterns only.
+
 ### 2026-11-01 — Free LLM wake (401/429 fix)
 
 - **What:** Bad LLM7 keys caused `401 authentication_error`; daily quota caused `429`. Chat stuck.
